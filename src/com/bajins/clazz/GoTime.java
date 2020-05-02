@@ -3,6 +3,10 @@ package com.bajins.clazz;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 
@@ -124,5 +128,22 @@ public class GoTime {
         //System.out.println(now.format(DateTimeFormatter.ISO_INSTANT));
         System.out.println(now.format(DateTimeFormatter.BASIC_ISO_DATE));
         //System.out.println(now.format(DateTimeFormatter.RFC_1123_DATE_TIME));
+
+
+        System.out.println("============= 创建定时任务 =============");
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("TimerTask1 run" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+            }
+        }, 1000, 5000);//延时1s，之后每隔5s运行一次
+
+        // cheduleWithFixedDelay跟schedule类似，而scheduleAtFixedRate与scheduleAtFixedRate一样会尽量减少漏掉调度的情况
+        ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(5);
+        executorService.scheduleWithFixedDelay(() -> {
+            String now1 = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+            System.out.println("ScheduledThreadPoolExecutor1 run:" + now1);
+        }, 1, 2, TimeUnit.SECONDS);
     }
 }
