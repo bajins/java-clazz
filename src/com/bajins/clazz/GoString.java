@@ -65,31 +65,39 @@ public class GoString {
 
         long start1 = System.nanoTime();
         String join = String.join(".", clazz, method);
-        System.out.println(join);
         long end1 = System.nanoTime();
-        System.out.println(end1 - start1);
+        GoSystem.println("String.join耗时:", end1 - start1);
 
         long start2 = System.nanoTime();
         String add = clazz + "." + method;
-        System.out.println(add);
         long end2 = System.nanoTime();
-        System.out.println(end2 - start2);
+        GoSystem.println("使用+号耗时:", end2 - start2);
 
         long start3 = System.nanoTime();
         StringBuilder stringBuilder = new StringBuilder(clazz);
         stringBuilder.append(".");
         stringBuilder.append(method);
-        System.out.println(stringBuilder.toString());
+        String s1 = stringBuilder.toString();
         long end3 = System.nanoTime();
-        System.out.println(end3 - start3);
+        GoSystem.println("StringBuilder耗时:", end3 - start3);
 
         long start4 = System.nanoTime();
         StringBuffer stringBuffer = new StringBuffer(clazz);
         stringBuffer.append(".");
         stringBuffer.append(method);
-        System.out.println(stringBuffer.toString());
+        String s = stringBuffer.toString();
         long end4 = System.nanoTime();
-        System.out.println(end4 - start4);
+        GoSystem.println("StringBuffer耗时:", end4 - start4);
+
+        long start5 = System.nanoTime();
+        String format = String.format("%s.%s", clazz, method);
+        long end5 = System.nanoTime();
+        GoSystem.println("String.format %s.%s耗时:", end5 - start5);
+
+        long start6 = System.nanoTime();
+        String format1 = String.format("%1$s.%2$s", clazz, method);
+        long end6 = System.nanoTime();
+        GoSystem.println("String.format %1$s.%2$s耗时:", end6 - start6);
 
     }
 }

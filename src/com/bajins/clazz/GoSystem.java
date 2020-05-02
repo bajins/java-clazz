@@ -13,15 +13,15 @@ import java.util.Properties;
  */
 public class GoSystem {
     /**
-     * 拼接字符串并打印
+     * 拼接对象并打印
      *
-     * @param str
+     * @param objects
      * @return
      */
-    public static void println(String... str) {
-        StringBuffer sb = new StringBuffer();
-        for (String s : str) {
-            sb.append(s).append(" ");
+    public static void println(Object... objects) {
+        StringBuilder sb = new StringBuilder();
+        for (Object o : objects) {
+            sb.append(o).append(" ");
         }
         System.out.println(sb.toString());
     }
