@@ -17,7 +17,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @description LRULocalCache
  * @create 2018-12-20 21:40
  */
-public class LRULocalCache {
+public class CacheLRULocal {
     /**
      * 默认有效时长,单位:秒
      */
@@ -40,7 +40,7 @@ public class LRULocalCache {
     /**
      * 私有构造函数,工具类不允许实例化
      */
-    private LRULocalCache() {
+    private CacheLRULocal() {
 
     }
 
@@ -179,7 +179,7 @@ public class LRULocalCache {
 
         @Override
         public void run() {
-            LocalCache.remove(key);
+            CacheLocal.remove(key);
         }
     }
 
@@ -191,7 +191,7 @@ public class LRULocalCache {
      */
     public static void add(String key, Object value) {
         map.put(key, value);
-        timer.schedule(new LocalCache.CleanWorkerTask(key), DEFUALT_TIMEOUT);
+        timer.schedule(new CacheLocal.CleanWorkerTask(key), DEFUALT_TIMEOUT);
 
     }
 
@@ -204,7 +204,7 @@ public class LRULocalCache {
      */
     public static void put(String key, Object value, int timeout) {
         map.put(key, value);
-        timer.schedule(new LocalCache.CleanWorkerTask(key), timeout * SECOND_TIME);
+        timer.schedule(new CacheLocal.CleanWorkerTask(key), timeout * SECOND_TIME);
     }
 
     /**
@@ -216,7 +216,7 @@ public class LRULocalCache {
      */
     public static void put(String key, Object value, Date expireTime) {
         map.put(key, value);
-        timer.schedule(new LocalCache.CleanWorkerTask(key), expireTime);
+        timer.schedule(new CacheLocal.CleanWorkerTask(key), expireTime);
     }
 
     /**
@@ -227,7 +227,7 @@ public class LRULocalCache {
     public static void putAll(Map<String, Object> m) {
         map.putAll(m);
         for (String key : m.keySet()) {
-            timer.schedule(new LocalCache.CleanWorkerTask(key), DEFUALT_TIMEOUT);
+            timer.schedule(new CacheLocal.CleanWorkerTask(key), DEFUALT_TIMEOUT);
         }
     }
 
@@ -240,7 +240,7 @@ public class LRULocalCache {
 
         map.putAll(m);
         for (String key : m.keySet()) {
-            timer.schedule(new LocalCache.CleanWorkerTask(key), timeout * SECOND_TIME);
+            timer.schedule(new CacheLocal.CleanWorkerTask(key), timeout * SECOND_TIME);
         }
     }
 
@@ -252,7 +252,7 @@ public class LRULocalCache {
     public static void putAll(Map<String, Object> m, Date expireTime) {
         map.putAll(m);
         for (String key : m.keySet()) {
-            timer.schedule(new LocalCache.CleanWorkerTask(key), expireTime);
+            timer.schedule(new CacheLocal.CleanWorkerTask(key), expireTime);
         }
     }
 

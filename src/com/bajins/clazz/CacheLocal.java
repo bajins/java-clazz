@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @description LocalCache
  * @create 2018-12-20 21:40
  */
-public class LocalCache {
+public class CacheLocal {
 
     /**
      * 默认有效时长,单位:秒
@@ -43,7 +43,7 @@ public class LocalCache {
     /**
      * 私有构造函数,工具类不允许实例化
      */
-    private LocalCache() {
+    private CacheLocal() {
 
     }
 
@@ -60,7 +60,7 @@ public class LocalCache {
 
         @Override
         public void run() {
-            LocalCache.remove(key);
+            CacheLocal.remove(key);
         }
     }
 
