@@ -56,5 +56,40 @@ public class GoString {
         // 使用 java.util.concurrent.ThreadLocalRandom 来生成有边界的Int，专为多线程并发使用的随机数生成器
         int i2 = ThreadLocalRandom.current().nextInt(1, 10);
 
+
+        System.out.println("==================== 测试拼接效率 ====================");
+
+
+        String clazz = "class";
+        String method = "method";
+
+        long start1 = System.nanoTime();
+        String join = String.join(".", clazz, method);
+        System.out.println(join);
+        long end1 = System.nanoTime();
+        System.out.println(end1 - start1);
+
+        long start2 = System.nanoTime();
+        String add = clazz + "." + method;
+        System.out.println(add);
+        long end2 = System.nanoTime();
+        System.out.println(end2 - start2);
+
+        long start3 = System.nanoTime();
+        StringBuilder stringBuilder = new StringBuilder(clazz);
+        stringBuilder.append(".");
+        stringBuilder.append(method);
+        System.out.println(stringBuilder.toString());
+        long end3 = System.nanoTime();
+        System.out.println(end3 - start3);
+
+        long start4 = System.nanoTime();
+        StringBuffer stringBuffer = new StringBuffer(clazz);
+        stringBuffer.append(".");
+        stringBuffer.append(method);
+        System.out.println(stringBuffer.toString());
+        long end4 = System.nanoTime();
+        System.out.println(end4 - start4);
+
     }
 }
