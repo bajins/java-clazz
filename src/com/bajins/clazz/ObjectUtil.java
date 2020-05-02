@@ -170,6 +170,19 @@ public class ObjectUtil {
     /**
      * 获取 类.方法
      *
+     * @param traceElement
+     * @return
+     */
+    public static String getClassMethod(StackTraceElement traceElement) {
+        StringBuilder method = new StringBuilder(traceElement.getClassName());
+        method.append(".");
+        method.append(traceElement.getMethodName());
+        return method.toString();
+    }
+
+    /**
+     * 获取 类.方法
+     *
      * @param throwable new Throwable()
      * @return java.lang.String
      */
