@@ -2,6 +2,7 @@ package com.bajins.clazz;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -90,10 +91,22 @@ public class GoTime {
         LocalDateTime localDateTime3 = now.plusSeconds(l2);
         System.out.println(localDateTime3.format(dateTimeFormatter));
 
+        // 计算去年
+        LocalDateTime previousYear = now.minus(1, ChronoUnit.YEARS);
+        // 减30天
+        LocalDateTime previousDay = now.minus(30, ChronoUnit.DAYS);
+        // 减少6天
+        LocalDateTime startTime = now.minusDays(6);
+
         // LocalDateTime转换为Date
         Date from = Date.from(localDateTime1.toInstant(zoneOffset));
         // Date转换为LocalDateTime
         LocalDateTime localDateTime = new Date().toInstant().atZone(zoneId).toLocalDateTime();
+
+        // 计算今天是星期几
+        int week = now.getDayOfWeek().getValue();
+        // 计算上周日的日期
+        LocalDateTime endTime = now.minusDays(week);
 
         // 前面一个时间 在 后面一个时间 之前
         boolean after = now.isAfter(localDateTime1);
@@ -108,9 +121,13 @@ public class GoTime {
         int compareTo = now.compareTo(localDateTime1);
         System.out.println(compareTo);
 
-        // 计算两个时间差
-        Duration between = Duration.between(now, localDateTime1);
-        System.out.println(between.toMinutes());
+        // 计算前一个时间到后一个时间的持续时间（已过时间或剩余时间）
+        Duration betweenTimeLeft = Duration.between(now, now.plusMinutes(10));
+        System.out.print("计算还剩时间：");
+        System.out.println(betweenTimeLeft.toMinutes());
+        Duration betweenElapsedTime = Duration.between(now, now.minus(5, ChronoUnit.MINUTES));
+        System.out.print("计算已过时间：");
+        System.out.println(betweenElapsedTime.toMinutes());
 
         System.out.println("============= 可使用的默认格式化格式 =============");
         System.out.println(now.format(DateTimeFormatter.ISO_LOCAL_DATE));
