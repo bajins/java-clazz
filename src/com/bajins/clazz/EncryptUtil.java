@@ -243,10 +243,26 @@ public class EncryptUtil {
             e.printStackTrace();
         }
 
-        // 这个没有提示，推荐
-        //Base64.getDecoder().decode();
-        //Base64.getEncoder().encode();
+        // 推荐，Java 8的java.util套件中Base64，要比sun.misc套件提供的还要快至少11倍，比Apache Commons Codec提供的还要快至少3倍
+        final Base64.Decoder decoder = Base64.getDecoder();
+        final Base64.Encoder encoder = Base64.getEncoder();
+        final String text = "字串文字";
+        final byte[] textByte = text.getBytes("UTF-8");
+        //编码
+        final String encodedText = encoder.encodeToString(textByte);
+        System.out.println(encodedText);
+        //解码
+        System.out.println(new String(decoder.decode(encodedText), "UTF-8"));
 
+        final Base64.Decoder decoder = Base64.getDecoder();
+        final Base64.Encoder encoder = Base64.getEncoder();
+        final String text = "字串文字";
+        final byte[] textByte = text.getBytes("UTF-8");
+        //编码
+        final String encodedText = encoder.encodeToString(textByte);
+        System.out.println(encodedText);
+        //解码
+        System.out.println(new String(decoder.decode(encodedText), "UTF-8"));
 
     }
 
