@@ -19,7 +19,7 @@ public class GoCollections {
         Collections.shuffle(list); // 混乱排序
         List<Object> objects = Collections.emptyList();
 
-        List<Integer> intList =new ArrayList<>();
+        List<Integer> intList = new ArrayList<>();
         intList.add(1);
         intList.add(2);
         intList.add(3);
@@ -38,6 +38,16 @@ public class GoCollections {
         Map<Boolean, List<Integer>> groups1 = intList.stream().collect(Collectors.partitioningBy(s -> s > 3));
         List<List<Integer>> subSets1 = new ArrayList<>(groups.values());
         List<Integer> lastPartition1 = subSets.get(1);
+
+        // 原始
+        List<List<String>> subSets2 = new ArrayList<>();
+        int index = 100;
+        for (int i = 0; i < list.size(); i += 100) {
+            if (i + 100 > list.size()) {
+                index = list.size() - i;
+            }
+            subSets2.add(list.subList(i, i + index));
+        }
 
     }
 }
