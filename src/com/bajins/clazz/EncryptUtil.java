@@ -8,12 +8,14 @@ import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.PBEKeySpec;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.Base64;
 
 /**
  * 封装各种格式的编码解码工具类.
@@ -242,17 +244,21 @@ public class EncryptUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // 推荐，Java 8的java.util套件中Base64，要比sun.misc套件提供的还要快至少11倍，比Apache Commons Codec提供的还要快至少3倍
-        final Base64.Decoder decoder = Base64.getDecoder();
-        final Base64.Encoder encoder = Base64.getEncoder();
-        final String text = "字串文字";
-        final byte[] textByte = text.getBytes("UTF-8");
-        //编码
-        final String encodedText = encoder.encodeToString(textByte);
-        System.out.println(encodedText);
-        //解码
-        System.out.println(new String(decoder.decode(encodedText), "UTF-8"));
+        try {
+            // 推荐，Java 8的java.util套件中Base64，
+            // 比sun.misc套件提供的还要快至少11倍，比Apache Commons Codec快至少3倍
+            final Base64.Decoder decoder = Base64.getDecoder();
+            final Base64.Encoder encoder = Base64.getEncoder();
+            final String text = "字串文字";
+            final byte[] textByte = text.getBytes("UTF-8");
+            //编码
+            final String encodedText = encoder.encodeToString(textByte);
+            System.out.println(encodedText);
+            //解码
+            System.out.println(new String(decoder.decode(encodedText), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
 }
