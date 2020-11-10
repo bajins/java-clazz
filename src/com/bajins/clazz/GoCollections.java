@@ -65,14 +65,7 @@ public class GoCollections {
         List<Integer> lastPartition1 = subSets.get(1);
 
         // 原始
-        List<List<String>> subSets2 = new ArrayList<>();
-        int index = 100;
-        for (int i = 0; i < list.size(); i += 100) {
-            if (i + 100 > list.size()) {
-                index = list.size() - i;
-            }
-            subSets2.add(list.subList(i, i + index));
-        }
+        List<List<String>> lists = splitList(list, 2);
 
     }
 }
