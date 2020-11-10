@@ -7,6 +7,31 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GoCollections {
+
+    /**
+     * 将一个list按三个一组分成N个小的list
+     *
+     * @param list
+     * @param groupSize
+     * @param <T>
+     * @return
+     */
+    public static <T> List<List<T>> splitList(List<T> list, int groupSize) {
+        int length = list.size();
+        // 计算可以分成多少组
+        int num = (length + groupSize - 1) / groupSize;
+        List<List<T>> newList = new ArrayList<>(num);
+        for (int i = 0; i < num; i++) {
+            // 开始位置
+            int fromIndex = i * groupSize;
+            // 结束位置
+            int toIndex = (i + 1) * groupSize < length ? (i + 1) * groupSize : length;
+            newList.add(list.subList(fromIndex, toIndex));
+        }
+        return newList;
+    }
+
+
     public static void main(String[] args) {
         List<String> list = new ArrayList<>();
         list.add("111");
