@@ -1,5 +1,7 @@
 package com.bajins.clazz;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -10,6 +12,26 @@ import java.util.stream.Collectors;
  */
 public class GoString {
 
+    /**
+     * 字符串判断编码并转换
+     *
+     * @param str
+     * @return 返回转换后的字符串
+     * @throws UnsupportedEncodingException
+     */
+    public static String getEncoding(String str) throws UnsupportedEncodingException {
+        // str.equals(new String(str.getBytes(encode), encode))
+        if (Charset.forName("ISO-8859-1").newEncoder().canEncode(str)) {
+            return new String(str.getBytes("ISO-8859-1"), "UTF-8");
+        } else if (Charset.forName("UTF-8").newEncoder().canEncode(str)) {
+            return str;
+        } else if (Charset.forName("GBK").newEncoder().canEncode(str)) {
+            return new String(str.getBytes("GBK"), "UTF-8");
+        } else if (Charset.forName("UNICODE").newEncoder().canEncode(str)) {
+            return new String(str.getBytes("UNICODE"), "UTF-8");
+        }
+        return str;
+    }
 
     public static void main(String[] args) {
         String[] addr = {"北京", "南京", "重庆", "西安"};
