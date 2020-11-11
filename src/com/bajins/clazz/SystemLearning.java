@@ -6,6 +6,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Formatter;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -38,28 +39,20 @@ public class SystemLearning {
         }
         // 获取本机名称
         String hostName = addr.getHostName();
-
         // 获得系统属性集
-        Properties props = java.lang.System.getProperties();
-
+        Properties props = System.getProperties();
         // 操作系统名称
         String name = props.getProperty("os.name");
-
         // CPU构架
         String arch = props.getProperty("os.arch");
-
         // 操作系统版本
         String version = props.getProperty("os.version");
-
         // 用户的当前工作目录
         String dir = props.getProperty("user.dir");
-
         // 用户的主目录
         String home = props.getProperty("user.home");
-
         // 获取系统账户
-        String username = java.lang.System.getProperty("user.name");
-
+        String username = System.getProperty("user.name");
         // 获取本机的IP地址
         String hostAddress = addr.getHostAddress();
 
@@ -75,9 +68,17 @@ public class SystemLearning {
             for (int i = 0; i < mac.length; i++) {
                 sMAC = formatter.format(Locale.getDefault(), "%02X%s", mac[i], (i < mac.length - 1) ? "-" : "").toString();
             }
-            java.lang.System.out.println(sMAC);
+            System.out.println(sMAC);
         } catch (SocketException e) {
             e.printStackTrace();
         }
+
+        Map<String, String> getenv = System.getenv();// 获取所有变量
+        System.out.println(getenv);
+        Properties properties = System.getProperties();// 获取所有配置
+        System.out.println(properties);
+        String tmpdir = System.getProperty("java.io.tmpdir");// 系统默认缓存目录
+
+
     }
 }

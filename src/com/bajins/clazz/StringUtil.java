@@ -472,7 +472,7 @@ public class StringUtil {
         char[] charArray = {'a', 'b', 'c'};
         int[] intArray = {1, 2, 3, 4};
 
-        java.lang.System.out.println("------------- 固定分隔符 -------------");
+        System.out.println("------------- 固定分隔符 -------------");
 
         SystemLearning.println("CharArray转String：", String.copyValueOf(charArray));
 
@@ -485,7 +485,7 @@ public class StringUtil {
         SystemLearning.println("IntArray转String：", str3);
 
 
-        java.lang.System.out.println("------------- 可自定义分隔符 -------------");
+        System.out.println("------------- 可自定义分隔符 -------------");
 
         // 必须将普通数组 boxed才能在 map 里面 toString
         String str1 = Arrays.stream(intArray).boxed().map(i -> i.toString()).collect(Collectors.joining(","));
@@ -510,46 +510,46 @@ public class StringUtil {
         int i2 = ThreadLocalRandom.current().nextInt(1, 10);
 
 
-        java.lang.System.out.println("==================== 测试拼接效率 ====================");
+        System.out.println("==================== 测试拼接效率 ====================");
 
 
         String clazz = "class";
         String method = "method";
 
-        long start1 = java.lang.System.nanoTime();
+        long start1 = System.nanoTime();
         String join = String.join(".", clazz, method);
-        long end1 = java.lang.System.nanoTime();
+        long end1 = System.nanoTime();
         SystemLearning.println("String.join耗时:", end1 - start1);
 
-        long start2 = java.lang.System.nanoTime();
+        long start2 = System.nanoTime();
         String add = clazz + "." + method;
-        long end2 = java.lang.System.nanoTime();
+        long end2 = System.nanoTime();
         SystemLearning.println("使用+号耗时:", end2 - start2);
 
-        long start3 = java.lang.System.nanoTime();
+        long start3 = System.nanoTime();
         StringBuilder stringBuilder = new StringBuilder(clazz);
         stringBuilder.append(".");
         stringBuilder.append(method);
         String s1 = stringBuilder.toString();
-        long end3 = java.lang.System.nanoTime();
+        long end3 = System.nanoTime();
         SystemLearning.println("StringBuilder耗时:", end3 - start3);
 
-        long start4 = java.lang.System.nanoTime();
+        long start4 = System.nanoTime();
         StringBuffer stringBuffer = new StringBuffer(clazz);
         stringBuffer.append(".");
         stringBuffer.append(method);
         String s = stringBuffer.toString();
-        long end4 = java.lang.System.nanoTime();
+        long end4 = System.nanoTime();
         SystemLearning.println("StringBuffer耗时:", end4 - start4);
 
-        long start5 = java.lang.System.nanoTime();
+        long start5 = System.nanoTime();
         String format = String.format("%s.%s", clazz, method);
-        long end5 = java.lang.System.nanoTime();
+        long end5 = System.nanoTime();
         SystemLearning.println("String.format %s.%s耗时:", end5 - start5);
 
-        long start6 = java.lang.System.nanoTime();
+        long start6 = System.nanoTime();
         String format1 = String.format("%1$s.%2$s", clazz, method);
-        long end6 = java.lang.System.nanoTime();
+        long end6 = System.nanoTime();
         SystemLearning.println("String.format %1$s.%2$s耗时:", end6 - start6);
 
     }
