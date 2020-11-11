@@ -3,9 +3,7 @@ package com.bajins.clazz;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -13,8 +11,48 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 涉及日期时间相关包的原生API
+ * <p>
+ * time包下的所有
+ * <p>
+ * util包下的：Date、Timer、TimerTask、Calendar
+ * <p>
+ * util.concurrent包下的：TimeUnit
  */
-public class GoTime {
+public class Time {
+
+    /**
+     * 获取一天的开始时间
+     *
+     * @param date
+     * @return
+     */
+    public static Date toDayStart(Date date) {
+        // Calendar calendar = new GregorianCalendar();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
+    /**
+     * 获取一天的结束时间
+     *
+     * @param date
+     * @return
+     */
+    public static Date toDayEnd(Date date) {
+        // Calendar calendar = new GregorianCalendar();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        return calendar.getTime();
+    }
 
     public static void main(String[] args) {
 
@@ -98,10 +136,22 @@ public class GoTime {
         // 减少6天
         LocalDateTime startTime = now.minusDays(6);
 
-        // LocalDateTime转换为Date
-        Date from = Date.from(localDateTime1.toInstant(zoneOffset));
         // Date转换为LocalDateTime
         LocalDateTime localDateTime = new Date().toInstant().atZone(zoneId).toLocalDateTime();
+        // 或者
+        LocalDateTime localDateTime4 = LocalDateTime.ofInstant(new Date().toInstant(), zoneId);
+        LocalDate localDate = localDateTime.toLocalDate();
+        // 转LocalTime
+        LocalTime localTime = localDateTime.toLocalTime();
+
+        // LocalDateTime转换为Date
+        Date from = Date.from(localDateTime1.toInstant(zoneOffset));
+        // 使用ZonedDateTime将LocalDate转换为Instant。
+        Instant instant = localDate.atStartOfDay(zoneId).toInstant();
+        // 使用from()方法从Instant对象获取Date的实例
+        Date date = Date.from(instant);
+        // LocalDateTime转Date
+        Date date1 = Date.from(localDateTime.atZone(zoneId).toInstant());
 
         // 计算今天是星期几
         int week = now.getDayOfWeek().getValue();
@@ -162,5 +212,31 @@ public class GoTime {
             String now1 = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
             System.out.println("ScheduledThreadPoolExecutor1 run:" + now1);
         }, 1, 2, TimeUnit.SECONDS);
+
+
+        // 获取`Calendar`的实例
+        Calendar calendar = Calendar.getInstance();
+        Calendar calendar1 = GregorianCalendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, 22);// 将日期设置为这个月的第几天
+        calendar.get(Calendar.DAY_OF_MONTH);// 这个月的第几天,返回值是int
+        calendar.get(Calendar.DAY_OF_YEAR);// 这一年的第几天
+        calendar.add(Calendar.DAY_OF_MONTH, 3);// 在现有的日期上加3天
+        calendar.getTime();// 返回`Date()`
+        calendar.setTime(new Date());// 将日期设置为某日期
+
+        calendar.setTime(date);//设置时间
+        calendar.add(Calendar.YEAR, -1);//当前时间减去一年，即一年前的时间
+        calendar.add(Calendar.MONTH, -1);//当前时间前去一个月，即一个月前的时间
+        calendar.getTime();//获取一年前的时间，或者一个月前的时间
+        int year = calendar.get(Calendar.YEAR);//获取年
+        int month = calendar.get(Calendar.MONTH - 1);//获取月，因为第一个月是0，所以要- 1
+        int day = calendar.get(Calendar.DATE);//获取日
+        int first = calendar.getActualMinimum(Calendar.DAY_OF_MONTH);//获取本月最小天数
+        int last = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);//获取本月最大天数
+        int time1 = calendar.get(Calendar.HOUR_OF_DAY);//获取当前小时
+        int min = calendar.get(Calendar.MINUTE);//获取当前分钟
+        int sec = calendar.get(Calendar.SECOND);//获取当前秒
+
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT> 08:00"));//获取东八区时间
     }
 }

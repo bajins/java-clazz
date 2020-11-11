@@ -2,6 +2,7 @@ package com.bajins.clazz;
 
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -11,6 +12,10 @@ import java.util.regex.Pattern;
 
 /**
  * 一切与数字操作相关的工具类
+ * <p>
+ * DecimalFormat
+ * BigDecimal
+ * RoundingMode
  *
  * @author claer
  * @program com.bajins.api.utils
@@ -163,9 +168,21 @@ public class NumberUtil {
         int i = decimal.compareTo(decima2);
 
 
-        String data="10.1111";
+        String money = "1.054841";
         // 四舍五入保留两位小数
-        BigDecimal setScale = new BigDecimal(data).setScale(2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal setScale = new BigDecimal(money).setScale(2, RoundingMode.HALF_UP);
+        // 不四舍五入保留两位小数
+        BigDecimal setScale1 = new BigDecimal(money).setScale(2, RoundingMode.DOWN);
+
+        /**
+         * DecimalFormat
+         */
+        double moneyD = 0.1585454545451545;
+        // 自动填充用`0`，比如`new DecimalFormat("0.00")`保留两位小数
+        // 不填充则用`#`，比如`new DecimalFormat("0.##")`小数有就保留没有就去掉
+        DecimalFormat dFormat = new DecimalFormat("0.00");// 保留两位小数
+        dFormat.setRoundingMode(RoundingMode.DOWN);// 不四舍五入
+        String format = dFormat.format(moneyD);
 
     }
 

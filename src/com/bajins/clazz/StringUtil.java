@@ -1,9 +1,13 @@
 package com.bajins.clazz;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * String类型的数据操作
@@ -439,7 +443,114 @@ public class StringUtil {
         return hexString.toString();
     }
 
+    /**
+     * 字符串判断编码并转换
+     *
+     * @param str
+     * @return 返回转换后的字符串
+     * @throws UnsupportedEncodingException
+     */
+    public static String getEncoding(String str) throws UnsupportedEncodingException {
+        // str.equals(new String(str.getBytes(encode), encode))
+        if (Charset.forName("ISO-8859-1").newEncoder().canEncode(str)) {
+            return new String(str.getBytes("ISO-8859-1"), "UTF-8");
+        } else if (Charset.forName("UTF-8").newEncoder().canEncode(str)) {
+            return str;
+        } else if (Charset.forName("GBK").newEncoder().canEncode(str)) {
+            return new String(str.getBytes("GBK"), "UTF-8");
+        } else if (Charset.forName("UNICODE").newEncoder().canEncode(str)) {
+            return new String(str.getBytes("UNICODE"), "UTF-8");
+        }
+        return str;
+    }
+
     public static void main(String[] args) {
+        String[] addr = {"北京", "南京", "重庆", "西安"};
+        // 数组转List
+        List<String> list = Arrays.asList(addr);
+
+        char[] charArray = {'a', 'b', 'c'};
+        int[] intArray = {1, 2, 3, 4};
+
+        java.lang.System.out.println("------------- 固定分隔符 -------------");
+
+        SystemLearning.println("CharArray转String：", String.copyValueOf(charArray));
+
+        // 必须将普通数组 boxed才能在 map 里面 toString
+        String str2 = Arrays.stream(intArray).boxed().map(i -> i.toString()).reduce("", String::concat);
+        SystemLearning.println("IntArray转String：", str2);
+
+        // // 必须将普通数组 boxed才能在 map 里面引用 Object::toString
+        String str3 = Arrays.stream(intArray).boxed().map(Object::toString).reduce("", String::concat);
+        SystemLearning.println("IntArray转String：", str3);
+
+
+        java.lang.System.out.println("------------- 可自定义分隔符 -------------");
+
+        // 必须将普通数组 boxed才能在 map 里面 toString
+        String str1 = Arrays.stream(intArray).boxed().map(i -> i.toString()).collect(Collectors.joining(","));
+        SystemLearning.println("IntArray转String：", str1);
+
+        SystemLearning.println("StringArray转String：", Arrays.stream(addr).collect(Collectors.joining(",")));
+        SystemLearning.println("StringArray转String：", Arrays.toString(addr));
+
+        SystemLearning.println("Array转String：", String.join(",", addr));
+        SystemLearning.println("List转String：", String.join(",", list));
+        SystemLearning.println("List转String：", list.stream().collect(Collectors.joining(",")));
+
+        String str = "abcdefg";
+        String childStr = "c";
+        // 获取子字符串在字符串中倒数第二次出现的下标
+        int i = str.lastIndexOf(childStr, str.lastIndexOf(childStr) + 1);
+
+        // 获取子字符串在字符串中第二次出现的下标
+        int i1 = str.indexOf(childStr, str.indexOf(childStr) + 1);
+
+        // 使用 java.util.concurrent.ThreadLocalRandom 来生成有边界的Int，专为多线程并发使用的随机数生成器
+        int i2 = ThreadLocalRandom.current().nextInt(1, 10);
+
+
+        java.lang.System.out.println("==================== 测试拼接效率 ====================");
+
+
+        String clazz = "class";
+        String method = "method";
+
+        long start1 = java.lang.System.nanoTime();
+        String join = String.join(".", clazz, method);
+        long end1 = java.lang.System.nanoTime();
+        SystemLearning.println("String.join耗时:", end1 - start1);
+
+        long start2 = java.lang.System.nanoTime();
+        String add = clazz + "." + method;
+        long end2 = java.lang.System.nanoTime();
+        SystemLearning.println("使用+号耗时:", end2 - start2);
+
+        long start3 = java.lang.System.nanoTime();
+        StringBuilder stringBuilder = new StringBuilder(clazz);
+        stringBuilder.append(".");
+        stringBuilder.append(method);
+        String s1 = stringBuilder.toString();
+        long end3 = java.lang.System.nanoTime();
+        SystemLearning.println("StringBuilder耗时:", end3 - start3);
+
+        long start4 = java.lang.System.nanoTime();
+        StringBuffer stringBuffer = new StringBuffer(clazz);
+        stringBuffer.append(".");
+        stringBuffer.append(method);
+        String s = stringBuffer.toString();
+        long end4 = java.lang.System.nanoTime();
+        SystemLearning.println("StringBuffer耗时:", end4 - start4);
+
+        long start5 = java.lang.System.nanoTime();
+        String format = String.format("%s.%s", clazz, method);
+        long end5 = java.lang.System.nanoTime();
+        SystemLearning.println("String.format %s.%s耗时:", end5 - start5);
+
+        long start6 = java.lang.System.nanoTime();
+        String format1 = String.format("%1$s.%2$s", clazz, method);
+        long end6 = java.lang.System.nanoTime();
+        SystemLearning.println("String.format %1$s.%2$s耗时:", end6 - start6);
 
     }
 

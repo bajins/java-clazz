@@ -11,7 +11,7 @@ import java.util.Properties;
 /**
  * System原生API的使用示例
  */
-public class GoSystem {
+public class SystemLearning {
     /**
      * 拼接对象并打印
      *
@@ -40,7 +40,7 @@ public class GoSystem {
         String hostName = addr.getHostName();
 
         // 获得系统属性集
-        Properties props = System.getProperties();
+        Properties props = java.lang.System.getProperties();
 
         // 操作系统名称
         String name = props.getProperty("os.name");
@@ -58,7 +58,7 @@ public class GoSystem {
         String home = props.getProperty("user.home");
 
         // 获取系统账户
-        String username = System.getProperty("user.name");
+        String username = java.lang.System.getProperty("user.name");
 
         // 获取本机的IP地址
         String hostAddress = addr.getHostAddress();
@@ -75,7 +75,7 @@ public class GoSystem {
             for (int i = 0; i < mac.length; i++) {
                 sMAC = formatter.format(Locale.getDefault(), "%02X%s", mac[i], (i < mac.length - 1) ? "-" : "").toString();
             }
-            System.out.println(sMAC);
+            java.lang.System.out.println(sMAC);
         } catch (SocketException e) {
             e.printStackTrace();
         }

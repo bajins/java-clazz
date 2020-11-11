@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Map的原生api使用示例
  */
-public class GoMap {
+public class MapLearning {
     public static void main(String[] args) {
         HashMap<Integer, String> map = new HashMap<>();
         map.put(1, "1111");

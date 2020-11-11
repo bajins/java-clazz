@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class GoCollections {
+public class CollectionsLearning {
 
     /**
      * 将一个list按三个一组分成N个小的list

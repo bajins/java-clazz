@@ -1,6 +1,9 @@
-package com.bajins.clazz;
+package com.bajins.clazz.threadlearning;
 
-public class GoThread {
+/**
+ * 捕获异常
+ */
+public class HandleException {
     public static void main(String[] args) {
         // https://blog.csdn.net/wild46cat/article/details/89076832
         /* 在以下两种方法中如果抛出了新的异常则会被JVM忽略。*/

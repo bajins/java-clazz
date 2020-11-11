@@ -5,7 +5,7 @@ package com.bajins.clazz;
  * Synchronized示例
  *
  */
-public class SynchronizedDemo {
+public class SynchronizedLearning {
 
     // 同步实例方法，锁住的是当前实例对象，不同对象实例访问时不会阻塞
     public synchronized void method() {
@@ -20,7 +20,7 @@ public class SynchronizedDemo {
         synchronized (this) {
         }
         // 同步代码块，锁住的是类，可以是当前类或任意类
-        synchronized (SynchronizedDemo.class) {
+        synchronized (SynchronizedLearning.class) {
         }
         // 同步代码块，任意实例对象作为锁，锁住的是指定的实例对象，
         // 注意Integer、Character、Short、Long等有缓存，
@@ -36,7 +36,7 @@ public class SynchronizedDemo {
     // 同步静态方法，锁住的是类，可以是当前类或任意类，
     // 不同对象实例访问时都会被阻塞
     public static void testStatic() {
-        synchronized (SynchronizedDemo.class) {
+        synchronized (SynchronizedLearning.class) {
         }
     }
 }
