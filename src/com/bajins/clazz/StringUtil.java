@@ -480,7 +480,7 @@ public class StringUtil {
         String str2 = Arrays.stream(intArray).boxed().map(i -> i.toString()).reduce("", String::concat);
         SystemLearning.println("IntArray转String：", str2);
 
-        // // 必须将普通数组 boxed才能在 map 里面引用 Object::toString
+        // 必须将普通数组 boxed才能在 map 里面引用 Object::toString
         String str3 = Arrays.stream(intArray).boxed().map(Object::toString).reduce("", String::concat);
         SystemLearning.println("IntArray转String：", str3);
 
@@ -521,6 +521,13 @@ public class StringUtil {
         long end1 = System.nanoTime();
         SystemLearning.println("String.join耗时:", end1 - start1);
 
+        long start7 = System.nanoTime();
+        StringJoiner stringJoiner = new StringJoiner(".");
+        stringJoiner.add(clazz);
+        stringJoiner.add(method);
+        long end7 = System.nanoTime();
+        SystemLearning.println("StringJoiner耗时:", end7 - start7);
+
         long start2 = System.nanoTime();
         String add = clazz + "." + method;
         long end2 = System.nanoTime();
@@ -551,6 +558,7 @@ public class StringUtil {
         String format1 = String.format("%1$s.%2$s", clazz, method);
         long end6 = System.nanoTime();
         SystemLearning.println("String.format %1$s.%2$s耗时:", end6 - start6);
+
 
     }
 
