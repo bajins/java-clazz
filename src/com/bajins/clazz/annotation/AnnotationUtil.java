@@ -1,10 +1,8 @@
 package com.bajins.clazz.annotation;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.TypeVariable;
+import java.lang.reflect.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +34,12 @@ public class AnnotationUtil {
         for (Method method : methods) {
             EnableLog annotation = method.getAnnotation(EnableLog.class);
             map.put(method.getName(), annotation);
-            // 方法的参数注解
+            Parameter[] parameters = method.getParameters();
+            Arrays.stream(parameters).forEach(x -> {
+                // 参数的注解，可能有多个注解
+                Annotation[] annotations1 = x.getAnnotations();
+            });
+            // 方法的所有参数注解
             Annotation[][] parameterAnnotations = method.getParameterAnnotations();
         }
         System.out.println(map);
