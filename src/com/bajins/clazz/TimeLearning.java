@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * util.concurrent包下的：TimeUnit
  */
-public class Time {
+public class TimeLearning {
 
     /**
      * 获取一天的开始时间
@@ -55,7 +55,6 @@ public class Time {
     }
 
     public static void main(String[] args) {
-
         // 设置一个基于时间的时间量
         Duration duration = Duration.ofMinutes(10);
         // 分钟转毫秒
@@ -79,7 +78,7 @@ public class Time {
         long convert2 = TimeUnit.NANOSECONDS.convert(convert1 - System.nanoTime(), TimeUnit.NANOSECONDS);
         System.out.println(convert2);
 
-        System.out.println("======================");
+        System.out.println("==================== JDK 8 API ====================");
 
         // 默认系统时区
         ZoneId zoneId = ZoneId.systemDefault();
@@ -204,7 +203,7 @@ public class Time {
             public void run() {
                 System.out.println("TimerTask1 run" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
             }
-        }, 1000, 5000);//延时1s，之后每隔5s运行一次
+        }, 1000, 5000);// 延时1s，之后每隔5s运行一次
 
         // cheduleWithFixedDelay跟schedule类似，而scheduleAtFixedRate与scheduleAtFixedRate一样会尽量减少漏掉调度的情况
         ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(5);
@@ -224,19 +223,19 @@ public class Time {
         calendar.getTime();// 返回`Date()`
         calendar.setTime(new Date());// 将日期设置为某日期
 
-        calendar.setTime(date);//设置时间
-        calendar.add(Calendar.YEAR, -1);//当前时间减去一年，即一年前的时间
-        calendar.add(Calendar.MONTH, -1);//当前时间前去一个月，即一个月前的时间
-        calendar.getTime();//获取一年前的时间，或者一个月前的时间
-        int year = calendar.get(Calendar.YEAR);//获取年
-        int month = calendar.get(Calendar.MONTH - 1);//获取月，因为第一个月是0，所以要- 1
-        int day = calendar.get(Calendar.DATE);//获取日
-        int first = calendar.getActualMinimum(Calendar.DAY_OF_MONTH);//获取本月最小天数
-        int last = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);//获取本月最大天数
-        int time1 = calendar.get(Calendar.HOUR_OF_DAY);//获取当前小时
-        int min = calendar.get(Calendar.MINUTE);//获取当前分钟
-        int sec = calendar.get(Calendar.SECOND);//获取当前秒
-
-        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT> 08:00"));//获取东八区时间
+        calendar.setTime(date);// 设置时间
+        calendar.add(Calendar.YEAR, -1);// 当前时间减去一年，即一年前的时间
+        calendar.add(Calendar.MONTH, -1);// 当前时间前去一个月，即一个月前的时间
+        calendar.getTime();// 获取一年前的时间，或者一个月前的时间
+        int year = calendar.get(Calendar.YEAR);// 获取年
+        int month = calendar.get(Calendar.MONTH - 1);// 获取月，因为第一个月是0，所以要- 1
+        int day = calendar.get(Calendar.DATE);// 获取日
+        int first = calendar.getActualMinimum(Calendar.DAY_OF_MONTH);// 获取本月最小天数
+        int last = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);// 获取本月最大天数
+        int time1 = calendar.get(Calendar.HOUR_OF_DAY);// 获取当前小时
+        int min = calendar.get(Calendar.MINUTE);// 获取当前分钟
+        int sec = calendar.get(Calendar.SECOND);// 获取当前秒
+        int day_of_week = calendar.get(Calendar.DAY_OF_WEEK);// 获取当周几
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT> 08:00"));// 获取东八区时间
     }
 }
