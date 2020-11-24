@@ -124,9 +124,15 @@ public class TimeLearning {
         LocalDateTime now = LocalDateTime.now();
         System.out.println(now.format(dateTimeFormatter));
 
-        // 增加时间
+        // 增加秒
         LocalDateTime localDateTime3 = now.plusSeconds(l2);
         System.out.println(localDateTime3.format(dateTimeFormatter));
+        // 增加小时
+        LocalDateTime localDateTime5 = now.plusHours(2);
+        // 增加分钟
+        LocalDateTime localDateTime6 = now.plusMinutes(2);
+        // 增加年
+        LocalDateTime plus = now.plus(2, ChronoUnit.YEARS);
 
         // 计算去年
         LocalDateTime previousYear = now.minus(1, ChronoUnit.YEARS);
@@ -134,23 +140,27 @@ public class TimeLearning {
         LocalDateTime previousDay = now.minus(30, ChronoUnit.DAYS);
         // 减少6天
         LocalDateTime startTime = now.minusDays(6);
+        // 减少分钟
+        LocalDateTime localDateTime7 = now.minusMinutes(2);
 
-        // Date转换为LocalDateTime
-        LocalDateTime localDateTime = new Date().toInstant().atZone(zoneId).toLocalDateTime();
-        // 或者
-        LocalDateTime localDateTime4 = LocalDateTime.ofInstant(new Date().toInstant(), zoneId);
+        // 将此Date对象转换为Instant
+        Instant instant = new Date().toInstant();
+        // Date转换为Instant然后再转换为LocalDateTime
+        LocalDateTime localDateTime = instant.atZone(zoneId).toLocalDateTime();
+        LocalDateTime localDateTime8 = instant.atOffset(zoneOffset).toLocalDateTime();
+        LocalDateTime localDateTime4 = LocalDateTime.ofInstant(instant, zoneId);
         LocalDate localDate = localDateTime.toLocalDate();
         // 转LocalTime
         LocalTime localTime = localDateTime.toLocalTime();
 
-        // LocalDateTime转换为Date
-        Date from = Date.from(localDateTime1.toInstant(zoneOffset));
-        // 使用ZonedDateTime将LocalDate转换为Instant。
-        Instant instant = localDate.atStartOfDay(zoneId).toInstant();
-        // 使用from()方法从Instant对象获取Date的实例
-        Date date = Date.from(instant);
-        // LocalDateTime转Date
+        // LocalDateTime转换为Instant然后再转换为Date
+        Date date = Date.from(localDateTime1.toInstant(zoneOffset));
         Date date1 = Date.from(localDateTime.atZone(zoneId).toInstant());
+        Date date2 = Date.from(localDateTime.atOffset(zoneOffset).toInstant());
+        // LocalDate转换为Date
+        Date date0 = Date.from(localDate.atStartOfDay(zoneId).toInstant());
+        Date date01 = Date.from(localDate.atStartOfDay().toInstant(zoneOffset));
+
 
         // 计算今天是星期几
         int week = now.getDayOfWeek().getValue();
