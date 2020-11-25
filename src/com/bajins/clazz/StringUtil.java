@@ -207,6 +207,105 @@ public class StringUtil {
     }
 
     /**
+     * 字符串大写字母转下划线，abcAbcaBc->abc_abca_bc
+     *
+     * @param param
+     * @return
+     */
+    public static String upperCharToUnderLine(String param) {
+        Pattern p = Pattern.compile("[A-Z]");
+        if (param == null || param.equals("")) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder(param);
+        Matcher mc = p.matcher(param);
+        int i = 0;
+        while (mc.find()) {
+            builder.replace(mc.start() + i, mc.end() + i, "_" + mc.group().toLowerCase());
+            i++;
+        }
+        if ('_' == builder.charAt(0)) {
+            builder.deleteCharAt(0);
+        }
+        return builder.toString();
+    }
+
+    /**
+     * 驼峰转大写+下划线，abcAbcaBc->ABC_ABCA_BC
+     *
+     * @param name
+     * @return
+     */
+    public static String underscoreName(String name) {
+        StringBuilder result = new StringBuilder();
+        if ((name != null) && (name.length() > 0)) {
+            result.append(name.substring(0, 1).toUpperCase());
+            for (int i = 1; i < name.length(); i++) {
+                String s = name.substring(i, i + 1);
+                if ((s.equals(s.toUpperCase())) && (!Character.isDigit(s.charAt(0)))) {
+                    result.append("_");
+                }
+                result.append(s.toUpperCase());
+            }
+        }
+        return result.toString();
+    }
+
+    /**
+     * 下划线转驼峰，abc_abca_bc->abcAbcaBc
+     *
+     * @param name
+     * @return
+     */
+    public static String camelName(String name) {
+        StringBuilder result = new StringBuilder();
+        if ((name == null) || (name.isEmpty())) {
+            return "";
+        }
+        if (!name.contains("_")) {
+            return name.toLowerCase();
+        }
+        String[] camels = name.split("_");
+        for (String camel : camels) {
+            if (!camel.isEmpty()) {
+                if (result.length() == 0) {
+                    result.append(camel.toLowerCase());
+                } else {
+                    result.append(camel.substring(0, 1).toUpperCase());
+                    result.append(camel.substring(1).toLowerCase());
+                }
+            }
+        }
+        return result.toString();
+    }
+
+    /**
+     * 下划线转首字母大写驼峰，abc_abca_bc->AbcAbcaBc
+     *
+     * @param name
+     * @return
+     */
+    public static String upCaseCamelName(String name) {
+        StringBuilder result = new StringBuilder();
+        if ((name == null) || (name.isEmpty())) {
+            return "";
+        }
+        if (!name.contains("_")) {
+            result.append(name.substring(0, 1).toUpperCase());
+            result.append(name.substring(1).toLowerCase());
+            return result.toString();
+        }
+        String[] camels = name.split("_");
+        for (String camel : camels) {
+            if (!camel.isEmpty()) {
+                result.append(camel.substring(0, 1).toUpperCase());
+                result.append(camel.substring(1).toLowerCase());
+            }
+        }
+        return result.toString();
+    }
+
+    /**
      * 通过身份证号码获取出生日期、性别、年龄
      *
      * @param idCard
