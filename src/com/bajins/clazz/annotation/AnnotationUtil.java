@@ -31,15 +31,17 @@ public class AnnotationUtil {
         Field[] fields = clazz.getFields();
         // 返回反映由类对象表示的类或接口声明的所有字段的字段对象数组。这包括公共、受保护、默认（包）访问和专用字段，但不包括继承的字段
         Field[] declaredFields = clazz.getDeclaredFields();
-        // 获取父级的字段
-        Field[] supDeclaredFields = superclass.getDeclaredFields();
-        // 把当前类和父级的字段放在一个数组中
-        Field[] allDeclaredFields = new Field[declaredFields.length + supDeclaredFields.length];
-        System.arraycopy(declaredFields, 0, allDeclaredFields, 0, declaredFields.length);
-        System.arraycopy(supDeclaredFields, 0, allDeclaredFields, declaredFields.length, supDeclaredFields.length);
-        for (Field field : allDeclaredFields) {
-            System.out.print(field.getName() + "=" + field.get(obj));
-            System.out.print(",类型：" + field.getType());
+        if (null != superclass) {// 这里可以判断不为空然后使用递归调用当前方法处理父级class
+            // 获取父级的字段
+            Field[] supDeclaredFields = superclass.getDeclaredFields();
+            // 把当前类和父级的字段放在一个数组中
+            Field[] allDeclaredFields = new Field[declaredFields.length + supDeclaredFields.length];
+            System.arraycopy(declaredFields, 0, allDeclaredFields, 0, declaredFields.length);
+            System.arraycopy(supDeclaredFields, 0, allDeclaredFields, declaredFields.length, supDeclaredFields.length);
+            for (Field field : allDeclaredFields) {
+                System.out.print(field.getName() + "=" + field.get(obj));
+                System.out.print(",类型：" + field.getType());
+            }
         }
         // 泛型声明中声明的类型
         TypeVariable<Class<T>>[] typeParameters = clazz.getTypeParameters();

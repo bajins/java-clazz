@@ -68,8 +68,8 @@ public class TimeLearning {
         long l2 = TimeUnit.NANOSECONDS.toMillis(convert);
         System.out.println(l2);
 
-        // 返回当前JVM的高精度时间。该方法只能用来测量时段而和系统时间无关。
-        // 它的返回值是从某个固定但随意的时间点开始的（可能是未来的某个时间）。不同的JVM使用的起点可能不同。
+        // 返回当前JVM的高精度时间，以纳秒为单位。该方法只能用来测量时段而和系统时间无关。
+        // 它的返回值是从某个固定但随意的时间点开始的（可能是未来的某个时间，因此值可能为负）。不同的JVM使用的起点可能不同。
         // 相同的代码在不同机器运行导致结果可能不同。所以它很少用来计算，通常都是测量先后顺序和时间段
         long nanoTime = System.nanoTime();
         System.out.println(nanoTime);
@@ -77,6 +77,10 @@ public class TimeLearning {
         System.out.println(convert1);
         long convert2 = TimeUnit.NANOSECONDS.convert(convert1 - System.nanoTime(), TimeUnit.NANOSECONDS);
         System.out.println(convert2);
+        // 返回当前时间（以毫秒为单位）。
+        // 请注意，虽然返回值的时间单位为毫秒，但该值的粒度取决于基础操作系统，并且可能更大。 例如，许多操作系统以几十毫秒为单位测量时间。
+        long l = System.currentTimeMillis();
+
 
         System.out.println("==================== JDK 8 API ====================");
 

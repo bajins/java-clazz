@@ -622,6 +622,7 @@ public class StringUtil {
 
         long start7 = System.nanoTime();
         StringJoiner stringJoiner = new StringJoiner(".");
+        //StringJoiner stringJoiner = new StringJoiner(".", "", "");
         stringJoiner.add(clazz);
         stringJoiner.add(method);
         long end7 = System.nanoTime();
