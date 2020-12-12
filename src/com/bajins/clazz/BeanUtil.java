@@ -46,7 +46,9 @@ public class BeanUtil {
             if (Modifier.isStatic(targetField.getModifiers())) {
                 continue;
             }
-            targetField.setAccessible(true); // 设置属性可访问
+            if (!Modifier.isPublic(targetField.getDeclaringClass().getModifiers())) {
+                targetField.setAccessible(true); // 设置属性可访问
+            }
             Object valueD = targetField.get(origin); // 源数据
             Object valueO = targetField.get(destination); // 目标数据
             // 如果源数据不为空，且该属性不为序列化，可覆盖或目标数据为空
