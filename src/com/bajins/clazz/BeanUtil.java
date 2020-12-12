@@ -1,6 +1,10 @@
 package com.bajins.clazz;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
@@ -27,7 +31,7 @@ public class BeanUtil {
      * @param cover       true为覆盖，false为不覆盖
      * @param <T>
      */
-    public <T> void mergeObject(T origin, T destination, boolean cover) throws IllegalAccessException {
+    public static <T> void mergeObject(T origin, T destination, boolean cover) throws IllegalAccessException {
         if (origin == null || destination == null) {
             return;
         }
@@ -50,6 +54,32 @@ public class BeanUtil {
                 targetField.set(destination, valueD); // 设值到目标对象属性
             }
             targetField.setAccessible(false);
+        }
+
+    }
+
+    /**
+     * 通过发现差异合并两个bean
+     *
+     * @param target
+     * @param destination
+     * @param <T>
+     * @throws Exception
+     */
+    public static <T> void merge(T target, T destination) throws Exception {
+        BeanInfo beanInfo = Introspector.getBeanInfo(target.getClass());
+        // 迭代遍历所有属性
+        for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors()) {
+            Method readMethod = descriptor.getReadMethod();
+            // 仅复制可写属性
+            if (readMethod != null) {
+                Object originalValue = readMethod.invoke(target);
+                // 仅复制目标值为null的值
+                if (originalValue == null) {
+                    Object defaultValue = readMethod.invoke(destination);
+                    descriptor.getWriteMethod().invoke(target, defaultValue);
+                }
+            }
         }
     }
 }
