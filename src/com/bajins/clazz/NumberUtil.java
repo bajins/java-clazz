@@ -167,6 +167,17 @@ public class NumberUtil {
         // compareTo 相等返回0，小于返回-1，大于返回1
         int i = decimal.compareTo(decima2);
 
+        // 相加
+        BigDecimal add = decimal.add(decima2);
+        // 相减
+        BigDecimal subtract = decimal.subtract(decima2);
+        // 相乘
+        BigDecimal multiply = decimal.multiply(decima2);
+        // 相除，推荐传入保留小数位数参数
+        BigDecimal divide = decimal.divide(decima2, 2, RoundingMode.HALF_UP);
+        BigDecimal divide1 = decimal.divide(decima2, 2, BigDecimal.ROUND_HALF_UP);
+        // 绝对值
+        BigDecimal abs = divide.abs();
 
         String money = "1.054841";
         // 四舍五入保留两位小数
