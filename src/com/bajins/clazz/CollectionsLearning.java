@@ -210,5 +210,11 @@ public class CollectionsLearning {
         // 原始
         List<List<String>> lists = splitList(list, 2);
 
+        // 过滤
+        // 在数据规模较小、单次操作花费较小时，串行操作直接计算，而parallel并行（数据量无排序要求时使用）操作需先对数据分片后多线程处理
+        // 数据量比较小（100W以下），一般业务场景下尽量用普通循环
+        List<String> collect =
+                list.stream().filter(entry -> "111".equals("111")).parallel().collect(Collectors.toList());
+
     }
 }
