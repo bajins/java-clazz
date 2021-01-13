@@ -4,15 +4,41 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Formatter;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * System原生API的使用示例
  */
 public class SystemLearning {
+
+
+    /**
+     * 获取所在类的行信息
+     *
+     * @param thread
+     * @return
+     */
+    public static String getStackTraceInfo(Thread thread) {
+        if (thread == null) {
+            thread = Thread.currentThread();
+        }
+        StackTraceElement[] es = thread.getStackTrace();
+        if (es.length <= 2) {
+            return "";
+        }
+        StringJoiner joiner = new StringJoiner("->", "", ": ");
+        // 由于getStackTrace()返回自身，而getStackTraceInfo()不需要返回，所以在显示时-2
+        /*for (int i = 0, len = es.length - 2; i < len; i++) {
+            // 层级是自顶向下，所以输出的时候是反过来的
+            StackTraceElement ei = es[es.length - i - 1];
+            joiner.add(String.format("%s.%s#%d", ei.getClassName(), ei.getMethodName(), ei.getLineNumber()));
+        }*/
+        StackTraceElement ei = es[es.length-1];
+        joiner.add(String.format("%s.%s#%d", ei.getClassName(), ei.getMethodName(), ei.getLineNumber()));
+        return joiner.toString();
+    }
+
+
     /**
      * 拼接对象并打印
      *
@@ -20,7 +46,7 @@ public class SystemLearning {
      * @return
      */
     public static void println(Object... objects) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(getStackTraceInfo(null));
         for (Object o : objects) {
             sb.append(o).append(" ");
         }
@@ -29,7 +55,6 @@ public class SystemLearning {
 
 
     public static void main(String[] args) {
-
         // 从系统中检索主机名为本地主机的地址
         InetAddress addr = null;
         try {
