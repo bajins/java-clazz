@@ -1,13 +1,25 @@
 package com.bajins.clazz;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Map的原生api使用示例
+ *
+ * @see HashMap
+ * @see TreeMap
+ * @see Hashtable
+ * @see SortedMap
+ * @see Collection
+ * @see Set
+ * @see Object#hashCode()
+ * @see Comparable
+ * @see Comparator
+ * @see ConcurrentHashMap
  */
 public class MapLearning {
+
+
     public static void main(String[] args) {
         HashMap<Integer, String> map = new HashMap<>();
         map.put(1, "1111");

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 文件IO操作
  */
-public class IOStream {
+public class InputOutputLearning {
     /**
      * 判断文件及目录是否存在，若不存在则创建文件及目录
      *
