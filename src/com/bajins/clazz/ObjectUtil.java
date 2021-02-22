@@ -6,6 +6,8 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 对象工具类
@@ -271,5 +273,48 @@ public class ObjectUtil {
             }
         }
         return newList;
+    }
+
+    /**
+     * 比较两个对象指定的属性值是否相等
+     *
+     * @param lhs    第一个对象
+     * @param rhs    第二个对象
+     * @param fields 需要比较的属性字段
+     * @return 相同返回true，不同则返回false
+     * @throws IntrospectionException
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
+    public static boolean equalsFields(Object lhs, Object rhs, String... fields) throws IntrospectionException,
+            InvocationTargetException, IllegalAccessException {
+        Class<?> lhsClazz = lhs.getClass();
+        Class<?> rhsClazz = rhs.getClass();
+        if (lhsClazz != rhsClazz) {
+            return false;
+        }
+        // 数组转Map
+        Map<String, String> fieldMap = Arrays.stream(fields).collect(Collectors.toMap(e -> e, Function.identity()));
+        // 获取JavaBean的所有属性
+        PropertyDescriptor[] pds = Introspector.getBeanInfo(lhsClazz, Object.class).getPropertyDescriptors();
+        for (PropertyDescriptor pd : pds) {
+            // 遍历获取属性名
+            String name = pd.getName();
+            if (name.equals(fieldMap.get(name))) {
+                // 获取属性的get方法
+                Method readMethod = pd.getReadMethod();
+                // 调用get方法获得属性值
+                Object lhsValue = readMethod.invoke(lhs);
+                Object rhsValue = readMethod.invoke(rhs);
+                // 比较值
+                if (lhsValue instanceof List || lhsValue instanceof Map) {
+                    continue;
+                }
+                if (lhsValue instanceof String && !lhsValue.equals(rhsValue)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
