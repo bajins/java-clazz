@@ -13,6 +13,18 @@ import java.util.*;
  * @author claer https://www.bajins.com
  * @program com.bajins.api.utils
  * @create 2018-06-10 22:48
+ * <br/>
+ * @see java.beans JavaBean是一种特殊的Java类,主要用于传递数据信息,这种Java类中的方法主要用于访问私有字段,且方法名符合某种命名规则，
+ * JavaBean的属性是根据其中的setter和getter方法名推断出来的，它根本看不到java类内部的成员变量
+ * @see Introspector 内省：对JavaBean类属性、事件的一种缺省处理方法，先得到属性描述器PropertyDecriptor后再进行各种操作
+ * @see PropertyDescriptor 属性描述器：通过存储器导出一个JavaBean类的属性
+ * <br/>
+ * @see java.lang.reflect （reflection）反射：一个类的所有成员都可以进行反射操作，先得到类的字节码Class后再进行各种操作
+ * @see Field 类的属性字段
+ * @see Method 类的方法
+ * @see Modifier
+ * @see Parameter
+ * @see Type
  */
 public class ObjectUtil {
 
@@ -68,7 +80,7 @@ public class ObjectUtil {
         }
         Object obj = beanClass.newInstance();
 
-        BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
+        BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
         PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
         for (PropertyDescriptor property : propertyDescriptors) {
             Method setter = property.getWriteMethod();
@@ -91,7 +103,7 @@ public class ObjectUtil {
         if (isEmpty(obj)) {
             throw new IllegalArgumentException("传入的对象为空");
         }
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
 
         BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
         PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
@@ -119,7 +131,7 @@ public class ObjectUtil {
         }
         Object obj = beanClass.newInstance();
 
-        Field[] fields = obj.getClass().getDeclaredFields();
+        Field[] fields = beanClass.getDeclaredFields();
         for (Field field : fields) {
             int mod = field.getModifiers();
             if (Modifier.isStatic(mod) || Modifier.isFinal(mod)) {
@@ -142,7 +154,7 @@ public class ObjectUtil {
         if (isEmpty(obj)) {
             throw new IllegalArgumentException("传入的对象为空");
         }
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
 
         Field[] declaredFields = obj.getClass().getDeclaredFields();
         for (Field field : declaredFields) {
