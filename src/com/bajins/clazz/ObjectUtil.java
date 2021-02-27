@@ -33,22 +33,28 @@ public class ObjectUtil {
 
     /**
      * 判断对象是否为空引用或大小为0
+     * <p>
+     * isAssignableFrom() 方法是从类继承的角度去判断，判断是否为某个类的父类。
+     * instanceof 关键字是从实例继承的角度去判断，判断是否某个类的子类。
+     * </p>
      *
      * @param obj
      * @return boolean
      */
     public static boolean isEmpty(Object obj) {
+        System.out.println(obj instanceof CharSequence);
+        System.out.println(CharSequence.class.isAssignableFrom(obj.getClass()));
         // 判断是否为空引用，也就是判断在堆内存中对象是否存在
         if (obj == null) {
             return true;
-        } else if (obj instanceof CharSequence) {
-            // CharSequence是一个接口,用于表示有序的字符集合,Sting实现了它
+        } else if (obj instanceof CharSequence) {// CharSequence.class.isAssignableFrom(obj.getClass())
+            // CharSequence是一个接口,用于表示有序的字符集合,String实现了它
             return ((CharSequence) obj).length() == 0;
-        } else if (obj instanceof Collection) {
+        } else if (obj instanceof Collection) {// Collection.class.isAssignableFrom(obj.getClass())
             // isEmpty先获取size的值在判断再返回
             // list.add(null) 会造成 isEmpty() 为 false, size() 为 1
             return ((Collection) obj).isEmpty();
-        } else if (obj instanceof Map) {
+        } else if (obj instanceof Map) {// Map.class.isAssignableFrom(obj.getClass())
             // isEmpty先获取size的值在判断再返回
             return ((Map) obj).isEmpty();
         } else if (obj.getClass().isArray()) {
@@ -316,5 +322,9 @@ public class ObjectUtil {
             }
         }
         return true;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(isEmpty(""));
     }
 }

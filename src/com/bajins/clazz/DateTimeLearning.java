@@ -2,6 +2,8 @@ package com.bajins.clazz;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
@@ -12,13 +14,16 @@ import java.util.concurrent.TimeUnit;
 /**
  * 涉及日期时间相关包的原生API
  * <p>
- * time包下的所有
+ * @see java.time
  * <p>
- * util包下的：Date、Timer、TimerTask、Calendar
+ * @see Date
+ * @see Timer
+ * @see TimerTask
+ * @see Calendar
  * <p>
- * util.concurrent包下的：TimeUnit
+ * @see TimeUnit
  */
-public class TimeLearning {
+public class DateTimeLearning {
 
     /**
      * 获取一天的开始时间
@@ -52,6 +57,23 @@ public class TimeLearning {
         calendar.set(Calendar.SECOND, 59);
         calendar.set(Calendar.MILLISECOND, 999);
         return calendar.getTime();
+    }
+
+    /**
+     * 判断时间字符串是否为正确的格式
+     * @param dateTime
+     * @return
+     */
+    public static boolean isDateTime(String dateTime) {
+        DateTimeFormatter ldt =
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS").withResolverStyle(ResolverStyle.STRICT);
+        try {
+            //LocalDateTime.parse(dateTime, ldt);
+            ldt.parse(dateTime);
+            return true;
+        } catch (DateTimeParseException | NullPointerException e) {
+            return false;
+        }
     }
 
     public static void main(String[] args) {
@@ -119,6 +141,7 @@ public class TimeLearning {
         System.out.println(parse);
         LocalDateTime parse1 = LocalDateTime.parse("2020-04-28 00:52:53.816", dateTimeFormatter);
         System.out.println(parse1);
+        LocalDateTime parse2 = dateTimeFormatter.parse("2020-04-28 00:52:53.816").query(LocalDateTime::from);
 
         // LocalDateTime 转 String
         String format = parse.format(dateTimeFormatter);

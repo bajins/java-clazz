@@ -8,6 +8,8 @@ import java.util.*;
 
 /**
  * System原生API的使用示例
+ *
+ * @see System
  */
 public class SystemLearning {
 
@@ -33,7 +35,7 @@ public class SystemLearning {
             StackTraceElement ei = es[es.length - i - 1];
             joiner.add(String.format("%s.%s#%d", ei.getClassName(), ei.getMethodName(), ei.getLineNumber()));
         }*/
-        StackTraceElement ei = es[es.length-1];
+        StackTraceElement ei = es[es.length - 1];
         joiner.add(String.format("%s.%s#%d", ei.getClassName(), ei.getMethodName(), ei.getLineNumber()));
         return joiner.toString();
     }

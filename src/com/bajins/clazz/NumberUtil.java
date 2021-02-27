@@ -13,14 +13,16 @@ import java.util.regex.Pattern;
 /**
  * 一切与数字操作相关的工具类
  * <p>
- * DecimalFormat
- * BigDecimal
- * RoundingMode
  *
  * @author claer
  * @program com.bajins.api.utils
  * @description NumberUtil
  * @create 2018-07-18 22:24
+ * @see DecimalFormat
+ * @see BigDecimal
+ * @see BigInteger
+ * @see RoundingMode
+ * @see Number 所有包装类（Byte、Short、Integer、Long、Character、Float、Double、Boolean）和Math包下的BigDecimal、BigInteger的父类
  */
 public class NumberUtil {
 
