@@ -36,6 +36,11 @@ public class CollectionsLearning {
 
     public static void main(String[] args) {
         List<String> list = Arrays.asList("a", "b", "c", "d");
+        /*list = Stream.of("a", "b", "c", "d").collect(Collectors.toList());
+        list = Stream.of("a", "b", "c", "d").collect(Collectors.toCollection(ArrayList::new));
+        list = new ArrayList<String>() {{// 使用匿名内部类初始化时构造数据
+            addAll(Arrays.asList("a", "b", "c", "d"));
+        }};*/
         System.out.println("------------- 随机取值 -------------");
         // 方法一
         int index = (int) (Math.random() * list.size());
@@ -106,7 +111,7 @@ public class CollectionsLearning {
         // 在数据规模较小、单次操作花费较小时，串行操作直接计算，而parallel并行（数据量无排序要求时使用）操作需先对数据分片后多线程处理
         // 数据量比较小（100W以下），一般业务场景下尽量用普通循环
         List<String> collect =
-                list.stream().filter(entry -> "a".equals("a")).parallel().collect(Collectors.toList());
+                list.stream().filter(entry -> "a" .equals("a")).parallel().collect(Collectors.toList());
 
         /**
          * List转Map
@@ -130,7 +135,7 @@ public class CollectionsLearning {
         /*List<String> result = new ArrayList(map.keySet());
         List<String> result2 = new ArrayList(map.values());
         List<String> result3 = map.keySet().stream().collect(Collectors.toList());
-        List<String> result4 = map.values().stream().collect(Collectors.toList());*/
+        List<String> result4 = map.keySet().stream().collect(Collectors.toList());*/
 
 
         /**

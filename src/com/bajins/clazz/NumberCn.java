@@ -9,7 +9,7 @@ import java.math.BigInteger;
  * @description CnNumberUtil
  * @create 2018-11-23 21:59
  */
-public class CnNumber {
+public class NumberCn {
 
     // 阿拉伯数字对应大写中文数字
     private final static String[] CN_NUMERALS = {"零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"};

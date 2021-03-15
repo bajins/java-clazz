@@ -189,6 +189,74 @@ public class CollectionUtils {
         return t -> concurrentHashMap.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
+    /**
+     * 把List<Map>的Map中value取出装进LIST中
+     *
+     * @param maps List<Map>集合
+     * @param key  Map中的key
+     * @return java.util.List
+     */
+    public static List getKeyList(List<Map> maps, String key) {
+        List list = new ArrayList<>();
+        Iterator<Map> iterator = maps.iterator();
+        while (iterator.hasNext()) {
+            Map next = iterator.next();
+            list.add(next.get(key));
+        }
+        return list;
+    }
+
+    /**
+     * 泛型类，是在实例化类的时候指明泛型的具体类型；
+     * 泛型方法，是在调用方法的时候指明泛型的具体类型 。
+     * 说明：
+     * 1）public 与 返回值中间<T>非常重要，可以理解为声明此方法为泛型方法。
+     * 2）只有声明了<T>的方法才是泛型方法，泛型类中的使用了泛型的成员方法并不是泛型方法。
+     * 3）<T> T的<T>表明该方法将使用泛型类型T，此时才可以在方法中使用泛型类型T。
+     * 4）<T> T的T表明该方法返回的类型。
+     * 5）与泛型类的定义一样，此处T可以随便写为任意标识，常见的如T、E、K、V等形式的参数常用于表示泛型。
+     *
+     * <p>
+     * List 集合中随机获取一条数据
+     *
+     * @param list 传入的泛型实参
+     * @param <T>  泛型类型T
+     * @return T 返回值为T类型
+     */
+    public static <T> T getRandomList(List<T> list) {
+        Random random = new Random();
+        int n = random.nextInt(list.size());
+        return list.get(n);
+    }
+
+    /**
+     * List 集合中随机获取指定条数数据
+     *
+     * @param list   传入的泛型实参
+     * @param length 获取多少条
+     * @param <T>    泛型类型T
+     * @return T 返回值为T类型
+     */
+    public static <T> List<T> getRandomListLimit(List<T> list, int length) {
+        Random index = new Random();
+        //存储已经被调训出来的List 中的 index
+        List<Integer> indexList = new ArrayList<>();
+        List<T> newList = new ArrayList<T>();
+        for (int i = 0, j; i < length; i++) {
+            //获取在 list.size 返回内的随机数
+            j = index.nextInt(list.size());
+            //判断是否重复
+            if (!indexList.contains(j)) {
+                //获取元素
+                indexList.add(j);
+                newList.add(list.get(j));
+            } else {
+                i--;//如果重复再来一次
+            }
+        }
+        return newList;
+    }
+
     public static void main(String[] args) {
         List<String> list = new ArrayList<>();
         list.add("111");

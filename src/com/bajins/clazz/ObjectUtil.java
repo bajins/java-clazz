@@ -6,8 +6,6 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * 对象工具类
@@ -15,18 +13,14 @@ import java.util.stream.Collectors;
  * @author claer https://www.bajins.com
  * @program com.bajins.api.utils
  * @create 2018-06-10 22:48
- * <br/>
- * @see java.beans JavaBean是一种特殊的Java类,主要用于传递数据信息,这种Java类中的方法主要用于访问私有字段,且方法名符合某种命名规则，
- * JavaBean的属性是根据其中的setter和getter方法名推断出来的，它根本看不到java类内部的成员变量
- * @see Introspector 内省：对JavaBean类属性、事件的一种缺省处理方法，先得到属性描述器PropertyDecriptor后再进行各种操作
- * @see PropertyDescriptor 属性描述器：通过存储器导出一个JavaBean类的属性
- * <br/>
+ * <p>
  * @see java.lang.reflect （reflection）反射：一个类的所有成员都可以进行反射操作，先得到类的字节码Class后再进行各种操作
  * @see Field 类的属性字段
  * @see Method 类的方法
  * @see Modifier
  * @see Parameter
  * @see Type
+ * <p/>
  */
 public class ObjectUtil {
 
@@ -213,116 +207,6 @@ public class ObjectUtil {
         return method.toString();
     }
 
-    /**
-     * 把List<Map>的Map中value取出装进LIST中
-     *
-     * @param maps List<Map>集合
-     * @param key  Map中的key
-     * @return java.util.List
-     */
-    public static List getKeyList(List<Map> maps, String key) {
-        List list = new ArrayList<>();
-        Iterator<Map> iterator = maps.iterator();
-        while (iterator.hasNext()) {
-            Map next = iterator.next();
-            list.add(next.get(key));
-        }
-        return list;
-    }
-
-    /**
-     * 泛型类，是在实例化类的时候指明泛型的具体类型；
-     * 泛型方法，是在调用方法的时候指明泛型的具体类型 。
-     * 说明：
-     * 1）public 与 返回值中间<T>非常重要，可以理解为声明此方法为泛型方法。
-     * 2）只有声明了<T>的方法才是泛型方法，泛型类中的使用了泛型的成员方法并不是泛型方法。
-     * 3）<T> T的<T>表明该方法将使用泛型类型T，此时才可以在方法中使用泛型类型T。
-     * 4）<T> T的T表明该方法返回的类型。
-     * 5）与泛型类的定义一样，此处T可以随便写为任意标识，常见的如T、E、K、V等形式的参数常用于表示泛型。
-     *
-     * <p>
-     * List 集合中随机获取一条数据
-     *
-     * @param list 传入的泛型实参
-     * @param <T>  泛型类型T
-     * @return T 返回值为T类型
-     */
-    public static <T> T getRandomList(List<T> list) {
-        Random random = new Random();
-        int n = random.nextInt(list.size());
-        return list.get(n);
-    }
-
-    /**
-     * List 集合中随机获取指定条数数据
-     *
-     * @param list   传入的泛型实参
-     * @param length 获取多少条
-     * @param <T>    泛型类型T
-     * @return T 返回值为T类型
-     */
-    public static <T> List<T> getRandomListLimit(List<T> list, int length) {
-        Random index = new Random();
-        //存储已经被调训出来的List 中的 index
-        List<Integer> indexList = new ArrayList<>();
-        List<T> newList = new ArrayList<T>();
-        for (int i = 0, j; i < length; i++) {
-            //获取在 list.size 返回内的随机数
-            j = index.nextInt(list.size());
-            //判断是否重复
-            if (!indexList.contains(j)) {
-                //获取元素
-                indexList.add(j);
-                newList.add(list.get(j));
-            } else {
-                i--;//如果重复再来一次
-            }
-        }
-        return newList;
-    }
-
-    /**
-     * 比较两个对象指定的属性值是否相等
-     *
-     * @param lhs    第一个对象
-     * @param rhs    第二个对象
-     * @param fields 需要比较的属性字段
-     * @return 相同返回true，不同则返回false
-     * @throws IntrospectionException
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     */
-    public static boolean equalsFields(Object lhs, Object rhs, String... fields) throws IntrospectionException,
-            InvocationTargetException, IllegalAccessException {
-        Class<?> lhsClazz = lhs.getClass();
-        Class<?> rhsClazz = rhs.getClass();
-        if (lhsClazz != rhsClazz) {
-            return false;
-        }
-        // 数组转Map
-        Map<String, String> fieldMap = Arrays.stream(fields).collect(Collectors.toMap(e -> e, Function.identity()));
-        // 获取JavaBean的所有属性
-        PropertyDescriptor[] pds = Introspector.getBeanInfo(lhsClazz, Object.class).getPropertyDescriptors();
-        for (PropertyDescriptor pd : pds) {
-            // 遍历获取属性名
-            String name = pd.getName();
-            if (name.equals(fieldMap.get(name))) {
-                // 获取属性的get方法
-                Method readMethod = pd.getReadMethod();
-                // 调用get方法获得属性值
-                Object lhsValue = readMethod.invoke(lhs);
-                Object rhsValue = readMethod.invoke(rhs);
-                // 比较值
-                if (lhsValue instanceof List || lhsValue instanceof Map) {
-                    continue;
-                }
-                if (lhsValue instanceof String && !lhsValue.equals(rhsValue)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     public static void main(String[] args) {
         System.out.println(isEmpty(""));
