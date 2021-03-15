@@ -111,7 +111,11 @@ public class CollectionsLearning {
         // 在数据规模较小、单次操作花费较小时，串行操作直接计算，而parallel并行（数据量无排序要求时使用）操作需先对数据分片后多线程处理
         // 数据量比较小（100W以下），一般业务场景下尽量用普通循环
         List<String> collect =
-                list.stream().filter(entry -> "a" .equals("a")).parallel().collect(Collectors.toList());
+                list.stream().filter(entry -> entry.equals("a")).parallel().collect(Collectors.toList());
+        // 判断是否存在某个值
+        boolean a = list.stream().filter(entry -> entry.equals("a")).findAny().isPresent();
+        //boolean a = list.stream().allMatch(entry -> entry.equals("a"));
+
 
         /**
          * List转Map
