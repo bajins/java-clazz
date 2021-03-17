@@ -1,4 +1,4 @@
-package com.bajins.clazz.threadlearning;
+package com.bajins.clazz.workersexecutors;
 
 /**
  * 捕获异常

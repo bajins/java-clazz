@@ -1,4 +1,4 @@
-package com.bajins.clazz.threadlearning;
+package com.bajins.clazz.workersexecutors;
 
 import java.util.ArrayList;
 import java.util.List;

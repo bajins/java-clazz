@@ -1,4 +1,4 @@
-package com.bajins.clazz.threadlearning;
+package com.bajins.clazz.workersexecutors;
 
 /**
  * 实现`Runnable`接口创建线程

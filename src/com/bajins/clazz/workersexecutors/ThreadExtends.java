@@ -1,4 +1,4 @@
-package com.bajins.clazz.threadlearning;
+package com.bajins.clazz.workersexecutors;
 
 /**
  * 继承`Thread`类创建线程类

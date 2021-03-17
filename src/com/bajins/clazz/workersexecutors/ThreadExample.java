@@ -1,4 +1,4 @@
-package com.bajins.clazz.threadlearning;
+package com.bajins.clazz.workersexecutors;
 
 public class ThreadExample {
     public static void main(String[] args) {
