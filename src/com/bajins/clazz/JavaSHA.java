@@ -1,6 +1,9 @@
 package com.bajins.clazz;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -350,6 +353,33 @@ public class JavaSHA {
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
         messageDigest.update(str.getBytes());
         return StringUtil.byte2Hex(messageDigest.digest());
+    }
+
+    /**
+     * HMAC-SHA256实现
+     *
+     * @param data
+     * @param key
+     * @return
+     */
+    public static String HMAC_SHA256(String data, String key) throws NoSuchAlgorithmException, InvalidKeyException {
+        Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+        SecretKeySpec secret_key = new SecretKeySpec(key.getBytes(), "HmacSHA256");
+        sha256_HMAC.init(secret_key);
+        byte[] bytes = sha256_HMAC.doFinal(data.getBytes());
+        StringBuilder sb = new StringBuilder();
+        String item;
+        for (int n = 0; bytes != null && n < bytes.length; n++) {
+            item = Integer.toHexString(bytes[n] & 0XFF);
+            if (item.length() == 1) {
+                sb.append('0');
+            }
+            sb.append(item);
+        }
+        /*for (byte item : bytes) {
+            sb.append(Integer.toHexString((item & 0xFF) | 0x100), 1, 3);
+        }*/
+        return sb.toString().toLowerCase();
     }
 
     public static void main(String[] args) {
