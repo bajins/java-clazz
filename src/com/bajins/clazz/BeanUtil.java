@@ -1,16 +1,18 @@
 package com.bajins.clazz;
 
+import com.sun.istack.internal.NotNull;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.net.URL;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -64,7 +66,7 @@ public class BeanUtil {
             Object valueD = targetField.get(origin); // 源数据
             Object valueO = targetField.get(destination); // 目标数据
             // 如果源数据不为空，且该属性不为序列化，可覆盖或目标数据为空
-            if (null != valueD && !"serialVersionUID" .equals(targetField.getName()) && (cover || null == valueO)) {
+            if (null != valueD && !"serialVersionUID".equals(targetField.getName()) && (cover || null == valueO)) {
                 targetField.set(destination, valueD); // 设值到目标对象属性
             }
             targetField.setAccessible(false);
@@ -143,5 +145,73 @@ public class BeanUtil {
             }
         }
         return true;
+    }
+
+
+    /**
+     * 获取一个接口的所有实现类
+     * <p>
+     * Spring https://blog.csdn.net/RickyIT/article/details/78198859#%E5%AE%9E%E7%8E%B0
+     * <p>
+     * 只能获取项目中自己定义的接口,不能获取到JDK或者是其他Jar包中的接口,因为这个工具的原理就是扫描编译后的classes目录
+     *
+     * @param target
+     * @return
+     */
+    public static ArrayList<Class<?>> getInterfaceImpls(Class<?> target) throws ClassNotFoundException {
+        ArrayList<Class<?>> subclassaes = new ArrayList<>();
+        // 判断class对象是否是一个接口
+        if (!target.isInterface()) {
+            throw new IllegalArgumentException("Class对象不是一个interface");
+        }
+        @NotNull
+        String basePackage = target.getClassLoader().getResource("").getPath();
+        File[] files = new File(basePackage).listFiles();
+        // 存放class路径的list
+        ArrayList<String> classpaths = new ArrayList<>();
+        for (File file : files) {
+            // 扫描项目编译后的所有类
+            if (file.isDirectory()) {
+                listPackages(file.getName(), classpaths);
+            }
+        }
+        // 获取所有类,然后判断是否是 target 接口的实现类
+        for (String classpath : classpaths) {
+            Class<?> classObject = Class.forName(classpath);
+            if (classObject.getSuperclass() == null) {
+                continue; // 判断该对象的父类是否为null
+            }
+            Set<Class<?>> interfaces = new HashSet<>(Arrays.asList(classObject.getInterfaces()));
+            if (interfaces.contains(target)) {
+                subclassaes.add(Class.forName(classObject.getName()));
+            }
+        }
+        return subclassaes;
+    }
+
+    /**
+     * 获取项目编译后的所有的.class的字节码文件
+     * 这么做的目的是为了让 Class.forName() 可以加载类
+     *
+     * @param basePackage 默认包名
+     * @param classes     存放字节码文件路径的集合
+     * @return
+     */
+    public static void listPackages(String basePackage, List<String> classes) {
+        URL url = BeanUtil.class.getClassLoader()
+                .getResource("./" + basePackage.replaceAll("\\.", "/"));
+        File directory = new File(url.getFile());
+        for (File file : directory.listFiles()) {
+            // 如果是一个目录就继续往下读取(递归调用)
+            if (file.isDirectory()) {
+                listPackages(basePackage + "." + file.getName(), classes);
+            } else {
+                // 如果不是一个目录,判断是不是以.class结尾的文件,如果不是则不作处理
+                String classpath = file.getName();
+                if (".class".equals(classpath.substring(classpath.length() - ".class".length()))) {
+                    classes.add(basePackage + "." + classpath.replaceAll(".class", ""));
+                }
+            }
+        }
     }
 }
