@@ -35,12 +35,15 @@ public class CollectionsLearning {
 
 
     public static void main(String[] args) {
+        // 数组转List
         List<String> list = Arrays.asList("a", "b", "c", "d");
         /*list = Stream.of("a", "b", "c", "d").collect(Collectors.toList());
         list = Stream.of("a", "b", "c", "d").collect(Collectors.toCollection(ArrayList::new));
         list = new ArrayList<String>() {{// 使用匿名内部类初始化时构造数据
             addAll(Arrays.asList("a", "b", "c", "d"));
         }};*/
+        // 取对象中的字段放到新的List中
+        //List<String> userIds = list.stream().map(a -> a.getUserid()).collect(Collectors.toList());
         System.out.println("------------- 随机取值 -------------");
         // 方法一
         int index = (int) (Math.random() * list.size());
