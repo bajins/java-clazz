@@ -44,6 +44,34 @@ public class CollectionsLearning {
         }};*/
         // 取对象中的字段放到新的List中
         //List<String> userIds = list.stream().map(a -> a.getUserid()).collect(Collectors.toList());
+
+
+        /**
+         * List转Map
+         * Function接口中的默认方法 Function.identity()，这个方法返回自身对象
+         */
+        // key一样的情况下，如果不指定一个覆盖规则，会报错
+        /*Map<Long, User> maps = userList.stream().collect(Collectors.toMap(User::getId, Function.identity()));
+        maps = userList.stream().collect(Collectors.toMap(User::getId, t -> t));
+        maps = userList.stream().collect(Collectors.toMap(User::getId, Function.identity(), (key1, key2) -> key2));
+        // 希望得到的map的值不是对象，而是对象的某个属性
+        Map<Long, String> maps = userList.stream().collect(Collectors.toMap(User::getId, User::getAge,
+                (key1, key2) -> key2));
+
+        accounts.stream().collect(Collectors.toMap(Account::getId, Account::getUsername));
+        // 设置map的value值是实体本身，同Function.identity()
+        accounts.stream().collect(Collectors.toMap(Account::getId, account -> account));*/
+
+
+        /**
+         * Map转List
+         */
+        /*List<String> result = new ArrayList(map.keySet());
+        List<String> result2 = new ArrayList(map.values());
+        List<String> result3 = map.keySet().stream().collect(Collectors.toList());
+        List<String> result4 = map.values().stream().collect(Collectors.toList());*/
+
+
         System.out.println("------------- 随机取值 -------------");
         // 方法一
         int index = (int) (Math.random() * list.size());
@@ -118,32 +146,6 @@ public class CollectionsLearning {
         // 判断是否存在某个值
         boolean a = list.stream().filter(entry -> entry.equals("a")).findAny().isPresent();
         //boolean a = list.stream().allMatch(entry -> entry.equals("a"));
-
-
-        /**
-         * List转Map
-         * Function接口中的默认方法 Function.identity()，这个方法返回自身对象
-         */
-        // key一样的情况下，如果不指定一个覆盖规则，会报错
-        /*Map<Long, User> maps = userList.stream().collect(Collectors.toMap(User::getId, Function.identity()));
-        maps = userList.stream().collect(Collectors.toMap(User::getId, Function.identity(), (key1, key2) -> key2));
-        // 希望得到的map的值不是对象，而是对象的某个属性
-        Map<Long, String> maps = userList.stream().collect(Collectors.toMap(User::getId, User::getAge,
-                (key1, key2) -> key2));
-
-        accounts.stream().collect(Collectors.toMap(Account::getId, Account::getUsername));
-        // 设置map的value值是实体本身，同Function.identity()
-        accounts.stream().collect(Collectors.toMap(Account::getId, account -> account));*/
-
-
-        /**
-         * Map转List
-         */
-        /*List<String> result = new ArrayList(map.keySet());
-        List<String> result2 = new ArrayList(map.values());
-        List<String> result3 = map.keySet().stream().collect(Collectors.toList());
-        List<String> result4 = map.keySet().stream().collect(Collectors.toList());*/
-
 
         /**
          * 去重
