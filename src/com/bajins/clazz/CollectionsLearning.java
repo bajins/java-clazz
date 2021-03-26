@@ -81,13 +81,18 @@ public class CollectionsLearning {
         Collections.shuffle(list);
         System.out.println(list.get(0));
 
-        // 取一定范围数据
-        // start,end分别是第几个到第几个。
-        // 注意的是此方法和substring一样，包含前不包含结尾，取下标索引
-        // 另一个注意的地方是使用此方法会改变原始list列表，返回的这个子列表的幕后其实还是原列表；
-        // 也就是说，修改这个子列表，将导致原列表也发生改变。
+        /**
+         * 取一定范围数据
+         * start,end分别是第几个到第几个。
+         * 注意的是此方法和substring一样，包含前不包含结尾，取下标索引
+         * 另一个注意的地方是使用此方法会改变原始list列表，返回的这个子列表的幕后其实还是原列表；
+         * 也就是说，修改这个子列表，将导致原列表也发生改变。
+         */
         List newList = list.subList(0, 2);
 
+        /**
+         * 排序
+         */
         Collections.sort(list); // 顺序排列
         Collections.reverse(list); // 倒序排列
         Collections.shuffle(list); // 混乱排序
@@ -124,8 +129,10 @@ public class CollectionsLearning {
         intList.add(3);
         intList.add(4);
         intList.add(5);
-        // 将一个list按三个一组分成N个小的list，分组后的list不再是原list的视图，原list的改变不会影响分组后的结果
-
+        /**
+         * 分组：
+         * 将一个list按三个一组分成N个小的list，分组后的list不再是原list的视图，原list的改变不会影响分组后的结果
+         */
         // 通过grouping by
         Map<Integer, List<Integer>> groups = intList.stream().collect(Collectors.groupingBy(s -> (s - 1) / 3));
         List<List<Integer>> subSets = new ArrayList<>(groups.values());
@@ -138,9 +145,12 @@ public class CollectionsLearning {
         List<List<Integer>> subSets1 = new ArrayList<>(groups.values());
         List<Integer> lastPartition1 = subSets.get(1);
 
-        // 过滤
-        // 在数据规模较小、单次操作花费较小时，串行操作直接计算，而parallel并行（数据量无排序要求时使用）操作需先对数据分片后多线程处理
-        // 数据量比较小（100W以下），一般业务场景下尽量用普通循环
+        /**
+         * 过滤：
+         * 在数据规模较小、单次操作花费较小时，串行操作直接计算，
+         * 而parallel并行（数据量无排序要求时使用）操作需先对数据分片后多线程处理
+         * 数据量比较小（100W以下），一般业务场景下尽量用普通循环
+         */
         List<String> collect =
                 list.stream().filter(entry -> entry.equals("a")).parallel().collect(Collectors.toList());
         // 判断是否存在某个值
