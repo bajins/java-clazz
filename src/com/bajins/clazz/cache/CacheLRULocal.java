@@ -1,4 +1,4 @@
-package com.bajins.clazz;
+package com.bajins.clazz.cache;
 
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -12,7 +12,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * LinkedHashMap并不是线程安全，如果不加控制的在多线程环境下使用的话，会有问题。
  * 所以在LRUMap中引入了ReentrantReadWriteLock读写锁，来控制并发问题。
  *
- * @author claer https://www.bajins.com
+ * @author https://www.bajins.com
  * @program com.bajins.api.utils.cache
  * @description LRULocalCache
  * @create 2018-12-20 21:40

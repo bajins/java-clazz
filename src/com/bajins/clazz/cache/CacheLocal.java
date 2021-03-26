@@ -1,4 +1,4 @@
-package com.bajins.clazz;
+package com.bajins.clazz.cache;
 
 import java.util.Date;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 在JDK1.8中，ConcurrentHashMap是支持完全并发读，这对本地缓存的效率也是一种提升。
  * 通过调用ConcurrentHashMap对map的操作来实现对缓存的操作。
  *
- * @author claer https://www.bajins.com
+ * @author https://www.bajins.com
  * @program com.bajins.api.utils.cache
  * @description LocalCache
  * @create 2018-12-20 21:40
