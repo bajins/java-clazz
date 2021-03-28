@@ -155,7 +155,7 @@ public class CollectionsLearning {
                 list.stream().filter(entry -> entry.equals("a")).parallel().collect(Collectors.toList());
         // 判断是否存在某个值
         boolean a = list.stream().filter(entry -> entry.equals("a")).findAny().isPresent();
-        //boolean a = list.stream().allMatch(entry -> entry.equals("a"));
+        boolean b = list.stream().allMatch(entry -> entry.equals("a"));
 
         /**
          * 去重
