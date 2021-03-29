@@ -24,6 +24,11 @@ import java.util.Base64;
  * 6.JavaMD5 消息摘要和加盐
  * 7.Base64
  *
+ * @see javax.crypto
+ * @see java.security
+ * @see MessageDigest getInstance() 支持标准：MD5、SHA-1、SHA-256
+ * @see java.util.Base64
+ *
  * @description: EncryptUtil
  * @author: claer
  * @create: 2018-04-14 15:21
