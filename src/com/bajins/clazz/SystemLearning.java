@@ -1,9 +1,12 @@
 package com.bajins.clazz;
 
+import sun.security.action.GetPropertyAction;
+
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.security.AccessController;
 import java.util.*;
 
 /**
@@ -83,6 +86,12 @@ public class SystemLearning {
         // 获取本机的IP地址
         String hostAddress = addr.getHostAddress();
 
+        // 获取当前系统换行符
+        GetPropertyAction getPropertyAction = new GetPropertyAction("line.separator");
+        String lineSeparator = AccessController.doPrivileged(getPropertyAction);
+        System.err.println("获取当前系统换行符：" + lineSeparator);
+        System.err.println("获取当前系统换行符：" + System.getProperty("line.separator"));
+        System.err.println("获取当前系统换行符：" + System.lineSeparator());
 
         try {
             // 获取本机MAC地址
