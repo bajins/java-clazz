@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
  * @see Charset
  * @see CharSequence 接口,用于表示有序的字符集合,String实现了它
  * @see String
+ * @see StringTokenizer 字符串词法分析
  */
 public class StringUtil {
 

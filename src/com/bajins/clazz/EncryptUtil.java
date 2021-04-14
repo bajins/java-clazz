@@ -6,13 +6,14 @@ import sun.misc.BASE64Encoder;
 import javax.crypto.*;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
@@ -24,14 +25,48 @@ import java.util.Base64;
  * 6.JavaMD5 消息摘要和加盐
  * 7.Base64
  *
- * @see javax.crypto
- * @see java.security
- * @see MessageDigest getInstance() 支持标准：MD5、SHA-1、SHA-256
- * @see java.util.Base64
- *
  * @description: EncryptUtil
  * @author: claer
  * @create: 2018-04-14 15:21
+ * @see java.security JCA(Java Cryptography Architecture)，提供了基本Java加密框架，包含证书、数字签名、消息摘要、秘钥对生成器
+ * @see MessageDigest 消息摘要 getInstance() 支持标准：MD5、SHA-1、SHA-256
+ * @see Key 有SecretKey（对称秘钥）、PublicKey、PrivateKey等子接口，是秘钥的抽象，对称加密算法的秘钥由SecretKey提供
+ * @see KeyPair 非对称加密算法秘钥对的抽象
+ * @see KeyPairGenerator 秘钥对的生成
+ * @see KeyFactory 根据指定的规范生成秘钥
+ * @see KeyGenerator
+ * @see KeyAgreement
+ * @see KeyStore 秘钥库的抽象，用于管理秘钥和证书
+ * @see Signature 生成和验证数字签名
+ * @see Mac 消息认证代码，与消息摘要类似，但是使用其他密钥来加密消息摘要
+ * @see Provider
+ * @see SecureRandom
+ * <p>
+ * @see java.security.cert
+ * @see CertificateFactory
+ * @see CertPathBuilder
+ * @see CertPathValidator
+ * @see CertStore
+ * @see java.security.spec
+ * @see java.security.interfaces
+ * </p>
+ * @see javax.crypto JCE(Java Cryptography Extension)是JCA的扩展，加密操作的类和接口
+ * @see Cipher 加密和解密
+ * <p>
+ * @see javax.crypto.spec
+ * @see javax.crypto.interfaces
+ * </p>
+ * <p>
+ * @see java.util.Base64 编码
+ * <pre>
+ *  多个编码方式 https://github.com/rbuck/java-codecs
+ *  Base85 https://github.com/fzakaria/ascii85
+ *  Quoted Printable
+ *  Percent Encoded
+ *  XXencode
+ *  UUencode https://github.com/biagioT/java-uudecoder
+ * </pre>
+ * </p>
  */
 public class EncryptUtil {
 
@@ -158,7 +193,7 @@ public class EncryptUtil {
         SecretKey key = keyFactory.generateSecret(deskey);
         // 加密对象
         Cipher cipher = Cipher.getInstance("DES");
-        cipher.init(Cipher.ENCRYPT_MODE, key, sr);
+        cipher.init(Cipher.ENCRYPT_MODE, key, sr); // 设置模式为加密
         return String.valueOf(cipher.doFinal(data.getBytes()));
     }
 
@@ -179,7 +214,7 @@ public class EncryptUtil {
         SecretKey key = keyFactory.generateSecret(deskey);
         // 解密对象
         Cipher cipher = Cipher.getInstance("DES");
-        cipher.init(Cipher.DECRYPT_MODE, key, sr);
+        cipher.init(Cipher.DECRYPT_MODE, key, sr); // 设置模式为解密
         // 把字符串进行解码，解码为为字节数组，并解密
         return String.valueOf(cipher.doFinal(cryptData.getBytes()));
     }
@@ -230,12 +265,18 @@ public class EncryptUtil {
             InvalidKeySpecException {
         // 迭代1000次，盐长度为128 * 4
         KeySpec spec = new PBEKeySpec(password.toCharArray(), StringUtil.hexToBinary(salt), 1000, 128 * 4);
-        String pbkdf2Algorithm = "PBKDF2WithHmacSHA1";
-        SecretKeyFactory f = SecretKeyFactory.getInstance(pbkdf2Algorithm);
+        SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         return StringUtil.binaryToHex(f.generateSecret(spec).getEncoded());
     }
 
     public static void main(String[] args) {
+        try {
+            URLEncoder.encode("", "UTF-8");
+            URLDecoder.decode("", "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
         // 编码，会提示内部使用API，可能会在未来某个版本删除
         BASE64Encoder base64Encoder = new BASE64Encoder();
         String encode = base64Encoder.encode("111".getBytes());
@@ -262,6 +303,94 @@ public class EncryptUtil {
             //解码
             System.out.println(new String(decoder.decode(encodedText), "UTF-8"));
         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * 3DES（3重DES）
+         */
+        try {
+            // 获得KEY
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("DESede");
+            //keyGenerator.init(112); // 设置密钥长度，默认值为168，也可设置为112
+            keyGenerator.init(new SecureRandom()); // 设置为默认值
+            // 获得KEY对象
+            SecretKey secrekeyone = keyGenerator.generateKey();
+            byte[] byteskey = secrekeyone.getEncoded();
+
+            // KEY转换
+            DESKeySpec deskeyspec = new DESKeySpec(byteskey);
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("DES");
+            Key secerkeytwo = factory.generateSecret(deskeyspec);
+
+            // 加密
+            Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+            cipher.init(cipher.ENCRYPT_MODE, secerkeytwo); // 设置模式为加密
+            byte[] result = cipher.doFinal("123456".getBytes());
+            System.out.println("jdkEDS:" + result.toString());
+
+            // 解密
+            cipher.init(cipher.DECRYPT_MODE, secerkeytwo); // 设置模式为解密
+            result = cipher.doFinal(result);
+            System.out.println("jdkEDS:" + new String(result));
+
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * AES
+         */
+        try {
+            // 获得key
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+            keyGenerator.init(new SecureRandom());//默认密钥长度为：
+            SecretKey secretKey = keyGenerator.generateKey();
+            byte[] keyBytes = secretKey.getEncoded();
+
+            // key转换
+            Key key = new SecretKeySpec(keyBytes, "AES");
+
+            // 加密
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            byte[] result = cipher.doFinal("123456".getBytes());
+            System.out.println("AES=" + result.toString());
+
+            // 解密
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            result = cipher.doFinal(result);
+            System.out.println("AES=" + new String(result));
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * PBE
+         */
+        try {
+            //初始化盐
+            SecureRandom random = new SecureRandom();
+            byte[] salt = random.generateSeed(8);
+
+            // 口令和密钥
+            String password = "123456";
+            PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray()); // 生成密钥转换对象
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBEWITHMD5andDES");
+            Key key = factory.generateSecret(pbeKeySpec);
+
+            // 加密，实例化PBE对象的一个输入的材料：参数分别为"盐和迭代次数"
+            PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(salt, 100);
+            Cipher cipher = Cipher.getInstance("PBEWITHMD5andDES");
+            cipher.init(Cipher.ENCRYPT_MODE, key, pbeParameterSpec);
+            byte[] result = cipher.doFinal("123458".getBytes());
+            System.out.println("PBE:" + result.toString());
+
+            // 解密
+            cipher.init(Cipher.DECRYPT_MODE, key, pbeParameterSpec);
+            result = cipher.doFinal(result);
+            System.out.println("PBE:" + new String(result));
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
             e.printStackTrace();
         }
     }
