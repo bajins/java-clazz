@@ -26,7 +26,7 @@ import java.util.Base64;
  * 7.Base64
  *
  * @description: EncryptUtil
- * @author: claer
+ * @author: https://www.bajins.com
  * @create: 2018-04-14 15:21
  * @see java.security JCA(Java Cryptography Architecture)，提供了基本Java加密框架，包含证书、数字签名、消息摘要、秘钥对生成器
  * @see MessageDigest 消息摘要 getInstance() 支持标准：MD5、SHA-1、SHA-256
