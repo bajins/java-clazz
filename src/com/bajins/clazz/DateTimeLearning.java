@@ -112,6 +112,8 @@ public class DateTimeLearning {
         ZoneId of = ZoneId.of("Asia/Shanghai");
         // 设置时区的偏移量
         ZoneOffset zoneOffset = ZoneOffset.ofHours(8);
+        // 东八区
+        TimeZone timeZone = TimeZone.getTimeZone("GMT> 08:00");
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
@@ -273,6 +275,6 @@ public class DateTimeLearning {
         int min = calendar.get(Calendar.MINUTE);// 获取当前分钟
         int sec = calendar.get(Calendar.SECOND);// 获取当前秒
         int day_of_week = calendar.get(Calendar.DAY_OF_WEEK);// 获取当周几
-        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT> 08:00"));// 获取东八区时间
+        Calendar c = Calendar.getInstance(timeZone);// 获取东八区时间
     }
 }
