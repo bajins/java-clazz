@@ -23,7 +23,7 @@ public class Html {
      * @return String
      */
     public static String formForward(String title, String url, Map<String, String> params, String charset) {
-        StringBuffer htmlForm = new StringBuffer();
+        StringBuilder htmlForm = new StringBuilder();
         htmlForm.append("<html>");
         htmlForm.append("<head>");
         htmlForm.append("<meta http-equiv='Content-Type' content='text/html; charset='").append(charset).append("'>");

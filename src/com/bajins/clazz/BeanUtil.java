@@ -165,7 +165,7 @@ public class BeanUtil {
             throw new IllegalArgumentException("Class对象不是一个interface");
         }
         @NotNull
-        String basePackage = target.getClassLoader().getResource("").getPath();
+        String basePackage = Objects.requireNonNull(target.getClassLoader().getResource("")).getPath();
         File[] files = new File(basePackage).listFiles();
         // 存放class路径的list
         ArrayList<String> classpaths = new ArrayList<>();

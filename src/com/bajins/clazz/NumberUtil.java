@@ -186,6 +186,8 @@ public class NumberUtil {
         BigDecimal setScale = new BigDecimal(money).setScale(2, RoundingMode.HALF_UP);
         // 不四舍五入保留两位小数
         BigDecimal setScale1 = new BigDecimal(money).setScale(2, RoundingMode.DOWN);
+        // 去除末尾多余的0，并输出非科学计数法的字符串
+        System.out.println(new BigDecimal("100.000").stripTrailingZeros().toPlainString());
 
         /**
          * DecimalFormat
