@@ -5,23 +5,40 @@ import java.util.*;
 import java.util.stream.*;
 
 /**
- * @see Set
- * @see List
- * @see Map
+ * @see Set 集
+ * @see List 列表
+ * @see Map 映射 HashMap、HashTable
  * @see SortedSet
  * @see SortedMap
  * @see HashSet
  * @see TreeSet
+ * @see TreeMap
+ * @see WeakHashMap
+ * @see NavigableMap
+ * @see NavigableSet
+ * @see java.util.concurrent.ConcurrentHashMap
+ * @see java.util.concurrent.ConcurrentMap
+ * @see java.util.concurrent.ConcurrentNavigableMap
+ * @see java.util.concurrent.ConcurrentLinkedDeque
+ * @see java.util.concurrent.ConcurrentLinkedQueue
+ * @see java.util.concurrent.ConcurrentSkipListMap
+ * @see java.util.concurrent.ConcurrentSkipListSet
  * @see ArrayList
- * @see LinkedList
+ * @see LinkedList 可被用作堆栈（stack），队列（queue）或双向队列（deque）
  * @see AbstractList
  * @see AbstractSequentialList
- * @see Vector
+ * @see Vector 同步
+ * @see Stack 后进先出的堆栈
+ * @see Delayed
+ * @see DelayQueue
+ * @see AbstractQueue
+ * @see Queue 队列
  * @see AbstractCollection
- * @see Collection 集合框架的父接口
+ * @see Collection 集合框架的父接口 List、Set
  * @see Collections 各种有关集合操作的 静态多态方法 工具类
  * @see Collections#nCopies(int, Object)
  * @see Collections#EMPTY_LIST
+ * @see Collections#synchronizedList
  * @see Arrays
  * @see Arrays#asList(Object[])
  * @see IntStream

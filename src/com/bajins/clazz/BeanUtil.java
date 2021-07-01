@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  * Java语言欠缺属性、事件、多重继承功能。
  * 如果要在Java程序中实现一些面向对象编程的常见需求，只能手写大量胶水代码/粘合代码（glue code），用途是粘合那些可能不兼容的代码。
  * <p>
+ * https://www.oracle.com/java/technologies/javase/javabeans-spec.html
  * Bean的含义是可重复使用的Java组件，所谓组件就是一个由可以自行进行内部管理的一个或几个类所组成、外界不了解其内部信息和运行方式的群体
  * <p>
  * Java Bean正是编写这套胶水代码的惯用模式或约定，必须达到如下条件：

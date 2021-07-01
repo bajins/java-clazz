@@ -36,8 +36,8 @@ public class ObjectUtil {
      * @return boolean
      */
     public static boolean isEmpty(Object obj) {
-        System.out.println(obj instanceof CharSequence);
-        System.out.println(CharSequence.class.isAssignableFrom(obj.getClass()));
+        System.out.println(obj instanceof CharSequence); // 判断是否某个类的子类
+        System.out.println(CharSequence.class.isAssignableFrom(obj.getClass())); // 判断是否为某个类的父类
         // 判断是否为空引用，也就是判断在堆内存中对象是否存在
         if (obj == null) {
             return true;
