@@ -77,7 +77,20 @@ public class CollectionsLearning {
 
         accounts.stream().collect(Collectors.toMap(Account::getId, Account::getUsername));
         // 设置map的value值是实体本身，同Function.identity()
-        accounts.stream().collect(Collectors.toMap(Account::getId, account -> account));*/
+        accounts.stream().collect(Collectors.toMap(Account::getId, account -> account));
+        // 拼接key
+        accounts.stream().collect(Collectors.toMap(k -> String.format("%s|%s", k.getId(), k.getUsername()), k -> k));
+        accounts.stream().collect(Collectors.toMap(k -> {
+            return k.getId() + k.getUsername();
+        }, k -> k));
+        accounts.stream().collect(HashMap::new, (n, v) -> n.put(v.getId() + k.getUsername(), v), HashMap::putAll);
+        accounts.stream().collect(Collectors.toMap(new Function<Account, String>() {
+            @Override
+            public String apply(Account account) {
+                return account.getId() + account.getUsername();  // (id+username)作为key
+            }
+        }, k -> k));
+        */
 
 
         /**
