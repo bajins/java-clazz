@@ -276,5 +276,19 @@ public class DateTimeLearning {
         int sec = calendar.get(Calendar.SECOND);// 获取当前秒
         int day_of_week = calendar.get(Calendar.DAY_OF_WEEK);// 获取当周几
         Calendar c = Calendar.getInstance(timeZone);// 获取东八区时间
+
+
+        /*Timer animTimer = new Timer();
+        animTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+
+            }
+
+        }, 0, 10);
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10 * 101), ev -> {
+
+        }));*/
     }
 }

@@ -5,10 +5,6 @@ import java.util.List;
 
 /**
  * 自定义进制类
- *
- * @author 王钟沛
- * @version 1.0
- * @category 框架工具实体类
  */
 public class CustomDigit {
 
@@ -20,7 +16,7 @@ public class CustomDigit {
     /**
      * 用于储存转换后数据的列表
      */
-    private List<CustomInteger> numberList = new ArrayList<CustomInteger>();
+    private List<CustomInteger> numberList = new ArrayList<>();
 
     /**
      * 位数，比如2、8、10、16、60等等任意正整数
