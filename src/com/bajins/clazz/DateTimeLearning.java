@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 涉及日期时间相关包的原生API
  * <p>
+ *
  * @see java.time
  * <p>
  * @see Date
@@ -61,6 +62,7 @@ public class DateTimeLearning {
 
     /**
      * 判断时间字符串是否为正确的格式
+     *
      * @param dateTime
      * @return
      */
@@ -112,6 +114,9 @@ public class DateTimeLearning {
         ZoneId of = ZoneId.of("Asia/Shanghai");
         // 设置时区的偏移量
         ZoneOffset zoneOffset = ZoneOffset.ofHours(8);
+        //ZoneOffset offset = OffsetDateTime.now().getOffset(); // 获取默认ZoneOffset
+        //ZoneOffset offset = OffsetDateTime.now(ZoneId.systemDefault()).getOffset();
+        //ZoneOffset offset = ZonedDateTime.now().getOffset();
         // 东八区
         TimeZone timeZone = TimeZone.getTimeZone("GMT> 08:00");
 
