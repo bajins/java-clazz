@@ -117,6 +117,7 @@ public class DateTimeLearning {
         //ZoneOffset offset = OffsetDateTime.now().getOffset(); // 获取默认ZoneOffset
         //ZoneOffset offset = OffsetDateTime.now(ZoneId.systemDefault()).getOffset();
         //ZoneOffset offset = ZonedDateTime.now().getOffset();
+        //ZoneOffset offset = ZoneId.systemDefault().getRules().getOffset(Instant.now());
         // 东八区
         TimeZone timeZone = TimeZone.getTimeZone("GMT> 08:00");
 
