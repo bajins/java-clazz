@@ -1,6 +1,7 @@
 package com.bajins.clazz;
 
 import java.io.*;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -31,6 +32,24 @@ public class PropertiesUtil {
         }
     }
 
+    public static Properties getPropertiesSR(String filePath) throws IOException {
+        Properties properties = new Properties();
+        try (InputStream resourceAsStream = ClassLoader.getSystemResourceAsStream(filePath)) {
+            // 基于ClassLoder读取配置文件,该方式只能读取类路径下的配置文件，有局限但是如果配置文件在类路径下比较方便。
+            properties.load(resourceAsStream);
+            return properties;
+        }
+    }
+
+    public static Properties getPropertiesCSR(String filePath) throws IOException {
+        Properties properties = new Properties();
+        try (InputStream resourceAsStream = PropertiesUtil.class.getClassLoader().getResourceAsStream(filePath)) {
+            // 基于ClassLoder读取配置文件,该方式只能读取类路径下的配置文件，有局限但是如果配置文件在类路径下比较方便。
+            properties.load(resourceAsStream);
+            return properties;
+        }
+    }
+
     /**
      * 基于ClassLoder读取配置文件获取Properties
      *
@@ -42,6 +61,19 @@ public class PropertiesUtil {
         InputStream inputStream = PropertiesUtil.class.getResourceAsStream(filePath);
         prop.load(inputStream);
         return prop;
+    }
+
+    public static Properties getPropertiesURL(String fileName) throws IOException {
+        String filePath = Objects.requireNonNull(PropertiesUtil.class.getResource(fileName)).getFile();
+        File file = new File(filePath);
+        Properties prop = new Properties();
+        // 通过输入缓冲流进行读取配置文件
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             InputStream InputStream = new BufferedInputStream(fileInputStream)) {
+            // 加载输入流
+            prop.load(InputStream);
+            return prop;
+        }
     }
 
     /**
