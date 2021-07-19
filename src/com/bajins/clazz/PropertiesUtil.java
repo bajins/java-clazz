@@ -32,8 +32,17 @@ public class PropertiesUtil {
         }
     }
 
+    /**
+     * 当jar包中与当前项目中有同样配置文件时获取项目中的配置文件
+     * </br>可使用相对路径
+     *
+     * @param filePath
+     * @return
+     * @throws IOException
+     */
     public static Properties getPropertiesSR(String filePath) throws IOException {
         Properties properties = new Properties();
+        //InputStream resourceAsStream = ClassLoader.getSystemClassLoader().getResourceAsStream(filePath);
         try (InputStream resourceAsStream = ClassLoader.getSystemResourceAsStream(filePath)) {
             // 基于ClassLoder读取配置文件,该方式只能读取类路径下的配置文件，有局限但是如果配置文件在类路径下比较方便。
             properties.load(resourceAsStream);
@@ -41,6 +50,14 @@ public class PropertiesUtil {
         }
     }
 
+    /**
+     * 当jar包中与当前项目中有同样配置文件时获取项目中的配置文件
+     * </br>可使用相对路径
+     *
+     * @param filePath
+     * @return
+     * @throws IOException
+     */
     public static Properties getPropertiesCSR(String filePath) throws IOException {
         Properties properties = new Properties();
         try (InputStream resourceAsStream = PropertiesUtil.class.getClassLoader().getResourceAsStream(filePath)) {
@@ -129,6 +146,12 @@ public class PropertiesUtil {
             Properties propertiesI = getPropertiesI("com/test/config/config.properties");
             System.out.println(propertiesI.getProperty("key"));
 
+            Properties propertiesSR = getPropertiesSR("com/test/config/config.properties");
+            System.out.println(propertiesSR.getProperty("key"));
+
+            Properties propertiesCSR = getPropertiesCSR("com/test/config/config.properties");
+            System.out.println(propertiesCSR.getProperty("key"));
+
             ResourceBundle propertiesR = getPropertiesR("com/test/config/config.properties");
             System.out.println(propertiesR.getString("key"));
 
@@ -137,6 +160,9 @@ public class PropertiesUtil {
 
             Properties propertiesC = getPropertiesC("com/test/config/config.properties");
             System.out.println(propertiesC.getProperty("key"));
+
+            Properties propertiesURL = getPropertiesURL("");
+            System.out.println(propertiesURL.getProperty("key"));
 
             Properties propertiesL = getPropertiesL("com/test/config/config.properties");
             System.out.println(propertiesL.getProperty("key"));
