@@ -212,12 +212,41 @@ public class StringUtil {
     }
 
     /**
+     * 判断是否为驼峰
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isCamel(String str) {
+        boolean lower = false;
+        boolean upper = false;
+        for (int i = 0; i < str.length(); i++) {
+            char charAt = str.charAt(i);
+            if (Character.isLowerCase(charAt)) {
+                lower = true;
+            } else if (Character.isUpperCase(charAt)) {
+                upper = true;
+            }
+            if (lower && upper) {
+                break;
+            }
+        }
+        return lower && upper;
+    }
+
+    /**
      * 字符串大写字母转下划线，abcAbcaBc->abc_abca_bc
      *
      * @param param
      * @return
      */
     public static String upperCharToUnderLine(String param) {
+        if (!param.contains("_")) { // 如果有下划线则不进行驼峰转下划线
+            return param;
+        }
+        if (!isCamel(param)) { // 如果有小写同时也有大写才进行转换
+            return param;
+        }
         Pattern p = Pattern.compile("[A-Z]");
         if (param == null || param.equals("")) {
             return "";
@@ -235,6 +264,28 @@ public class StringUtil {
         return builder.toString();
     }
 
+    public static String camel2Underline(String line) {
+        if (line == null || "".equals(line)) {
+            return line;
+        }
+        if (!line.contains("_")) { // 如果有下划线则不进行驼峰转下划线
+            return line;
+        }
+        if (!isCamel(line)) { // 如果有小写同时也有大写才进行转换
+            return line;
+        }
+        line = String.valueOf(line.charAt(0)).toUpperCase().concat(line.substring(1));
+        StringBuffer sb = new StringBuffer();
+        Pattern pattern = Pattern.compile("[A-Z]([a-z\\d]+)?");
+        Matcher matcher = pattern.matcher(line);
+        while (matcher.find()) {
+            String word = matcher.group();
+            sb.append(word.toUpperCase());
+            sb.append(matcher.end() == line.length() ? "" : "_");
+        }
+        return sb.toString();
+    }
+
     /**
      * 驼峰转大写+下划线，abcAbcaBc->ABC_ABCA_BC
      *
@@ -242,16 +293,20 @@ public class StringUtil {
      * @return
      */
     public static String underscoreName(String name) {
+        if (!name.contains("_")) { // 如果有下划线则不进行驼峰转下划线
+            return name;
+        }
+        if (!isCamel(name)) { // 如果有小写同时也有大写才进行转换
+            return name;
+        }
         StringBuilder result = new StringBuilder();
-        if ((name != null) && (name.length() > 0)) {
-            result.append(name.substring(0, 1).toUpperCase());
-            for (int i = 1; i < name.length(); i++) {
-                String s = name.substring(i, i + 1);
-                if ((s.equals(s.toUpperCase())) && (!Character.isDigit(s.charAt(0)))) {
-                    result.append("_");
-                }
-                result.append(s.toUpperCase());
+        result.append(name.substring(0, 1).toUpperCase());
+        for (int i = 1; i < name.length(); i++) {
+            String s = name.substring(i, i + 1);
+            if ((s.equals(s.toUpperCase())) && (!Character.isDigit(s.charAt(0)))) {
+                result.append("_");
             }
+            result.append(s.toUpperCase());
         }
         return result.toString();
     }
