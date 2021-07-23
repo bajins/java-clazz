@@ -1,17 +1,18 @@
 package com.bajins.clazz;
 
-import com.bajins.clazz.delayqueue.DelayedMessage;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
 /**
  * 文件IO操作
+ *
+ * @see java.io
+ * @see java.nio
+ * @see java.net
  */
 public class InputOutputLearning {
     /**
@@ -106,25 +107,43 @@ public class InputOutputLearning {
         file.delete();
     }
 
+    /**
+     * 复制文件
+     *
+     * @param resource
+     * @param target
+     * @throws Exception
+     */
+    public static void copyFile(File resource, File target) throws IOException {
+        long start = System.currentTimeMillis();
+        try (FileInputStream inputStream = new FileInputStream(resource);// 文件输入流并进行缓冲
+             //BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+             FileOutputStream outputStream = new FileOutputStream(target);// 文件输出流并进行缓冲
+             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);) {
+            // 缓冲数组
+            // 大文件 可将 1024 * 2 改大一些，但是 并不是越大就越快
+            byte[] bytes = new byte[1024 * 2];
+            int len;
+            while ((len = inputStream.read(bytes)) != -1) {
+                bufferedOutputStream.write(bytes, 0, len);
+            }
+            // 刷新输出缓冲流
+            bufferedOutputStream.flush();
+        }
+        long end = System.currentTimeMillis();
+
+        System.out.println("耗时：" + (end - start) / 1000 + " s");
+    }
+
 
     public static void main(String[] args) {
-        DelayedMessage delayedMessage = new DelayedMessage(1, "1111111111", 10000);
-        Class<? extends DelayedMessage> clazz = delayedMessage.getClass();
-        Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
-            field.setAccessible(true);
-            try {
-                Object o = field.get(delayedMessage);
-                System.out.println(clazz.getSimpleName() + "  " + field.getName() + "  " + o);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        });
-        System.out.println("--------------------");
-        Arrays.stream(clazz.getFields()).forEach(System.out::println);
-        System.out.println("--------------------");
-        System.out.println(clazz.getSimpleName());
-
-        System.out.println(StandardCharsets.UTF_8);
-
+        // https://www.cnblogs.com/fortunely/p/14051310.html
+        Path path = Paths.get("foo", "bar", "baz.txt");
+        System.out.println(path.resolve("foo"));
+        System.out.println(path.resolveSibling("foo"));
+        System.out.println(path.relativize(Paths.get("bar")));
+        System.out.println(path.getFileName());
+        System.out.println(path.getFileSystem());
+        System.out.println(Paths.get("bar","11").getFileName());
     }
 }

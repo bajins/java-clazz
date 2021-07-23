@@ -1,5 +1,8 @@
 package com.bajins.clazz;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+
 public class HandleProxy<T> {
     private Class<T> clazz;
 
@@ -7,8 +10,7 @@ public class HandleProxy<T> {
         this.clazz = clazz;
     }
 
-    //public T getInstance(){
-    //    Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),new Class[]{clazz},new ProxyIn)
-    //
-    //}
+    public T getInstance(InvocationHandler handler) {
+        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{clazz}, handler);
+    }
 }
