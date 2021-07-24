@@ -52,6 +52,7 @@ public class CollectionsLearning {
 
 
     public static void main(String[] args) {
+        // https://juejin.cn/post/6844903766106325006
         // 数组转List
         List<String> list = Arrays.asList("a", "b", "c", "d");
         /*list = Stream.of("a", "b", "c", "d").collect(Collectors.toList());
@@ -94,12 +95,20 @@ public class CollectionsLearning {
 
 
         /**
+         * List转Set
+         */
+        //Set<String> userIdSet = userList.stream().map(User::getId).collect(Collectors.toSet());
+        //Set<String> userIdSet = userList.stream().map(User::getId).collect(Collectors.toCollection(TreeSet::new));
+
+
+        /**
          * Map转List
          */
         /*List<String> result = new ArrayList(map.keySet());
         List<String> result2 = new ArrayList(map.values());
         List<String> result3 = map.keySet().stream().collect(Collectors.toList());
         List<String> result4 = map.values().stream().collect(Collectors.toList());*/
+
 
 
         System.out.println("------------- 随机取值 -------------");
@@ -153,12 +162,10 @@ public class CollectionsLearning {
         // 先以属性一升序,再进行属性二降序
         list.stream().sorted(Comparator.comparing(类::属性一).thenComparing(类::属性二,Comparator.reverseOrder()));*/
 
-        List<Integer> intList = new ArrayList<>();
-        intList.add(1);
-        intList.add(2);
-        intList.add(3);
-        intList.add(4);
-        intList.add(5);
+        // IntStream.range(0, 10).boxed().collect(Collectors.toList());
+        List<Integer> intList = new ArrayList<>(
+                IntStream.range(0, 10).boxed().collect(Collectors.toCollection(ArrayList::new))
+        );
         /**
          * 分组：
          * 将一个list按三个一组分成N个小的list，分组后的list不再是原list的视图，原list的改变不会影响分组后的结果
@@ -218,12 +225,12 @@ public class CollectionsLearning {
         System.out.println("---交集 intersection---");
         intersection.parallelStream().forEach(System.out::println);
 
-        // 差集 (list1 - list2)
+        // 差集 (list1 - list2) 前面一个列表在后面一个列表中没有的数据
         List<String> reduce1 = list1.stream().filter(item -> !list2.contains(item)).collect(Collectors.toList());
         System.out.println("---差集 reduce1 (list1 - list2)---");
         reduce1.parallelStream().forEach(System.out::println);
 
-        // 差集 (list2 - list1)
+        // 差集 (list2 - list1) 前面一个列表在后面一个列表中没有的数据
         List<String> reduce2 = list2.stream().filter(item -> !list1.contains(item)).collect(Collectors.toList());
         System.out.println("---差集 reduce2 (list2 - list1)---");
         reduce2.parallelStream().forEach(System.out::println);
