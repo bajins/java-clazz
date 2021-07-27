@@ -1,5 +1,6 @@
 package com.bajins.clazz;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class CustomDigit {
     /**
      * 十进制数
      */
-    private Integer decimal;
+    private BigDecimal decimal;
 
     /**
      * 用于储存转换后数据的列表
@@ -32,14 +33,27 @@ public class CustomDigit {
         super();
     }
 
-    public CustomDigit(Integer decimal, Integer digit) {
+    public CustomDigit(BigDecimal decimal, Integer digit) {
         this.decimal = decimal;
         this.digit = digit;
         numberList.add(new CustomInteger(0));
     }
 
-    public CustomDigit(Integer decimal, Integer digit, Integer minValue) {
+    public CustomDigit(String decimal, Integer digit) {
+        this.decimal = new BigDecimal(decimal);
+        this.digit = digit;
+        numberList.add(new CustomInteger(0));
+    }
+
+    public CustomDigit(BigDecimal decimal, Integer digit, Integer minValue) {
         this.decimal = decimal;
+        this.digit = digit;
+        this.minValue = minValue;
+        numberList.add(new CustomInteger(0));
+    }
+
+    public CustomDigit(String decimal, Integer digit, Integer minValue) {
+        this.decimal = new BigDecimal(decimal);
         this.digit = digit;
         this.minValue = minValue;
         numberList.add(new CustomInteger(0));
@@ -48,14 +62,14 @@ public class CustomDigit {
     /**
      * @return the decimal
      */
-    public Integer getDecimal() {
+    public BigDecimal getDecimal() {
         return decimal;
     }
 
     /**
      * @param decimal the decimal to set
      */
-    public void setDecimal(Integer decimal) {
+    public void setDecimal(BigDecimal decimal) {
         this.decimal = decimal;
     }
 
@@ -102,7 +116,7 @@ public class CustomDigit {
     }
 
     public void clear() {
-        this.decimal = 0;
+        this.decimal = BigDecimal.ZERO;
         this.digit = 0;
         this.minValue = 0;
         this.numberList.clear();
@@ -113,7 +127,7 @@ public class CustomDigit {
     }
 
     private List<CustomInteger> formattedNumberList() {
-        int initialNumber = decimal;
+        int initialNumber = decimal.intValue();
         while (initialNumber > 0) {
             int tempNumber = initialNumber > digit ? digit : initialNumber;
             CustomInteger lastNumber = this.numberList.get(getLength() - 1);

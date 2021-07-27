@@ -72,7 +72,7 @@ public class BinOctDecHexTest {
     /**
      * 由于用到了位移操作，所以它的进制表示只是局限于2/4/8/16/32，其它的就不能实现了。
      *
-     * @param i 十进制的数字
+     * @param i     十进制的数字
      * @param shift 当shift为1时，表示二进制；当shift为2时，表示四进制；依次类推
      * @return
      */
@@ -95,11 +95,12 @@ public class BinOctDecHexTest {
         System.out.println(toCustomNumericString(26,26));
         System.out.println(toUnsignedString(26,32));
 
-        CustomDigit cd = new CustomDigit(750, 16, 1);
+        CustomDigit cd = new CustomDigit("1000000000", 36, 1);
         for (Integer i : cd.getFormattedNumberList()) {
             // 因为从1开始，所以这边只加上64，即从'A'输出到'Z'
             System.out.print((char) (i + 64));
         }
+        System.out.println(Integer.parseInt("SAMURT", Character.MAX_RADIX));
     }
 
 }

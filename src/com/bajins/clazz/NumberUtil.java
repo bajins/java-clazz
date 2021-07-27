@@ -164,6 +164,7 @@ public class NumberUtil {
     }
 
     public static void main(String[] args) {
+        // BigInteger https://blog.csdn.net/m0_37602827/article/details/102547542
         BigDecimal decimal = new BigDecimal("10");
         BigDecimal decima2 = new BigDecimal("11");
         // compareTo 相等返回0，小于返回-1，大于返回1
