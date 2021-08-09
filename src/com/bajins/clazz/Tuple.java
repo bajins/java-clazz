@@ -11,6 +11,7 @@ package com.bajins.clazz;
  * 但和列表不同的是：列表只能存储相同的数据类型，而元组不一样，它可以存储不同的数据类型
  * 这里使用泛型方法实现，利用参数类型推断，编译器可以找出具体的类型
  * </p>
+ * https://stackoverflow.com/questions/521171/a-java-collection-of-value-pairs-tuples
  */
 public class Tuple {
     public static <A, B> TwoTuple<A, B> tuple(A a, B b) {
