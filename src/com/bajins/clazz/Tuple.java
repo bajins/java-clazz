@@ -14,6 +14,15 @@ package com.bajins.clazz;
  * https://stackoverflow.com/questions/521171/a-java-collection-of-value-pairs-tuples
  */
 public class Tuple {
+    /**
+     * 一个Pair
+     *
+     * @param a
+     * @param b
+     * @param <A>
+     * @param <B>
+     * @return
+     */
     public static <A, B> TwoTuple<A, B> tuple(A a, B b) {
         return new TwoTuple<>(a, b);
     }
@@ -33,6 +42,14 @@ public class Tuple {
         return new ThreeTuple<>(a, b, c);
     }
 
+    public static <A, B, C, D> FourTuple<A, B, C, D> tuple(A a, B b, C c, D d) {
+        return new FourTuple<>(a, b, c, d);
+    }
+
+    public static <A, B, C, D, E> FiveTuple<A, B, C, D, E> tuple(A a, B b, C c, D d, E e) {
+        return new FiveTuple<>(a, b, c, d, e);
+    }
+
     public static class TwoTuple<A, B> {
         public final A first;
         public final B second;
@@ -50,5 +67,28 @@ public class Tuple {
             super(a, b);
             third = c;
         }
+    }
+
+    public static class FourTuple<A, B, C, D> extends ThreeTuple<A, B, C> {
+        public final D fourth;
+
+        public FourTuple(A a, B b, C c, D d) {
+            super(a, b, c);
+            fourth = d;
+        }
+    }
+
+    public static class FiveTuple<A, B, C, D, E> extends FourTuple<A, B, C, D> {
+        public final E fifth;
+
+        public FiveTuple(A a, B b, C c, D d, E e) {
+            super(a, b, c, d);
+            fifth = e;
+        }
+    }
+
+    public static void main(String[] args) {
+        FourTuple<String, Integer, Double, Long> tuple = Tuple.tuple("1", 2, 3.0, 4L);
+        System.out.println(tuple);
     }
 }
