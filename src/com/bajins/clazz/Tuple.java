@@ -8,7 +8,7 @@ package com.bajins.clazz;
  * </p>
  * <p>
  * 元组和列表list一样，都可能用于数据存储，包含多个数据；<br/>
- * 但和列表不同的是：列表只能存储相同的数据类型，而元组不一样，它可以存储不同的数据类型
+ * 但和列表不同的是：列表只能存储相同的数据类型，而元组不一样，它可以存储不同的数据类型<br/>
  * 这里使用泛型方法实现，利用参数类型推断，编译器可以找出具体的类型
  * </p>
  * https://stackoverflow.com/questions/521171/a-java-collection-of-value-pairs-tuples
