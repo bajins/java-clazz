@@ -52,6 +52,24 @@ class Apply8 {
     public static List<String> mapListToRepeat(List<String> list) {
         return mapList(list, item -> item + item); // lambda 表达式
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////
+
+    public static <R, T> List<String> newList(List<String> list, Function<R, T> mapFn) {
+        List<String> newList = new ArrayList<>();
+        for (String word : list) {
+            newList.add((String) mapFn.apply((R) word));
+        }
+        return newList;
+    }
+
+    public static List<String> newListToLowerCase(List<String> list) {
+        return newList(list, (Function<String, String>) String::toLowerCase);
+    }
+
+    public static List<String> newListToRepeat(List<String> list) {
+        return newList(list, (Function<String, String>) item -> item + item); // lambda 表达式
+    }
 }
 
 /**
