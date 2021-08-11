@@ -2,8 +2,9 @@ package com.bajins.clazz;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.*;
 
 /**
  * 在方法中传递函数，做到方法重用
@@ -22,11 +23,15 @@ public class FunctionLearning {
 /**
  * Java8使用lambda 表达式、方法引用、函数接口（@FunctionalInterface只有一个抽象方法的接口）等实现函数式编程
  *
- * @see java.util.function
+ * @see java.util.function 包下有默认的一系列定义好的函数接口
  * @see Consumer 接收一个对象，返回 void，比如 foreach
  * @see Function 接收一个对象，返回一个对象，比如 map
  * @see Predicate 接收一个对象，返回 boolean，比如 filter
  * @see Supplier 不接收对象，返回一个对象
+ * @see BiConsumer 接受两个输入参数
+ * @see BiFunction
+ * @see BinaryOperator
+ * @see BiPredicate
  * @see Comparator
  */
 class Apply8 {
