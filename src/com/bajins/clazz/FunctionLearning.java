@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.function.*;
 
 /**
- * 在方法中传递函数，做到方法重用
+ * 在方法中传递函数，做到方法重用<br/>
+ * 在使用的方法参数中接收定义的接口，方法内调用该接口的方法，合并这些重复逻辑，或反过来把非重复逻辑在接口方法中实现
  */
 public class FunctionLearning {
 
@@ -21,17 +22,17 @@ public class FunctionLearning {
 }
 
 /**
- * Java8使用lambda 表达式、方法引用、函数接口（@FunctionalInterface只有一个抽象方法的接口）等实现函数式编程
+ * Java8使用lambda表达式、方法引用、函数接口（@FunctionalInterface只能有一个抽象方法的接口）等实现函数式编程
  *
  * @see java.util.function 包下有默认的一系列定义好的函数接口
  * @see Consumer 接收一个对象，返回 void，比如 foreach
  * @see Function 接收一个对象，返回一个对象，比如 map
  * @see Predicate 接收一个对象，返回 boolean，比如 filter
  * @see Supplier 不接收对象，返回一个对象
- * @see BiConsumer 接受两个输入参数
- * @see BiFunction
- * @see BinaryOperator
- * @see BiPredicate
+ * @see BiConsumer 接收两个对象，返回 void
+ * @see BiFunction 接收三个对象，前两个是参数，最后一个是返回对象
+ * @see BinaryOperator 继承自BiFunction
+ * @see BiPredicate 接收两个对象，返回 boolean
  * @see Comparator
  */
 class Apply8 {
@@ -97,9 +98,7 @@ class Apply8 {
 }
 
 /**
- * Java8之前使用方式：<br/>
- * 定义一个接口<br/>
- * 函数参数中接收接口，调用接口的方法，合并这些重复逻辑
+ * 一般是Java8之前版本的使用方式：定义一个接口，然后使用new对该接口实例化作为参数传入方法
  */
 class Apply7 {
 
@@ -108,11 +107,11 @@ class Apply7 {
     }
 
     public static List<String> mapList(List<String> list, ApplyItem<String> mapItem) {
-        List<String> newlist = new ArrayList<>();
+        List<String> newList = new ArrayList<>();
         for (String word : list) {
-            newlist.add(mapItem.getNewItem(word));
+            newList.add(mapItem.getNewItem(word));
         }
-        return newlist;
+        return newList;
     }
 
     public static List<String> apListToUpperCase(List<String> list) {
