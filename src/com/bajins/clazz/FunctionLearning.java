@@ -14,6 +14,8 @@ public class FunctionLearning {
         List<String> list = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
         List<String> strings = Apply7.apListToUpperCase(list);
         List<String> stringList = Apply8.mapListToLowerCase(list);
+        List<String> strings1 = Apply8.newListToLowerCase(list);
+        List<String> test = Apply8.applyList(list, (r, t) -> r + t, "test");
     }
 }
 
@@ -70,6 +72,23 @@ class Apply8 {
     public static List<String> newListToRepeat(List<String> list) {
         return newList(list, (Function<String, String>) item -> item + item); // lambda 表达式
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+    @FunctionalInterface
+    interface ApplyFunction<R, T> {
+        T apply(R r, T t);
+    }
+
+    public static List<String> applyList(List<String> list, ApplyFunction<String, String> mapFn, String t) {
+        List<String> newList = new ArrayList<>();
+        for (String word : list) {
+            newList.add(mapFn.apply(word, t));
+        }
+        return newList;
+    }
+
 }
 
 /**
