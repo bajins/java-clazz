@@ -105,13 +105,18 @@ public class HtmlXml {
                 return is;
             });
             Document document = builder.parse(new File("spring-mybatis.xml"));
-            // DocumentType doctype = document.getDoctype();
-            // document.setXmlStandalone(true);
+            // false(no)表示XML不是独立的而是依赖于外部所定义的一个 DTD，true(yes)表示XML是自包含的(self-contained).
+            document.setXmlStandalone(false);
             // document.setXmlVersion("1.0");
             // System.out.println(document.getDocumentURI());
+            // DocumentType doctype = document.getDoctype();
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); // 字符集编码
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes"); // 设置换行
+            // no表示XML不是独立的而是依赖于外部所定义的一个 DTD，yes表示XML是自包含的(self-contained).
+            transformer.setOutputProperty(OutputKeys.STANDALONE, "no");
             transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "-//mybatis.org//DTDConfig 3.0//EN");
             transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "http://mybatis.org/dtd/mybatis-3-config.dtd");
             transformer.transform(new DOMSource(document), new StreamResult(System.out)); // 把内容定位到输出
