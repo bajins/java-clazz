@@ -98,8 +98,6 @@ public class HtmlXml {
             factory.setNamespaceAware(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setEntityResolver((publicId, systemId) -> {
-                //return new InputSource(new StringReader("")); // 不验证DTD
-                //return new InputSource(new ByteArrayInputStream("".getBytes())); // 不验证DTD
                 InputStream stream = XmlUtil.class.getClassLoader().getResourceAsStream("***.dtd");
                 InputSource is = new InputSource(stream);
                 is.setPublicId(publicId);
