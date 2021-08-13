@@ -1,6 +1,7 @@
 package com.bajins.clazz;
 
 import java.io.*;
+import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -108,7 +109,7 @@ public class InputOutputLearning {
     }
 
     /**
-     * 复制文件
+     * 复制文件，执行了几个读和写操作try的数据，效率低
      *
      * @param resource
      * @param target
@@ -119,7 +120,7 @@ public class InputOutputLearning {
         try (FileInputStream inputStream = new FileInputStream(resource);// 文件输入流并进行缓冲
              //BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
              FileOutputStream outputStream = new FileOutputStream(target);// 文件输出流并进行缓冲
-             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);) {
+             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream)) {
             // 缓冲数组
             // 大文件 可将 1024 * 2 改大一些，但是 并不是越大就越快
             byte[] bytes = new byte[1024 * 2];
@@ -135,6 +136,23 @@ public class InputOutputLearning {
         System.out.println("耗时：" + (end - start) / 1000 + " s");
     }
 
+    /**
+     * 使用FileChannel复制，根据官方文档说明应该比文件流复制的速度更快
+     *
+     * @param source
+     * @param dest
+     * @throws IOException
+     */
+    private static void copyFileUsingFileChannels(File source, File dest) throws IOException {
+        try (FileInputStream inputStream = new FileInputStream(source);// 文件输入流并进行缓冲
+             FileOutputStream outputStream = new FileOutputStream(dest);// 文件输出流并进行缓冲
+             FileChannel inputChannel = inputStream.getChannel();
+             FileChannel outputChannel = outputStream.getChannel()) {
+
+            outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
+        }
+    }
+
 
     public static void main(String[] args) {
         // https://www.cnblogs.com/fortunely/p/14051310.html
@@ -144,6 +162,6 @@ public class InputOutputLearning {
         System.out.println(path.relativize(Paths.get("bar")));
         System.out.println(path.getFileName());
         System.out.println(path.getFileSystem());
-        System.out.println(Paths.get("bar","11").getFileName());
+        System.out.println(Paths.get("bar", "11").getFileName());
     }
 }
