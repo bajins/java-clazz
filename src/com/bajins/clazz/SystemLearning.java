@@ -86,17 +86,17 @@ public class SystemLearning {
         // 获取本机的IP地址
         String hostAddress = addr.getHostAddress();
 
-        System.out.println(System.getenv("temp"));// 缓存目录
+        System.out.println(System.getenv("temp")); // 缓存目录
         System.out.println(System.getenv("tmp"));
         System.out.println(System.getProperty("java.io.tmpdir"));
-        System.out.println(System.getenv("userprofile"));//用户目录
+        System.out.println(System.getenv("userprofile")); // 用户目录
         System.out.println(System.getenv("homepath"));
         System.out.println(System.getProperty("user.home")); // 用户的主目录
-        System.out.println(System.getenv("localappdata"));//程序数据目录
+        System.out.println(System.getenv("localappdata")); // 程序数据目录
         System.out.println(System.getenv("appdata"));
-        System.out.println(System.getProperty("file.separator"));//路径分隔符
+        System.out.println(System.getProperty("file.separator")); // 路径分隔符
         System.out.println(System.getProperty("path.separator"));
-        System.out.println(System.getProperty("line.separator")); //多个路径分隔符
+        System.out.println(System.getProperty("line.separator")); // 多个路径分隔符
         // 获取当前系统换行符
         GetPropertyAction getPropertyAction = new GetPropertyAction("line.separator");
         String lineSeparator = AccessController.doPrivileged(getPropertyAction);
