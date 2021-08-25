@@ -196,6 +196,15 @@ public class NumberUtil {
         // 去除末尾多余的0，并输出非科学计数法的字符串
         System.out.println(new BigDecimal("100.000").stripTrailingZeros().toPlainString());
 
+        // 3个toString方法的区别
+        BigDecimal number = new BigDecimal("1E11");
+        // 有必要时使用工程计数法。工程记数法是一种工程计算中经常使用的记录数字的方法，与科学计数法类似，但要求10的幂必须是3的倍数
+        System.out.println(number.toEngineeringString());
+        // 不使用任何指数（永不使用科学计数法）
+        System.out.println(number.toPlainString());
+        // 有必要时使用科学计数法
+        System.out.println(number.toString());
+
         /**
          * DecimalFormat
          */
