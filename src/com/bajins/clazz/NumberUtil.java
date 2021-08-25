@@ -102,8 +102,8 @@ public class NumberUtil {
     /**
      * 使用NumberFormat把Double转百分比
      *
-     * @param value需要转换的数值
-     * @param maximum保留的小数位数
+     * @param value   需要转换的数值
+     * @param maximum 保留的小数位数
      * @return java.lang.String
      */
     public static String doubleToPercentage(Double value, Integer maximum) {
