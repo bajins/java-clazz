@@ -192,8 +192,8 @@ public class CollectionUtils {
     /**
      * 把List<Map>的Map中value取出装进LIST中
      *
-     * @param maps List<Map>集合
-     * @param key  Map中的key
+     * @param maps  List<Map>集合
+     * @param key   Map中的key
      * @return java.util.List
      */
     public static List getKeyList(List<Map> maps, String key) {
