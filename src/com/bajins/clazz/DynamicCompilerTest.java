@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
  * https://github.com/pfmiles/kan-java
  * https://pfmiles.github.io/blog/dynamic-java
  */
-public class DynamicTest {
+public class DynamicCompilerTest {
     private final Writer out;
     private final JavaFileManager fileManager;
     private final DiagnosticListener<? super JavaFileObject> diagnosticListener;
@@ -25,9 +25,9 @@ public class DynamicTest {
     private final Iterable<? extends JavaFileObject> compilationUnits;
     private final static JavaCompiler COMPILER = ToolProvider.getSystemJavaCompiler();
 
-    public DynamicTest(Writer out, JavaFileManager fileManager,
-                       DiagnosticListener<? super JavaFileObject> diagnosticListener, Iterable<String> options,
-                       Iterable<String> classes, Iterable<? extends JavaFileObject> compilationUnits) {
+    public DynamicCompilerTest(Writer out, JavaFileManager fileManager,
+                               DiagnosticListener<? super JavaFileObject> diagnosticListener, Iterable<String> options,
+                               Iterable<String> classes, Iterable<? extends JavaFileObject> compilationUnits) {
         this.out = out;
         this.fileManager = fileManager;
         this.diagnosticListener = diagnosticListener;
@@ -50,7 +50,7 @@ public class DynamicTest {
         // 自定义 JavaFileManager 方便自定义输入和输出
         MyJavaFileManager myJavaFileManager = new MyJavaFileManager(COMPILER.getStandardFileManager(null, null,
                 StandardCharsets.UTF_8));
-        DynamicTest dynamicTest = new DynamicTest(null
+        DynamicCompilerTest dynamicTest = new DynamicCompilerTest(null
                 , myJavaFileManager
                 , System.out::println, null, null, Arrays.asList(new StringJavaFileObject(content, "CalledClass")));
         boolean b = dynamicTest.compile();

@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -102,8 +103,14 @@ public class SystemLearning {
         String lineSeparator = AccessController.doPrivileged(getPropertyAction);
         System.err.println("获取当前系统换行符：" + lineSeparator);
         System.err.println("获取当前系统换行符：" + System.lineSeparator());
+
+        System.out.println(System.getProperty("sun.jnu.encoding")); // 操作系统默认字符编码
+        System.out.println(System.getProperty("file.encoding")); // 操作系统文件的字符编码
+        System.out.println(Charset.defaultCharset()); // 操作系统文件的字符编码
+
         System.out.println(System.getenv()); // 系统变量
         System.out.println(System.getProperties()); // Java环境变量
+        System.getProperties().list(System.out);
 
         /**
          * 内网IP范围

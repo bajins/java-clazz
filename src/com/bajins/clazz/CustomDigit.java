@@ -174,27 +174,27 @@ public class CustomDigit {
         }
         return list;
     }
-}
 
-class CustomInteger {
-    private Integer value;
+    static class CustomInteger {
+        private Integer value;
 
-    public CustomInteger() {
-    }
+        public CustomInteger() {
+        }
 
-    public CustomInteger(Integer value) {
-        this.value = value;
-    }
+        public CustomInteger(Integer value) {
+            this.value = value;
+        }
 
-    public Integer getValue() {
-        return value;
-    }
+        public Integer getValue() {
+            return value;
+        }
 
-    public void setValue(Integer value) {
-        this.value = value;
-    }
+        public void setValue(Integer value) {
+            this.value = value;
+        }
 
-    public String toString() {
-        return String.valueOf(value);
+        public String toString() {
+            return String.valueOf(value);
+        }
     }
 }
