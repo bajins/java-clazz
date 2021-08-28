@@ -110,7 +110,6 @@ public class CollectionsLearning {
         List<String> result4 = map.values().stream().collect(Collectors.toList());*/
 
 
-
         System.out.println("------------- 随机取值 -------------");
         // 方法一
         int index = (int) (Math.random() * list.size());
@@ -181,6 +180,37 @@ public class CollectionsLearning {
         Map<Boolean, List<Integer>> groups1 = intList.stream().collect(Collectors.partitioningBy(s -> s > 3));
         List<List<Integer>> subSets1 = new ArrayList<>(groups.values());
         List<Integer> lastPartition1 = subSets.get(1);
+
+
+        /**
+         * 统计求和
+         */
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "a");
+        map.put("price", 500);
+
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("name", "a");
+        map2.put("price", 1500);
+
+        Map<String, Object> map3 = new HashMap<>();
+        map3.put("name", "b");
+        map3.put("price", 300);
+
+        List<Map<String, Object>> maps = new ArrayList<>();
+        maps.add(map);
+        maps.add(map2);
+        maps.add(map3);
+        Map<String, List<Map<String, Object>>> glist =
+                maps.stream().collect(Collectors.groupingBy(e -> e.get("name").toString()));
+
+        glist.forEach((k, slist) -> {
+            IntSummaryStatistics sumcc = slist.stream().collect(
+                    Collectors.summarizingInt(e -> Integer.parseInt(e.get("price").toString())));
+            System.out.print(slist.get(0).get("name"));
+            System.out.print(" = ");
+            System.out.println(sumcc.getSum()); //求和
+        });
 
         /**
          * 过滤：

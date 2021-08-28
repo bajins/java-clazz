@@ -632,12 +632,33 @@ public class StringUtil {
      */
     public static String captureStrToUpper1(String str) {
         // 效率低下
-        /*name = name.substring(0, 1).toUpperCase() + name.substring(1);
-        return name;*/
+        /*str = str.substring(0, 1).toUpperCase() + str.substring(1);
+        return str;*/
         char[] chars = str.toCharArray();
         //chars[0] -= (chars[0] > 96 && chars[0] < 123) ? 32 : 0;
-        if (chars[0] >= 97 && chars[0] <= 122) { // 检查ascii是否大写
+        if (chars[0] >= 97 && chars[0] <= 122) { // 检查ascii是大写
             chars[0] -= 32;
+        }
+        return String.valueOf(chars);
+    }
+
+    /**
+     * 首字母小写，进行字母的ascii编码前移
+     *
+     * @param str 需要转换的字符串
+     * @return
+     */
+    public static String captureStrToLower1(String str) {
+        // 效率低下
+        /*str = str.substring(0, 1).toLowerCase(Locale.ROOT) + str.substring(1);
+        return str;*/
+        int point = str.codePointAt(0);
+        if (point < 65 || point > 90) { // 判断首字符不是大写
+            return str;
+        }
+        char[] chars = str.toCharArray();
+        if (chars[0] >= 65 && chars[0] <= 90) { // 检查ascii是大写
+            chars[0] += 32;
         }
         return String.valueOf(chars);
     }
@@ -652,6 +673,20 @@ public class StringUtil {
         char[] ch = str.toCharArray();
         if (ch[0] >= 'a' && ch[0] <= 'z') {
             ch[0] = (char) (ch[0] - 32);
+        }
+        return new String(ch);
+    }
+
+    /**
+     * 首字母小写
+     *
+     * @param str 需要转换的字符串
+     * @return
+     */
+    private String captureStrToLower2(String str) {
+        char[] ch = str.toCharArray();
+        if (ch[0] >= 'A' && ch[0] <= 'Z') {
+            ch[0] = (char) (ch[0] + 32);
         }
         return new String(ch);
     }
