@@ -3,6 +3,7 @@ package com.bajins.clazz;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
@@ -241,6 +242,9 @@ public class StringUtil {
      * @return
      */
     public static String upperCharToUnderLine(String param) {
+        if (param == null || param.trim().equals("")) {
+            return "";
+        }
         if (!param.contains("_")) { // 如果有下划线则不进行驼峰转下划线
             return param;
         }
@@ -248,9 +252,6 @@ public class StringUtil {
             return param;
         }
         Pattern p = Pattern.compile("[A-Z]");
-        if (param == null || param.equals("")) {
-            return "";
-        }
         StringBuilder builder = new StringBuilder(param);
         Matcher mc = p.matcher(param);
         int i = 0;
@@ -611,17 +612,75 @@ public class StringUtil {
      */
     public static String getEncoding(String str) throws UnsupportedEncodingException {
         // str.equals(new String(str.getBytes(encode), encode))
-        if (Charset.forName("ISO-8859-1").newEncoder().canEncode(str)) {
-            return new String(str.getBytes("ISO-8859-1"), "UTF-8");
-        } else if (Charset.forName("UTF-8").newEncoder().canEncode(str)) {
+        if (StandardCharsets.ISO_8859_1.newEncoder().canEncode(str)) {
+            return new String(str.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+        } else if (StandardCharsets.UTF_8.newEncoder().canEncode(str)) {
             return str;
         } else if (Charset.forName("GBK").newEncoder().canEncode(str)) {
-            return new String(str.getBytes("GBK"), "UTF-8");
+            return new String(str.getBytes("GBK"), StandardCharsets.UTF_8);
         } else if (Charset.forName("UNICODE").newEncoder().canEncode(str)) {
-            return new String(str.getBytes("UNICODE"), "UTF-8");
+            return new String(str.getBytes("UNICODE"), StandardCharsets.UTF_8);
         }
         return str;
     }
+
+    /**
+     * 首字母大写，进行字母的ascii编码前移
+     *
+     * @param str 需要转换的字符串
+     * @return
+     */
+    public static String captureStrToUpper1(String str) {
+        // 效率低下
+        /*name = name.substring(0, 1).toUpperCase() + name.substring(1);
+        return name;*/
+        char[] chars = str.toCharArray();
+        //chars[0] -= (chars[0] > 96 && chars[0] < 123) ? 32 : 0;
+        if (chars[0] >= 97 && chars[0] <= 122) { // 检查ascii是否大写
+            chars[0] -= 32;
+        }
+        return String.valueOf(chars);
+    }
+
+    /**
+     * 首字母大写
+     *
+     * @param str 需要转换的字符串
+     * @return
+     */
+    private String captureStrToUpper2(String str) {
+        char[] ch = str.toCharArray();
+        if (ch[0] >= 'a' && ch[0] <= 'z') {
+            ch[0] = (char) (ch[0] - 32);
+        }
+        return new String(ch);
+    }
+
+    /**
+     * 首字母大写
+     *
+     * @param str 需要转换的字符串
+     * @return
+     */
+    public static String toUpperCase4Index(String str) {
+        char[] methodName = str.toCharArray();
+        methodName[0] = toUpperCase(methodName[0]);
+        return String.valueOf(methodName);
+    }
+
+    /**
+     * 字符转成大写
+     *
+     * @param chars
+     * @return
+     */
+    public static char toUpperCase(char chars) {
+        if (97 <= chars && chars <= 122) {
+            chars ^= 32;
+        }
+        return chars;
+    }
+
 
     public static void main(String[] args) {
         String[] addr = {"北京", "南京", "重庆", "西安"};
