@@ -201,15 +201,15 @@ public class CollectionsLearning {
         maps.add(map);
         maps.add(map2);
         maps.add(map3);
-        Map<String, List<Map<String, Object>>> glist =
+        Map<String, List<Map<String, Object>>> groupMap =
                 maps.stream().collect(Collectors.groupingBy(e -> e.get("name").toString()));
 
-        glist.forEach((k, slist) -> {
-            IntSummaryStatistics sumcc = slist.stream().collect(
+        groupMap.forEach((k, vList) -> { // 循环遍历分组
+            IntSummaryStatistics iss = vList.stream().collect(
                     Collectors.summarizingInt(e -> Integer.parseInt(e.get("price").toString())));
-            System.out.print(slist.get(0).get("name"));
+            System.out.print(k);
             System.out.print(" = ");
-            System.out.println(sumcc.getSum()); //求和
+            System.out.println(iss.getSum()); //求和
         });
 
         /**
