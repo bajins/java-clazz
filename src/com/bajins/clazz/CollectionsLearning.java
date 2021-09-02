@@ -30,9 +30,16 @@ import java.util.stream.*;
  * @see Vector 同步
  * @see Stack 后进先出的堆栈
  * @see Delayed
- * @see DelayQueue
  * @see AbstractQueue
  * @see Queue 队列
+ * @see BlockingQueue 阻塞队列接口
+ * @see ArrayBlockingQueue 一个由数组结构组成的有界阻塞队列。
+ * @see LinkedBlockingQueue 一个由链表结构组成的有界阻塞队列。
+ * @see SynchronousQueue 一个不存储元素的阻塞队列，即直接提交给线程不保持它们。
+ * @see PriorityBlockingQueue 一个支持优先级排序的无界阻塞队列。
+ * @see DelayQueue 一个使用优先级队列实现的无界阻塞队列，只有在延迟期满时才能从中提取元素。
+ * @see LinkedTransferQueue 一个由链表结构组成的无界阻塞队列。与SynchronousQueue类似，还含有非阻塞方法。
+ * @see LinkedBlockingDeque 一个由链表结构组成的双向阻塞队列。
  * @see AbstractCollection
  * @see Collection 集合框架的父接口 List、Set
  * @see Collections 各种有关集合操作的 静态多态方法 工具类
@@ -127,7 +134,6 @@ public class CollectionsLearning {
          * 也就是说，修改这个子列表，将导致原列表也发生改变。
          */
         List newList = list.subList(0, 2);
-
         /**
          * 排序
          */

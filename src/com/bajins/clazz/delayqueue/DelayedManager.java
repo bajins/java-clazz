@@ -13,14 +13,6 @@ import java.util.concurrent.TimeUnit;
  * @program com.bajins.common.utils.delayqueue
  * @description QueueManager
  * @create 2019-03-16 22:07
- * @see BlockingQueue 阻塞队列接口
- * @see ArrayBlockingQueue 一个由数组结构组成的有界阻塞队列。
- * @see LinkedBlockingQueue 一个由链表结构组成的有界阻塞队列。
- * @see SynchronousQueue 一个不存储元素的阻塞队列，即直接提交给线程不保持它们。
- * @see PriorityBlockingQueue 一个支持优先级排序的无界阻塞队列。
- * @see DelayQueue 一个使用优先级队列实现的无界阻塞队列，只有在延迟期满时才能从中提取元素。
- * @see LinkedTransferQueue 一个由链表结构组成的无界阻塞队列。与SynchronousQueue类似，还含有非阻塞方法。
- * @see LinkedBlockingDeque 一个由链表结构组成的双向阻塞队列。
  */
 public class DelayedManager {
 
