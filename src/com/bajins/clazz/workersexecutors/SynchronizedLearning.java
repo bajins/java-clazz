@@ -1,9 +1,11 @@
-package com.bajins.clazz;
+package com.bajins.clazz.workersexecutors;
 
 
 /**
  * Synchronized示例
  *
+ * @see Monitor https://www.cnblogs.com/tomsheep/archive/2010/06/09/1754419.html
+ * @see Lock
  */
 public class SynchronizedLearning {
 

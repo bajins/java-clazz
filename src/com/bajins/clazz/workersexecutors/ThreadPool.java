@@ -12,7 +12,6 @@ import java.util.concurrent.*;
  * @see Executors
  * @see ExecutorService
  * @see ThreadPoolExecutor
- * @see ForkJoinPool
  * @see CountDownLatch
  */
 public class ThreadPool {
@@ -36,9 +35,9 @@ public class ThreadPool {
         //ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
 
         // 创建一个具有抢占式操作（并行操作）的线程池，每个线程都有一个任务队列存放任务（窃取算法），JDK1.8新增
-        // 默认将available processors作为其目标并行度，使用ForkJoinPool实现
-        // 该线程池维护足以支持给定并行度级别的线程，并使用多个队列来减少争用。并行度级别对应于活动参与或可用于参与任务处理的最大线程数。
-        // 实际的线程数可能会动态增长和收缩。不能保证提交任务的执行顺序
+        // 默认将available processors作为其目标并行度级别，使用ForkJoinPool实现
+        // 该work stealing池维护足以支持给定并行度级别的线程，并使用多个队列来减少争用。不能保证提交任务的执行顺序
+        // 并行度级别对应于活动参与或可用于参与任务处理的最大线程数。实际的线程数可能会动态增长和收缩。
         //ExecutorService executorService = Executors.newWorkStealingPool();
         //System.out.println(Runtime.getRuntime().availableProcessors()); // CPU 核数
         for (int i = 0; i < 10; i++) {

@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
  * @program com.bajins.common.utils.delayqueue
  * @description QueueManager
  * @create 2019-03-16 22:07
+ * @see BlockingQueue 阻塞队列接口
  * @see ArrayBlockingQueue 一个由数组结构组成的有界阻塞队列。
  * @see LinkedBlockingQueue 一个由链表结构组成的有界阻塞队列。
  * @see SynchronousQueue 一个不存储元素的阻塞队列，即直接提交给线程不保持它们。

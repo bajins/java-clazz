@@ -6,14 +6,19 @@ import java.util.concurrent.*;
 
 
 /**
- * 四种方式创建线程
+ * 6种方式创建线程
  *
  * @see Callable
+ * @see RunnableFuture
+ * @see Future
  * @see FutureTask
- * @see java.util.concurrent.Future
  * @see Thread
  * @see Runnable
  * @see CountDownLatch
+ * @see ForkJoinPool 用于把大的计算任务，拆分为多个小的计算任务
+ * @see RecursiveAction
+ * @see RecursiveTask
+ * @see ForkJoinTask
  */
 public class ThreadExample {
 
@@ -190,6 +195,116 @@ public class ThreadExample {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    /**
+     * 定义一个支持拆分计算的任务，继承RecursiveAction类
+     */
+    private static class RecursiveActionExtends extends RecursiveAction {
+        private int start;
+        private int end;
+        private final int MAX_NUM = 100;
+
+        /**
+         * 构造实例传入任务需要的参数
+         */
+        public RecursiveActionExtends(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        /**
+         * 具体执行计算的任务的抽象方法重写
+         */
+        @Override
+        protected void compute() {
+            String tName = Thread.currentThread().getName();
+            if ((end - start) < MAX_NUM) {
+                System.out.println(tName + "    start:" + start);
+                System.out.println(tName + "    end:" + end);
+            } else {
+                int middle = (start + end) / 2;
+                /**
+                 * 大任务拆分为两个小任务
+                 */
+                RecursiveActionExtends subTask1 = new RecursiveActionExtends(start, middle);
+                RecursiveActionExtends subTask2 = new RecursiveActionExtends(middle, end);
+                // 分别执行两个小任务
+                subTask1.fork();
+                subTask2.fork();
+            }
+        }
+
+        /**
+         * 执行计算任务
+         */
+        public static void main(String[] args) throws InterruptedException {
+            ForkJoinPool forkJoinPool = new ForkJoinPool();
+            RecursiveActionExtends printTask = new RecursiveActionExtends(1, 300);
+            // 线程池提交任务
+            forkJoinPool.submit(printTask);
+            boolean b = forkJoinPool.awaitTermination(1, TimeUnit.SECONDS); // 执行任务
+            // 关闭提交接口
+            forkJoinPool.shutdown();
+        }
+    }
+
+    /**
+     * 定义一个支持拆分计算的任务，继承RecursiveTask类(可以有返回值)
+     */
+    private static class RecursiveTaskExtends extends RecursiveTask<Integer> {
+        private int start;
+        private int end;
+        private final int MAX_NUM = 30;
+
+        /**
+         * 构造实例传入任务需要的参数
+         */
+        public RecursiveTaskExtends(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        /**
+         * 具体执行计算的任务的抽象方法重写
+         */
+        @Override
+        protected Integer compute() {
+            Integer count = 0;
+            if ((end - start) < MAX_NUM) {
+                System.out.println("start:" + start);
+                System.out.println("end:" + end);
+                for (int i = start; i < end; i++) {
+                    count += i;
+                }
+                return count;
+            }
+            int middle = (start + end) / 2;
+            /**
+             * 大任务拆分为两个小任务，
+             */
+            RecursiveTaskExtends subTask1 = new RecursiveTaskExtends(start, middle);
+            RecursiveTaskExtends subTask2 = new RecursiveTaskExtends(middle, end);
+            // 分别执行两个小任务
+            subTask1.fork();
+            subTask2.fork();
+            return subTask1.join() + subTask2.join(); // 合并两个子任务结果
+
+        }
+
+        /**
+         * 执行计算任务
+         */
+        public static void main(String[] args) throws InterruptedException, ExecutionException {
+            ForkJoinPool forkJoinPool = new ForkJoinPool();
+            RecursiveTaskExtends calcCountTask = new RecursiveTaskExtends(1, 101);
+            // 线程池提交任务
+            ForkJoinTask<Integer> forkJoinTask = forkJoinPool.submit(calcCountTask);
+            // 获取执行结果
+            System.out.println(forkJoinTask.get());
+            // 关闭提交接口
+            forkJoinPool.shutdown();
         }
     }
 }
