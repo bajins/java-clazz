@@ -1,6 +1,7 @@
 package com.bajins.clazz.workersexecutors;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 线程池<br/>
@@ -12,7 +13,12 @@ import java.util.concurrent.*;
  * @see Executors
  * @see ExecutorService
  * @see ThreadPoolExecutor
- * @see CountDownLatch
+ * @see CountDownLatch 使一个线程等待其他线程各自执行完毕后再执行 https://zhuanlan.zhihu.com/p/148231820
+ * @see CyclicBarrier 计数器更像一个阀门，需要所有线程都到达，然后继续执行，计数器递增，提供reset功能，可以多次使用
+ * https://zhuanlan.zhihu.com/p/265530418
+ * https://blog.csdn.net/qq_39241239/article/details/87030142
+ * https://blog.csdn.net/qq_38293564/article/details/80558157
+ * @see Semaphore 信号量，控制同时访问特定资源的线程数量 https://www.cnblogs.com/crazymakercircle/p/13907012.html
  */
 public class ThreadPool {
 
@@ -35,7 +41,7 @@ public class ThreadPool {
         //ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
 
         // 创建一个具有抢占式操作（并行操作）的线程池，每个线程都有一个任务队列存放任务（窃取算法），JDK1.8新增
-        // 默认将available processors作为其目标并行度级别，使用ForkJoinPool实现
+        // 默认将available processors（最大同时执行线程数）作为其目标并行度级别，使用ForkJoinPool实现
         // 该work stealing池维护足以支持给定并行度级别的线程，并使用多个队列来减少争用。不能保证提交任务的执行顺序
         // 并行度级别对应于活动参与或可用于参与任务处理的最大线程数。实际的线程数可能会动态增长和收缩。
         //ExecutorService executorService = Executors.newWorkStealingPool();
@@ -76,6 +82,56 @@ public class ThreadPool {
             countDownLatch.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static class TestWorkStealing {
+
+        public static void main(String[] args) {
+            // 创建一个具有抢占式操作的线程池 1。8 之后新增 每个线程都有一个任务队列存放任务
+            ExecutorService executorService =
+                    Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors());
+            // CPU 核数
+            System.out.println("CPU核数：" + Runtime.getRuntime().availableProcessors());
+            //CountDownLatch countDownLatch = new CountDownLatch(20); // 计数器
+
+            long start = System.currentTimeMillis();
+            LinkedBlockingDeque<Future<String>> strings = new LinkedBlockingDeque<>();
+            AtomicInteger a = new AtomicInteger(); // 原子
+            for (int i = 1; i <= 20; i++) {
+                Future<String> submit = executorService.submit(new Callable<String>() {
+                    @Override
+                    public String call() {
+                        try {
+                            TimeUnit.SECONDS.sleep(2);
+                            a.getAndIncrement(); // 以原子的方式将当前值加 1，注意，这里返回的是自增前的值，也就是旧值
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } finally {
+                            //countDownLatch.countDown();
+                        }
+                        return Thread.currentThread().getName();
+                    }
+                });
+                strings.offer(submit);
+            }
+            /*try {
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
+            //System.out.println("计数器统计：" + countDownLatch.getCount());
+            executorService.shutdown();
+
+            strings.forEach(f -> {
+                try {
+                    System.out.println(f.get());
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            });
+            System.out.println("原子整数结果：" + a.get());
+            System.out.println("执行共耗时：" + ((System.currentTimeMillis() - start) / 1000) + "s");
         }
     }
 }

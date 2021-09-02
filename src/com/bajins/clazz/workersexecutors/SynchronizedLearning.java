@@ -5,7 +5,33 @@ package com.bajins.clazz.workersexecutors;
  * Synchronized示例
  *
  * @see Monitor https://www.cnblogs.com/tomsheep/archive/2010/06/09/1754419.html
+ * @see java.util.concurrent.locks 锁类包
  * @see Lock
+ * @see Condition
+ * @see LockSupport
+ * @see ReadWriteLock
+ * @see ReentrantLock
+ * @see ReentrantReadWriteLock
+ * @see StampedLock
+ * @see java.util.concurrent.atomic 原子类包
+ * @see AtomicBoolean
+ * @see AtomicInteger
+ * @see AtomicIntegerArray
+ * @see AtomicIntegerFieldUpdater
+ * @see AtomicLong
+ * @see AtomicLongArray
+ * @see AtomicLongFieldUpdater
+ * @see AtomicMarkableReference
+ * @see AtomicReference
+ * @see AtomicReferenceArray
+ * @see AtomicReferenceFieldUpdater
+ * @see AtomicStampedReference
+ * @see Striped64 以下JDK1.8新增的原子类的抽象类
+ * @see DoubleAccumulator
+ * @see DoubleAdder
+ * @see LongAccumulator
+ * @see LongAdder
+ * @see AbstractQueuedSynchronizer
  */
 public class SynchronizedLearning {
 
