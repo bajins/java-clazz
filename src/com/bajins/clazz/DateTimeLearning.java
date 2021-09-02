@@ -22,7 +22,17 @@ import java.util.concurrent.TimeUnit;
  * @see TimerTask
  * @see Calendar
  * <p>
+ * @see Duration
  * @see TimeUnit
+ * <pre>
+ *     TimeUnit.DAYS 天
+ *     TimeUnit.HOURS 小时
+ *     TimeUnit.MINUTES 分
+ *     TimeUnit.SECONDS 秒
+ *     TimeUnit.MILLISECONDS 毫秒
+ *     TimeUnit.MICROSECONDS 微妙
+ *     TimeUnit.NANOSECONDS 纳秒
+ * </pre>
  */
 public class DateTimeLearning {
 

@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 延迟队列消息
  *
- * @author claer woytu.com
+ * @author https://www.bajins.com
  * @program com.bajins.common.utils.delayqueue
  * @description Message
  * @create 2019-03-16 21:16

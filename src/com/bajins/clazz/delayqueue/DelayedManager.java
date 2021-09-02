@@ -13,13 +13,20 @@ import java.util.concurrent.TimeUnit;
  * @program com.bajins.common.utils.delayqueue
  * @description QueueManager
  * @create 2019-03-16 22:07
+ * @see ArrayBlockingQueue 一个由数组结构组成的有界阻塞队列。
+ * @see LinkedBlockingQueue 一个由链表结构组成的有界阻塞队列。
+ * @see SynchronousQueue 一个不存储元素的阻塞队列，即直接提交给线程不保持它们。
+ * @see PriorityBlockingQueue 一个支持优先级排序的无界阻塞队列。
+ * @see DelayQueue 一个使用优先级队列实现的无界阻塞队列，只有在延迟期满时才能从中提取元素。
+ * @see LinkedTransferQueue 一个由链表结构组成的无界阻塞队列。与SynchronousQueue类似，还含有非阻塞方法。
+ * @see LinkedBlockingDeque 一个由链表结构组成的双向阻塞队列。
  */
 public class DelayedManager {
 
     // 创建延时队列
     private static final DelayQueue<DelayedMessage> queue = new DelayQueue<>();
     // 线程池，消息队列中消息的延期时间到期时，自动启用一个线程消费添加到延时队列中的消息
-    private static final ExecutorService exec = Executors.newFixedThreadPool(1);
+    private static final ExecutorService exec = Executors.newSingleThreadExecutor();
 
     /**
      * 传入指定的毫秒进行初始化
@@ -92,4 +99,28 @@ public class DelayedManager {
 
     }
 
+    /**
+     * 实现Runnable接口进行消费，此方式可以在添加完多个消息后进行消费，亦可添加单个后进行消费
+     */
+    public static class DelayedConsumer implements Runnable {
+        // 延时队列 ,消费者从其中获取消息进行消费
+        private DelayQueue<DelayedMessage> queue;
+
+        public DelayedConsumer(DelayQueue<DelayedMessage> queue) {
+            this.queue = queue;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    DelayedMessage take = queue.take();
+                    System.out.println(take);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
 }
