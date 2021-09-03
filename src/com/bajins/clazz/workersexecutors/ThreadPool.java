@@ -130,6 +130,7 @@ public class ThreadPool {
                     e.printStackTrace();
                 }
             });
+            // 注意位置，如果CountDownLatch或CyclicBarrier没有启用的情况下在此处获取值才是正确的
             System.out.println("原子整数结果：" + a.get());
             System.out.println("执行共耗时：" + ((System.currentTimeMillis() - start) / 1000) + "s");
         }
