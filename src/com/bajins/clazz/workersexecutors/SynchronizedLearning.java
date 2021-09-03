@@ -3,16 +3,21 @@ package com.bajins.clazz.workersexecutors;
 
 /**
  * Synchronized示例
+ * 内存可见性：https://www.jianshu.com/p/d3fda02d4cae https://blog.csdn.net/u013887008/article/details/79681609
+ * 线程释放锁时，JMM会把该线程对应的本地内存中的共享变量刷新到主内存中。
+ * 线程获取锁时，JMM会把该线程对应的本地内存置为无效，从而使得被监视器保护的临界区代码必须从主内存中读取共享变量。
  *
  * @see Monitor https://www.cnblogs.com/tomsheep/archive/2010/06/09/1754419.html
  * @see java.util.concurrent.locks 锁类包
  * @see Lock
- * @see Condition
+ * @see Condition 条件变量，很大程度上是为了解决Object.wait/notify/notifyAll难以使用的问题
  * @see LockSupport
  * @see ReadWriteLock
  * @see ReentrantLock
  * @see ReentrantReadWriteLock
  * @see StampedLock
+ * @see AbstractQueuedSynchronizer
+ * @see AbstractQueuedSynchronizer.Node
  * @see java.util.concurrent.atomic 原子类包
  * @see AtomicBoolean
  * @see AtomicInteger
@@ -31,7 +36,6 @@ package com.bajins.clazz.workersexecutors;
  * @see DoubleAdder
  * @see LongAccumulator
  * @see LongAdder
- * @see AbstractQueuedSynchronizer
  */
 public class SynchronizedLearning {
 

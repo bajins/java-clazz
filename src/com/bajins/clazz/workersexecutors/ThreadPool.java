@@ -52,7 +52,9 @@ public class ThreadPool {
             // 提交配合shutdown使用
             //executorService.submit(futureTask);
         }
-        //executorService.shutdown();
+        //executorService.shutdown(); // 停止接收新任务，原来的任务继续执行，再次submit()无效（关闭了提交通道）
+        //executorService.shutdownNow(); // 停止接收新任务，原来的任务停止执行（正在运行和等待的）
+        //executorService.awaitTermination(long timeOut, TimeUnit unit); // 当前线程阻塞，返回当前线程池是否已停止（true/false）
 
         /**
          * 手动创建一个线程池
@@ -79,7 +81,7 @@ public class ThreadPool {
             });
         }
         try {
-            countDownLatch.await();
+            countDownLatch.await(); // 等待所有线程都执行完成
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -89,8 +91,7 @@ public class ThreadPool {
 
         public static void main(String[] args) {
             // 创建一个具有抢占式操作的线程池 1。8 之后新增 每个线程都有一个任务队列存放任务
-            ExecutorService executorService =
-                    Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors());
+            ExecutorService executorService = Executors.newWorkStealingPool();
             // CPU 核数
             System.out.println("CPU核数：" + Runtime.getRuntime().availableProcessors());
             //CountDownLatch countDownLatch = new CountDownLatch(20); // 计数器
@@ -116,16 +117,16 @@ public class ThreadPool {
                 strings.offer(submit);
             }
             /*try {
-                countDownLatch.await();
+                countDownLatch.await(); // 等待所有线程都执行完成
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }*/
             //System.out.println("计数器统计：" + countDownLatch.getCount());
-            executorService.shutdown();
+            executorService.shutdown(); // 停止接收新任务，原来的任务继续执行，再次submit()无效（关闭了提交通道）
 
             strings.forEach(f -> {
                 try {
-                    System.out.println(f.get());
+                    System.out.println(f.get()); // 阻塞
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }

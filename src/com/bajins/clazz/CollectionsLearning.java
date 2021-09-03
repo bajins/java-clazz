@@ -27,7 +27,10 @@ import java.util.stream.*;
  * @see LinkedList 可被用作堆栈（stack），队列（queue）或双向队列（deque）
  * @see AbstractList
  * @see AbstractSequentialList
- * @see Vector 同步
+ * @see Vector 性能是最差，所有的方法都加了synchronized来同步
+ * @see Collections.SynchronizedList 能把所有 List 接口的实现类转换成线程安全的List，比 Vector 有更好的扩展性和兼容性
+ * @see CopyOnWriteArrayList 添加删除时加锁(ReentrantLock ,非synchronized同步锁)，进行复制替换操作，最后再释放锁
+ * @see CopyOnWriteArraySet
  * @see Stack 后进先出的堆栈
  * @see Delayed
  * @see AbstractQueue
