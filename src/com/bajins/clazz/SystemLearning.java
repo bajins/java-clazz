@@ -1,5 +1,6 @@
 package com.bajins.clazz;
 
+import com.sun.javafx.runtime.SystemProperties;
 import sun.security.action.GetPropertyAction;
 
 import java.net.InetAddress;
@@ -16,6 +17,7 @@ import java.util.regex.Pattern;
  * System原生API的使用示例
  *
  * @see System
+ * @see SystemProperties
  */
 public class SystemLearning {
 
@@ -82,6 +84,7 @@ public class SystemLearning {
         String version = props.getProperty("os.version");
         // 用户的当前工作目录
         String dir = props.getProperty("user.dir");
+        String userDir = SystemProperties.getProperty("userDir");
         // 获取系统账户
         String username = System.getProperty("user.name");
         // 获取本机的IP地址
