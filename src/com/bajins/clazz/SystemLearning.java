@@ -3,6 +3,8 @@ package com.bajins.clazz;
 import com.sun.javafx.runtime.SystemProperties;
 import sun.security.action.GetPropertyAction;
 
+import javax.swing.filechooser.FileSystemView;
+import java.io.File;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -85,6 +87,12 @@ public class SystemLearning {
         // 用户的当前工作目录
         String dir = props.getProperty("user.dir");
         String userDir = SystemProperties.getProperty("userDir");
+        // 获取用户桌面路径
+        FileSystemView fileSystemView = FileSystemView.getFileSystemView();
+        File desktopDir =fileSystemView.getHomeDirectory();
+        String desktopPath = desktopDir.getAbsolutePath();
+        System.out.println(desktopPath);
+
         // 获取系统账户
         String username = System.getProperty("user.name");
         // 获取本机的IP地址
