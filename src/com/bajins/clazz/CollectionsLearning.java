@@ -35,7 +35,7 @@ import java.util.stream.*;
  * @see Delayed
  * @see AbstractQueue
  * @see Queue 队列
- * @see BlockingQueue 阻塞队列接口
+ * @see BlockingQueue 阻塞队列接口 https://www.cnblogs.com/WangHaiMing/p/8798709.html
  * @see ArrayBlockingQueue 一个由数组结构组成的有界阻塞队列。
  * @see LinkedBlockingQueue 一个由链表结构组成的有界阻塞队列。
  * @see SynchronousQueue 一个不存储元素的阻塞队列，即直接提交给线程不保持它们。

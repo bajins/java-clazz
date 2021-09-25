@@ -6,14 +6,12 @@ import sun.security.action.GetPropertyAction;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.security.AccessController;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
+import java.util.Properties;
+import java.util.StringJoiner;
 
 /**
  * System原生API的使用示例
@@ -75,7 +73,7 @@ public class SystemLearning {
             e.printStackTrace();
         }
         // 获取本机名称
-        String hostName = addr.getHostName();
+        String hostName = addr != null ? addr.getHostName() : null;
         // 获得系统属性集
         Properties props = System.getProperties();
         // 操作系统名称
@@ -96,7 +94,7 @@ public class SystemLearning {
         // 获取系统账户
         String username = System.getProperty("user.name");
         // 获取本机的IP地址
-        String hostAddress = addr.getHostAddress();
+        String hostAddress = addr != null ? addr.getHostAddress() : null;
 
         System.out.println(System.getenv("temp")); // 缓存目录
         System.out.println(System.getenv("tmp"));
@@ -123,42 +121,11 @@ public class SystemLearning {
         System.out.println(System.getProperties()); // Java环境变量
         System.getProperties().list(System.out);
 
-        /**
-         * 内网IP范围
-         * <pre>
-         * 10.0.0.0/8-------10.0.0.0~10.255.255.255（A类）
-         * 172.16.0.0/12----172.16.0.0~172.31.255.255（B类）
-         * 192.168.0.0/16---192.168.0.0~192.168.255.255（C类）
-         * </pre>
-         */
-        String reg = "^(192\\.168|172\\.(1[6-9]|2\\d|3[0,1]))(\\.(2[0-4]\\d|25[0-5]|[0,1]?\\d?\\d)){2}$"
-                + "|^10(\\.([2][0-4]\\d|25[0-5]|[0,1]?\\d?\\d)){3}$";
-        Pattern p = Pattern.compile(reg);
-        Matcher matcher = p.matcher("10.0.4.2");
-        boolean isIntranet = matcher.find(); // true：是内网IP
-
-        try {
-            // 获取本机MAC地址
-            NetworkInterface ni = NetworkInterface.getByInetAddress(addr);
-            //ni.getInetAddresses().nextElement().getAddress();
-            byte[] mac = ni.getHardwareAddress();
-
-            String sMAC = null;
-            Formatter formatter = new Formatter();
-            for (int i = 0; i < mac.length; i++) {
-                sMAC = formatter.format(Locale.getDefault(), "%02X%s", mac[i], (i < mac.length - 1) ? "-" : "").toString();
-            }
-            System.out.println(sMAC);
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-
         Map<String, String> getenv = System.getenv();// 获取所有变量
         System.out.println(getenv);
         Properties properties = System.getProperties();// 获取所有配置
         System.out.println(properties);
         String tmpdir = System.getProperty("java.io.tmpdir");// 系统默认缓存目录
-
 
     }
 }

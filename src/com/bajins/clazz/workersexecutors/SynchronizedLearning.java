@@ -27,7 +27,7 @@ package com.bajins.clazz.workersexecutors;
  * @see AtomicLongArray
  * @see AtomicLongFieldUpdater
  * @see AtomicMarkableReference
- * @see AtomicReference
+ * @see AtomicReference 原子性引用
  * @see AtomicReferenceArray
  * @see AtomicReferenceFieldUpdater
  * @see AtomicStampedReference
