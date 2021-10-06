@@ -36,7 +36,7 @@ package com.bajins.clazz.workersexecutors;
  * @see DoubleAdder
  * @see LongAccumulator
  * @see LongAdder
- * @see ThreadLocal 线程本地变量
+ * @see ThreadLocal 线程本地变量（副本）
  * @see ThreadLocalRandom
  * @see InheritableThreadLocal
  */

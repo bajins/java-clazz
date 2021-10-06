@@ -1,5 +1,7 @@
 package com.bajins.clazz;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -22,9 +24,14 @@ import java.util.concurrent.TimeUnit;
  * @see Timer
  * @see TimerTask
  * @see Calendar
+ * @see DateFormat 线程不安全
+ * @see SimpleDateFormat 非线程安全
+ * @see DateFormatSymbols
+ * @see SimpleTimeZone
  * <p>
  * @see Duration
  * @see TimeUnit
+ * @see FormatStyle
  * <pre>
  *     TimeUnit.DAYS 天
  *     TimeUnit.HOURS 小时
@@ -34,8 +41,38 @@ import java.util.concurrent.TimeUnit;
  *     TimeUnit.MICROSECONDS 微妙
  *     TimeUnit.NANOSECONDS 纳秒
  * </pre>
+ * @see Instant
+ * @see LocalDate
+ * @see LocalDateTime
+ * @see DateTimeFormatter
  */
 public class DateTimeLearning {
+
+    /**
+     * 在需要执行时间格式化的地方new SimpleDateFormat局部变量实例，可能会导致短期内创建大量实例对象开销比较大<br/>
+     * 每个线程都有一个独立副本，以保证线程安全
+     */
+    /*private static final ThreadLocal<DateFormat> threadLocal = new ThreadLocal<DateFormat>() {
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        }
+    };*/
+    private static final ThreadLocal<DateFormat> threadLocal = ThreadLocal.withInitial(() ->
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+
+    public static String format(Date date) {
+        return threadLocal.get().format(date);
+    }
+
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    public static String formatDate(Date date) {
+        synchronized (sdf) { // 线程同步，在高并发的环境下会阻塞
+            return sdf.format(date);
+        }
+    }
+
 
     /**
      * 获取一天的开始时间
@@ -132,6 +169,7 @@ public class DateTimeLearning {
         // 东八区
         TimeZone timeZone = TimeZone.getTimeZone("GMT> 08:00");
 
+        // 通过参数传入格式化对象TemporalAccessor的实现类，以保证线程安全
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
         // 基于系统时间的毫秒
