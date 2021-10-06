@@ -36,6 +36,9 @@ package com.bajins.clazz.workersexecutors;
  * @see DoubleAdder
  * @see LongAccumulator
  * @see LongAdder
+ * @see ThreadLocal 线程本地变量
+ * @see ThreadLocalRandom
+ * @see InheritableThreadLocal
  */
 public class SynchronizedLearning {
 

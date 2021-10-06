@@ -1,6 +1,5 @@
 package com.bajins.clazz;
 
-import com.bajins.clazz.delayqueue.DelayedMessage;
 import com.sun.javafx.application.PlatformImpl;
 import com.sun.javafx.tk.TKClipboard;
 import com.sun.javafx.tk.Toolkit;
@@ -112,7 +111,7 @@ public class JavaFxLearning {
     }
 
     public static void main(String[] args) {
-        createInstanceSetter(DelayedMessage.class);
+        createInstanceSetter(DelayedManager.DelayedMessage.class);
     }
 }
 

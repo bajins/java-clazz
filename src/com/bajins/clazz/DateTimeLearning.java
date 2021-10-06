@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -165,6 +166,10 @@ public class DateTimeLearning {
         String format = parse.format(dateTimeFormatter);
         System.out.println(format);
 
+        // String 转 指定格式String
+        TemporalAccessor temporal = dateTimeFormatter.parse("2020-04-28T00:52:53.072");
+        String format1 = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(temporal);
+
         // 当前时间
         LocalDateTime now = LocalDateTime.now();
         System.out.println(now.format(dateTimeFormatter));
@@ -283,7 +288,7 @@ public class DateTimeLearning {
         calendar.add(Calendar.MONTH, -1);// 当前时间前去一个月，即一个月前的时间
         calendar.getTime();// 获取一年前的时间，或者一个月前的时间
         int year = calendar.get(Calendar.YEAR);// 获取年
-        int month = calendar.get(Calendar.MONTH - 1);// 获取月，因为第一个月是0，所以要- 1
+        int month = calendar.get(Calendar.MONTH) + 1;// 获取月，因为第一个月是0，所以要+ 1
         int day = calendar.get(Calendar.DATE);// 获取日
         int first = calendar.getActualMinimum(Calendar.DAY_OF_MONTH);// 获取本月最小天数
         int last = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);// 获取本月最大天数

@@ -19,7 +19,6 @@ import java.util.concurrent.*;
  * @see RecursiveAction
  * @see RecursiveTask
  * @see ForkJoinTask
- * @see java.util.concurrent.atomic.AtomicLong
  */
 public class ThreadExample {
 
