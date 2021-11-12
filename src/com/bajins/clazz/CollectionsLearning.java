@@ -1,6 +1,7 @@
 package com.bajins.clazz;
 
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.*;
 
@@ -57,6 +58,8 @@ import java.util.stream.*;
  * @see Stream#collect(Collector)
  * @see Collector 作为Stream的collect方法的参数
  * @see Collectors 实现Collector的工具类
+ * @see Comparable 排序接口
+ * @see Comparator 比较接口
  */
 public class CollectionsLearning {
 
@@ -74,7 +77,7 @@ public class CollectionsLearning {
         //List<String> userIds = list.stream().map(a -> a.getUserid()).collect(Collectors.toList());
 
 
-        /**
+        /*
          * List转Map
          * Function接口中的默认方法 Function.identity()，这个方法返回自身对象
          */
@@ -104,14 +107,14 @@ public class CollectionsLearning {
         */
 
 
-        /**
+        /*
          * List转Set
          */
         //Set<String> userIdSet = userList.stream().map(User::getId).collect(Collectors.toSet());
         //Set<String> userIdSet = userList.stream().map(User::getId).collect(Collectors.toCollection(TreeSet::new));
 
 
-        /**
+        /*
          * Map转List
          */
         /*List<String> result = new ArrayList(map.keySet());
@@ -129,23 +132,36 @@ public class CollectionsLearning {
         Collections.shuffle(list);
         System.out.println(list.get(0));
 
-        /**
+        /*
          * 取一定范围数据
          * start,end分别是第几个到第几个。
          * 注意的是此方法和substring一样，包含前不包含结尾，取下标索引
          * 另一个注意的地方是使用此方法会改变原始list列表，返回的这个子列表的幕后其实还是原列表；
          * 也就是说，修改这个子列表，将导致原列表也发生改变。
          */
-        List newList = list.subList(0, 2);
-        /**
+        List<String> newList = list.subList(0, 2);
+        /*
          * 排序
          */
-        Collections.sort(list); // 顺序排列
+        // 会改变原list数据
+        Collections.<String>sort(list); // 顺序排列，根据类中字段排序可实现Comparable接口
+        // 多个字段排序 String.CASE_INSENSITIVE_ORDER不区分字符串大小写
+        //list.sort(Comparator.comparing(Student::getAge).thenComparing(Comparator.comparing(Student::getId)));
+        /*Collections.sort(list, new Comparator<Field>() {
+            @Override
+            public int compare(Field u1, Field u2) {
+                int diff = u1.hashCode() - u2.hashCode();
+                if (diff > 0) {
+                    return 1;
+                } else if (diff < 0) {
+                    return -1;
+                }
+                return 0; // 相等
+            }
+        });*/
         Collections.reverse(list); // 倒序排列
         Collections.shuffle(list); // 混乱排序
-        List<Object> objects = Collections.emptyList();
-        // 多个字段排序
-        //list.sort(Comparator.comparing(Student::getAge).thenComparing(Comparator.comparing(Student::getId)));
+        // 不改变原list，返回一个list的副本（ 排序之后的）
         // 返回 对象集合以类属性一升序排序
         /*list.stream().sorted(Comparator.comparing(类::属性一));
         // 返回 对象集合以类属性一降序排序 注意两种写法
@@ -171,10 +187,11 @@ public class CollectionsLearning {
         list.stream().sorted(Comparator.comparing(类::属性一).thenComparing(类::属性二,Comparator.reverseOrder()));*/
 
         // IntStream.range(0, 10).boxed().collect(Collectors.toList());
-        List<Integer> intList = new ArrayList<>(
+        List<Integer> intList = IntStream.range(0, 10).boxed().collect(Collectors.toList());
+        /*List<Integer> intList = new ArrayList<>(
                 IntStream.range(0, 10).boxed().collect(Collectors.toCollection(ArrayList::new))
-        );
-        /**
+        );*/
+        /*
          * 分组：
          * 将一个list按三个一组分成N个小的list，分组后的list不再是原list的视图，原list的改变不会影响分组后的结果
          */
@@ -191,7 +208,7 @@ public class CollectionsLearning {
         List<Integer> lastPartition1 = subSets.get(1);
 
 
-        /**
+        /*
          * 统计求和
          */
         Map<String, Object> map = new HashMap<>();
@@ -211,17 +228,29 @@ public class CollectionsLearning {
         maps.add(map2);
         maps.add(map3);
         Map<String, List<Map<String, Object>>> groupMap =
-                maps.stream().collect(Collectors.groupingBy(e -> e.get("name").toString()));
+                maps.stream().collect(Collectors.groupingBy(e -> (String) e.get("name")));
 
         groupMap.forEach((k, vList) -> { // 循环遍历分组
             IntSummaryStatistics iss = vList.stream().collect(
-                    Collectors.summarizingInt(e -> Integer.parseInt(e.get("price").toString())));
+                    Collectors.summarizingInt(e -> (Integer) e.get("price")));
             System.out.print(k);
             System.out.print(" = ");
             System.out.println(iss.getSum()); //求和
         });
-
-        /**
+        // 分组求和一步到位
+        Map<String, IntSummaryStatistics> collect1 = maps.stream().collect(
+                Collectors.groupingBy(e -> (String) e.get("name")
+                        , Collectors.summarizingInt(e -> (Integer) e.get("price"))
+                ));
+        // 分组求和后并取最大值
+        Map<String, Map<String, Object>> collect2 = maps.parallelStream().filter(Objects::nonNull).collect(
+                Collectors.groupingBy(e -> (String) e.get("name"), Collectors.collectingAndThen(
+                        Collectors.reducing((c1, c2) -> ((Integer) c1.get("price") > (Integer) c2.get("price")) ? c1 : c2)
+                        , Optional::get)
+                ));
+        int price = maps.stream().mapToInt(x -> (Integer) x.get("price")).reduce(0, Integer::sum);
+        BigDecimal price1 = maps.stream().map(x -> new BigDecimal((Integer) x.get("price"))).reduce(BigDecimal.ZERO, BigDecimal::add);
+        /*
          * 过滤：
          * 在数据规模较小、单次操作花费较小时，串行操作直接计算，
          * 而parallel并行（数据量无排序要求时使用）操作需先对数据分片后多线程处理
@@ -233,7 +262,7 @@ public class CollectionsLearning {
         boolean a = list.stream().filter(entry -> entry.equals("a")).findAny().isPresent();
         boolean b = list.stream().allMatch(entry -> entry.equals("a"));
 
-        /**
+        /*
          * 去重
          */
         // 根据name去重

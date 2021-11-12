@@ -746,6 +746,8 @@ public class StringUtil {
         SystemLearning.println("IntArray转String：", str1);
 
         SystemLearning.println("StringArray转String：", Arrays.stream(addr).collect(Collectors.joining(",")));
+        SystemLearning.println("StringArray转String：", Arrays.stream(addr).reduce((a, b) -> a + "," + b));
+        SystemLearning.println("StringArray转String：", list.stream().reduce(new StringBuilder(), (sb, s) -> sb.append(s).append(','), StringBuilder::append).toString());
         SystemLearning.println("StringArray转String：", Arrays.toString(addr));
 
         SystemLearning.println("Array转String：", String.join(",", addr));
