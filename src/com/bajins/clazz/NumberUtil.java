@@ -2,6 +2,7 @@ package com.bajins.clazz;
 
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -23,6 +24,7 @@ import java.util.regex.Pattern;
  * @see BigInteger
  * @see RoundingMode
  * @see Number 所有包装类（Byte、Short、Integer、Long、Character、Float、Double、Boolean）和Math包下的BigDecimal、BigInteger的父类
+ * @see NumberFormat
  */
 public class NumberUtil {
 
@@ -163,6 +165,33 @@ public class NumberUtil {
         return parse.doubleValue();
     }
 
+    /**
+     * 流水号补位
+     *
+     * @param i      数值
+     * @param length 长度
+     * @return 补位后的流水号字符串
+     */
+    public static String fillSerialNumber(int i, int length) {
+        // 自动填充用`0`，比如`new DecimalFormat("0.00")`保留两位小数
+        // 不填充则用`#`，比如`new DecimalFormat("0.##")`小数有就保留没有就去掉
+        DecimalFormat dFormat = new DecimalFormat("0.##");// 保留两位小数
+        dFormat.setGroupingUsed(false); // 设置是否使用分组
+        //dFormat.setMaximumFractionDigits(length); // 设置最大小数位数
+        //dFormat.setMinimumFractionDigits(length);
+        dFormat.setMaximumIntegerDigits(length); // 设置最大整数位数
+        dFormat.setMinimumIntegerDigits(length);
+        dFormat.setRoundingMode(RoundingMode.DOWN);// 不四舍五入
+        return dFormat.format(i);
+
+        /*NumberFormat nf = NumberFormat.getIntegerInstance();
+        nf.setGroupingUsed(false); // 设置是否使用分组
+        nf.setMaximumIntegerDigits(length); // 设置最大整数位数
+        nf.setMinimumIntegerDigits(length); // 设置最小整数位数
+        return nf.format(i);*/
+        //return String.format("%0" + length + "d", i);
+    }
+
     public static void main(String[] args) {
         // BigInteger https://blog.csdn.net/m0_37602827/article/details/102547542
         BigDecimal decimal = new BigDecimal("10");
@@ -204,16 +233,6 @@ public class NumberUtil {
         System.out.println(number.toPlainString());
         // 有必要时使用科学计数法
         System.out.println(number.toString());
-
-        /**
-         * DecimalFormat
-         */
-        double moneyD = 0.1585454545451545;
-        // 自动填充用`0`，比如`new DecimalFormat("0.00")`保留两位小数
-        // 不填充则用`#`，比如`new DecimalFormat("0.##")`小数有就保留没有就去掉
-        DecimalFormat dFormat = new DecimalFormat("0.00");// 保留两位小数
-        dFormat.setRoundingMode(RoundingMode.DOWN);// 不四舍五入
-        String format = dFormat.format(moneyD);
 
     }
 
