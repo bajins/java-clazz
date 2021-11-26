@@ -251,6 +251,24 @@ public class CollectionsLearning {
         int price = maps.stream().mapToInt(x -> (Integer) x.get("price")).reduce(0, Integer::sum);
         BigDecimal price1 = maps.stream().map(x -> new BigDecimal((Integer) x.get("price"))).reduce(BigDecimal.ZERO, BigDecimal::add);
         /*
+        获取重复数据
+         */
+        // 方式一：distinct, 只能获取重复的主键
+        List<Object> dl1 = maps.stream().map(t -> t.get("name")).distinct().collect(Collectors.toList());
+        System.out.println(dl1.size() != list.size() ? "有重复" : "无重复");
+        // 方式二：先分组统计
+        Map<Object, Long> dl2 = maps.stream().collect(Collectors.groupingBy(t -> t.get("name"), Collectors.counting()));
+        // 过滤出大于1（重复）的数据
+        List<Object> collect3 = dl2.keySet().stream().filter(key -> dl2.get(key) > 1).collect(Collectors.toList());
+        System.out.println("重复的数据：" + collect3);
+        // 方式三：同方式二
+        List<Map<String, Long>> collect4 = dl2.keySet().stream().filter(key -> dl2.get(key) > 1).map(key -> {
+            Map<String, Long> tamp = new HashMap<>();
+            tamp.put((String) key, dl2.get(key));
+            return tamp;
+        }).collect(Collectors.toList());
+        System.out.println("重复的数据：" + collect4);
+        /*
          * 过滤：
          * 在数据规模较小、单次操作花费较小时，串行操作直接计算，
          * 而parallel并行（数据量无排序要求时使用）操作需先对数据分片后多线程处理
