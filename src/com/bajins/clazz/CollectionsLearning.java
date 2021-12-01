@@ -3,6 +3,10 @@ package com.bajins.clazz;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.*;
 
 /**
@@ -248,8 +252,13 @@ public class CollectionsLearning {
                         Collectors.reducing((c1, c2) -> ((Integer) c1.get("price") > (Integer) c2.get("price")) ? c1 : c2)
                         , Optional::get)
                 ));
-        int price = maps.stream().mapToInt(x -> (Integer) x.get("price")).reduce(0, Integer::sum);
-        BigDecimal price1 = maps.stream().map(x -> new BigDecimal((Integer) x.get("price"))).reduce(BigDecimal.ZERO, BigDecimal::add);
+        int price = maps.stream().mapToInt(x -> (Integer) x.get("price")).sum();
+        long price$ = maps.stream().mapToInt(x -> (Integer) x.get("price")).summaryStatistics().getSum();
+        int exact = Math.toIntExact(price$);
+        int price_ = maps.stream().mapToInt(x -> (Integer) x.get("price")).reduce(0, Integer::sum);
+        // BigDecimal使用聚合函数求和
+        BigDecimal $price = maps.stream().map(x -> new BigDecimal((Integer) x.get("price"))).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal _price = maps.stream().collect(Collectors.reducing(BigDecimal.ZERO, x -> new BigDecimal((Integer) x.get("price")), BigDecimal::add));
         /*
         获取重复数据
          */
@@ -338,5 +347,76 @@ public class CollectionsLearning {
         System.out.println("---原来的List2---");
         list2.parallelStream().forEachOrdered(System.out::println);
 
+    }
+
+
+    private static <I, R> Function<I, R> castingIdentity() {
+        return i -> (R) i;
+    }
+
+    public static class CollectorImpl<T, A, R> implements Collector<T, A, R> {
+        private final Supplier<A> supplier;
+        private final BiConsumer<A, T> accumulator;
+        private final BinaryOperator<A> combiner;
+        private final Function<A, R> finisher;
+        private final Set<Characteristics> characteristics;
+
+        CollectorImpl(Supplier<A> supplier, BiConsumer<A, T> accumulator, BinaryOperator<A> combiner,
+                      Function<A, R> finisher, Set<Characteristics> characteristics) {
+            this.supplier = supplier;
+            this.accumulator = accumulator;
+            this.combiner = combiner;
+            this.finisher = finisher;
+            this.characteristics = characteristics;
+        }
+
+        CollectorImpl(Supplier<A> supplier, BiConsumer<A, T> accumulator, BinaryOperator<A> combiner,
+                      Set<Characteristics> characteristics) {
+            this(supplier, accumulator, combiner, castingIdentity(), characteristics);
+        }
+
+        @Override
+        public BiConsumer<A, T> accumulator() {
+            return accumulator;
+        }
+
+        @Override
+        public Supplier<A> supplier() {
+            return supplier;
+        }
+
+        @Override
+        public BinaryOperator<A> combiner() {
+            return combiner;
+        }
+
+        @Override
+        public Function<A, R> finisher() {
+            return finisher;
+        }
+
+        @Override
+        public Set<Characteristics> characteristics() {
+            return characteristics;
+        }
+    }
+
+    static final Set<Collector.Characteristics> CH_NOID = Collections.emptySet();
+
+    public static <T> Collector<T, ?, BigDecimal> summingBigDecimal(ToBigDecimalFunction<? super T> mapper) {
+        return new CollectorImpl<>(() -> new BigDecimal[1], (a, t) -> {
+            if (a[0] == null) {
+                a[0] = BigDecimal.ZERO;
+            }
+            a[0] = a[0].add(mapper.applyAsBigDecimal(t));
+        }, (a, b) -> {
+            a[0] = a[0].add(b[0]);
+            return a;
+        }, a -> a[0], CH_NOID);
+    }
+
+    @FunctionalInterface
+    public interface ToBigDecimalFunction<T> {
+        BigDecimal applyAsBigDecimal(T value);
     }
 }

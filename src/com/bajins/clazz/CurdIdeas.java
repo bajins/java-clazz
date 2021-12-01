@@ -65,8 +65,8 @@ public class CurdIdeas {
             }
             updateList.add(form); // 有变化的数据
         }
-        deleteList = new ArrayList<>(dbMap.values()); // 最后需要删除数据库的数据
-        if (deleteList != null && !deleteList.isEmpty()) {
+        if (dbMap != null && !dbMap.isEmpty()) {
+            deleteList = new ArrayList<>(dbMap.values()); // 最后需要删除数据库的数据
             // TODO: 请求数据库删除数据
         }
         if (addList != null && !addList.isEmpty()) {
