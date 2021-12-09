@@ -260,7 +260,7 @@ public class CollectionsLearning {
         BigDecimal $price = maps.stream().map(x -> new BigDecimal((Integer) x.get("price"))).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal _price = maps.stream().collect(Collectors.reducing(BigDecimal.ZERO, x -> new BigDecimal((Integer) x.get("price")), BigDecimal::add));
         /*
-        获取重复数据
+         * 获取重复数据
          */
         // 方式一：distinct, 只能获取重复的主键
         List<Object> dl1 = maps.stream().map(t -> t.get("name")).distinct().collect(Collectors.toList());
@@ -315,7 +315,7 @@ public class CollectionsLearning {
         list2.add("7");
         list2.add("8");
 
-        // 交集
+        // 交集 两个列表都有的数据
         List<String> intersection = list1.stream().filter(item -> list2.contains(item)).collect(Collectors.toList());
         System.out.println("---交集 intersection---");
         intersection.parallelStream().forEach(System.out::println);
@@ -325,12 +325,7 @@ public class CollectionsLearning {
         System.out.println("---差集 reduce1 (list1 - list2)---");
         reduce1.parallelStream().forEach(System.out::println);
 
-        // 差集 (list2 - list1) 前面一个列表在后面一个列表中没有的数据
-        List<String> reduce2 = list2.stream().filter(item -> !list1.contains(item)).collect(Collectors.toList());
-        System.out.println("---差集 reduce2 (list2 - list1)---");
-        reduce2.parallelStream().forEach(System.out::println);
-
-        // 并集
+        // 并集 合并两个列表
         List<String> listAll = list1.parallelStream().collect(Collectors.toList());
         List<String> listAll2 = list2.parallelStream().collect(Collectors.toList());
         listAll.addAll(listAll2);
@@ -346,7 +341,6 @@ public class CollectionsLearning {
         list1.parallelStream().forEachOrdered(System.out::println);
         System.out.println("---原来的List2---");
         list2.parallelStream().forEachOrdered(System.out::println);
-
     }
 
 
