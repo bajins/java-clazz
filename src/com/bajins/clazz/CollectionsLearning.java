@@ -316,7 +316,7 @@ public class CollectionsLearning {
         list2.add("8");
 
         // 交集 两个列表都有的数据
-        List<String> intersection = list1.stream().filter(item -> list2.contains(item)).collect(Collectors.toList());
+        List<String> intersection = list1.stream().filter(list2::contains).collect(Collectors.toList());
         System.out.println("---交集 intersection---");
         intersection.parallelStream().forEach(System.out::println);
 
@@ -331,6 +331,7 @@ public class CollectionsLearning {
         listAll.addAll(listAll2);
         System.out.println("---并集 listAll---");
         listAll.parallelStream().forEachOrdered(System.out::println);
+        List<String> listAll3 = Stream.of(list1, list2).flatMap(Collection::stream).distinct().collect(Collectors.toList());
 
         // 去重并集
         List<String> listAllDistinct = listAll.stream().distinct().collect(Collectors.toList());
@@ -341,6 +342,18 @@ public class CollectionsLearning {
         list1.parallelStream().forEachOrdered(System.out::println);
         System.out.println("---原来的List2---");
         list2.parallelStream().forEachOrdered(System.out::println);
+
+        /*
+         * 合并多个list
+         */
+        List<String> listAll4 = list1.stream().flatMap(listContainer -> list2.stream()).collect(Collectors.toList());
+
+        List<List<String>> lists = new ArrayList<>(2);
+        lists.add(listAll);
+        lists.add(listAll2);
+        lists.add(listAll3);
+        // 多层嵌套合并
+        List<String> listOf1 = lists.stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
 
