@@ -10,9 +10,13 @@ import java.util.function.Supplier;
 import java.util.stream.*;
 
 /**
+ * 集合学习：字典、列表、数组、映射、队列、堆栈<br/>
+ * stream 流：JDK1.8同时增加了接口函数调用的使用：把接口方法当作参数。见 <link>com.bajins.clazz.FunctionLearning</link>
+ *
  * @see Set 集
  * @see List 列表
  * @see Map 映射 HashMap、HashTable
+ * @see HashMap
  * @see SortedSet
  * @see SortedMap
  * @see HashSet
@@ -21,6 +25,7 @@ import java.util.stream.*;
  * @see WeakHashMap
  * @see NavigableMap
  * @see NavigableSet
+ * @see Hashtable
  * @see java.util.concurrent.ConcurrentHashMap
  * @see java.util.concurrent.ConcurrentMap
  * @see java.util.concurrent.ConcurrentNavigableMap
@@ -64,9 +69,66 @@ import java.util.stream.*;
  * @see Collectors 实现Collector的工具类
  * @see Comparable 排序接口
  * @see Comparator 比较接口
+ * @see Object#hashCode()
  */
 public class CollectionsLearning {
 
+    /**
+     * Map学习
+     */
+    public static void MapLearning() {
+        HashMap<Integer, String> map = new HashMap<>();
+        for (int i = 0; i < 1000; i++) { // 生成一千个数据
+            map.put(i, i + "");
+        }
+
+        // entrySet迭代，不能移除元素
+        for (Map.Entry<Integer, String> entry : map.entrySet()) {
+            System.out.println("方法一：key =" + entry.getKey() + "---value=" + entry.getValue());
+        }
+        // Iterator迭代，可调用entries.remove()移除元素：使用了泛型，如果不使用泛型键值则需要强转
+        Iterator<Map.Entry<Integer, String>> entries = map.entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry<Integer, String> entry = entries.next();
+            //entries.remove(); // 移除后，该循环代码块内还能正常获取到当前index数据
+            System.out.println("方法一iterator：key = " + entry.getKey() + "--value=" + entry.getValue());
+        }
+
+        // 遍历键
+        for (Integer key : map.keySet()) {
+            // 遍历键获取值：效率低，通过key得到value值更耗时
+            String value = map.get(key);
+            System.out.println("方法二：Key = " + key + ", Value = " + value);
+        }
+        Iterator<Integer> keyIterator = map.keySet().iterator();
+        while (keyIterator.hasNext()) {
+            Integer key = keyIterator.next();
+            // 遍历键获取值：效率低，通过key得到value值更耗时
+            String value = map.get(key);
+            //keyIterator.remove();  // 移除后，该循环代码块内还能正常获取到当前index数据
+            System.out.println("方法二iterator：Key = " + key + ", Value = " + value);
+        }
+        // 遍历值
+        for (String value : map.values()) {
+            System.out.println("方法二：value = " + value);
+        }
+        Iterator<String> iterator = map.values().iterator();
+        //Iterator<String> iterator = map.values().stream().iterator(); // 不能调用remove()方法
+        //Iterator<String> iterator = map.values().parallelStream().iterator(); // 不能调用remove()方法
+        while (iterator.hasNext()) {
+            String next = iterator.next();
+            //iterator.remove();  // 移除后，该循环代码块内还能正常获取到当前index数据
+            System.out.println("方法二iterator：value = " + next);
+        }
+
+        long start = System.currentTimeMillis();
+        List<Integer> collect = map.keySet().stream().collect(Collectors.toList());
+        System.out.println(System.currentTimeMillis() - start);
+        start = System.currentTimeMillis();
+        ArrayList<Integer> integers = new ArrayList<>(map.keySet());
+        System.out.println(System.currentTimeMillis() - start); // stream 比 Arrays.copyOf 效率低
+
+    }
 
     public static void main(String[] args) {
         // https://juejin.cn/post/6844903766106325006
