@@ -170,6 +170,8 @@ public class DateTimeLearning {
         TimeZone timeZone = TimeZone.getTimeZone("GMT> 08:00");
 
         // 通过参数传入格式化对象TemporalAccessor的实现类，以保证线程安全
+        // 使用YYMMdd格式 format [2020~2021]-12-[26~31] 时会变成2212
+        // @see java.time.temporal.WeekFields.ComputedDayOfField.localizedWeekBasedYear
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
         // 基于系统时间的毫秒
