@@ -192,6 +192,60 @@ public class NumberUtil {
         //return String.format("%0" + length + "d", i);
     }
 
+
+    /**
+     * 校验字符串连续多少位是纯数字或者纯字母，默认6位(字母区分大小写)
+     * <p/>
+     * 实现思路：统一转成ASCII进行计数判断，纯数字、纯字母<br/>
+     * 纯数字(数字0 -- 数字9,对应ASCII为48 -- 57)<br/>
+     * 大写纯字母(大写字母A -- 大写字母Z,对应ASCII为65 -- 90)<br/>
+     * 小写纯字母(小写字母a -- 小写字母z，对应ASCII为97 -- 122)<br/>
+     *
+     * @param value  需要校验的值
+     * @param length 校验长度,默认6位
+     */
+    public static boolean simpleLetterAndNumCheck(String value, int length) {
+        int i = 0;
+        //计数器
+        int counter = 1;
+        //
+        while (i < value.length() - 1) {
+            //当前ascii值
+            int currentAscii = value.charAt(i);
+            //下一个ascii值
+            int nextAscii = value.charAt(i + 1);
+            //满足区间进行判断
+            if ((rangeInDefined(currentAscii, 48, 57) || rangeInDefined(currentAscii, 65, 90) || rangeInDefined(currentAscii, 97, 122))
+                    && (rangeInDefined(nextAscii, 48, 57) || rangeInDefined(nextAscii, 65, 90) || rangeInDefined(nextAscii, 97, 122))) {
+                //计算两数之间差一位则为连续
+                if (Math.abs((nextAscii - currentAscii)) == 1) {
+                    //计数器++
+                    counter++;
+                } else {
+                    //否则计数器重新计数
+                    counter = 1;
+                }
+            }
+            //满足连续数字或者字母
+            if (counter >= length) return true;
+            //
+            i++;
+        }
+        return false;
+    }
+
+    /**
+     * 判断一个数字是否在某个区间
+     *
+     * @param current 当前比对值
+     * @param min     最小范围值
+     * @param max     最大范围值
+     */
+    public static boolean rangeInDefined(int current, int min, int max) {
+        //
+        return Math.max(min, current) == Math.min(current, max);
+    }
+
     public static void main(String[] args) {
         // BigInteger https://blog.csdn.net/m0_37602827/article/details/102547542
         BigDecimal decimal = new BigDecimal("10");

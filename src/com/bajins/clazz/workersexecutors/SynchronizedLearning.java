@@ -19,21 +19,21 @@ package com.bajins.clazz.workersexecutors;
  * @see AbstractQueuedSynchronizer
  * @see AbstractQueuedSynchronizer.Node
  * @see java.util.concurrent.atomic 原子类包
- * @see AtomicBoolean
- * @see AtomicInteger
- * @see AtomicIntegerArray
- * @see AtomicIntegerFieldUpdater
- * @see AtomicLong
- * @see AtomicLongArray
- * @see AtomicLongFieldUpdater
- * @see AtomicMarkableReference
- * @see AtomicReference 原子性引用
- * @see AtomicReferenceArray
- * @see AtomicReferenceFieldUpdater
- * @see AtomicStampedReference
+ * @see AtomicBoolean 原子更新布尔类型
+ * @see AtomicInteger 原子更新整型
+ * @see AtomicIntegerArray 原子更新整型数组里的元素
+ * @see AtomicIntegerFieldUpdater 原子更新整型的字段的更新器
+ * @see AtomicLong 原子更新长整型
+ * @see AtomicLongArray 原子更新长整型数组里的元素
+ * @see AtomicLongFieldUpdater 原子更新长整型字段的更新器
+ * @see AtomicMarkableReference 原子更新带有标记位的引用类型，可以使用构造方法更新一个布尔类型的标记位和引用类型
+ * @see AtomicReference 原子更新引用类型
+ * @see AtomicReferenceArray 原子更新引用类型数组里的元素
+ * @see AtomicReferenceFieldUpdater 原子更新引用类型的字段
+ * @see AtomicStampedReference 原子更新带有版本号的引用类型
  * @see Striped64 以下JDK1.8新增的原子类的抽象类
  * @see DoubleAccumulator
- * @see DoubleAdder
+ * @see DoubleAdder Atomic、Adder在低并发环境下，两者性能很相似。在高并发环境下，Adder 有更高的吞吐量，但有更高的空间复杂度
  * @see LongAccumulator
  * @see LongAdder
  * @see ThreadLocal 线程本地变量（副本）
