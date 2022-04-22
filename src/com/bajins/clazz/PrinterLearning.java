@@ -1137,7 +1137,7 @@ public class PrinterLearning {
             // socketWriter = new PrintWriter(client.getOutputStream());// 创建输入输出数据流
             outSW = new OutputStreamWriter(client.getOutputStream(), "GBK");
             BufferedWriter socketWriter = new BufferedWriter(outSW);
-            //        socketWriter.write(new String(set_chinese_on(), "UTF-8"));
+            //        socketWriter.write(new String(set_chinese_on(), StandardCharsets.UTF_8));
             socketWriter.write(new String(justification_center(), StandardCharsets.UTF_8));
             socketWriter.write("***测试***\n");
             socketWriter.write("快来买吧\n");

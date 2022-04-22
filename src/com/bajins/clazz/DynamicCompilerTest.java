@@ -15,6 +15,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
  * https://blog.csdn.net/u010398771/article/details/90474813
  * https://github.com/pfmiles/kan-java
  * https://pfmiles.github.io/blog/dynamic-java
+ *
+ * @see java.lang.instrument 代理检测-javaagent:  https://yuwang.blog.csdn.net/article/details/121037591
  */
 public class DynamicCompilerTest {
     private final Writer out;

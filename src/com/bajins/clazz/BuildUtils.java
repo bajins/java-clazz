@@ -1,8 +1,10 @@
 package com.bajins.clazz;
 
 import javax.tools.*;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -65,7 +67,7 @@ public class BuildUtils {
         JavaCompiler javaCompiler = getJavaCompiler();
         // 第一个参数：输入，默认System.in；第二个参数：输出，默认System.out；第三个参数：错误输出，默认System.err
         // 返回 0 表示成功， 其他表示出现了错误
-        //int i = javaCompiler.run(null, null, null, "-encoding", "UTF-8", "-d", ".", "test/Hello.java");
+        //int i = javaCompiler.run(null, null, null, "-encoding", StandardCharsets.UTF_8, "-d", ".", "test/Hello.java");
         // 编译文件
         try (StandardJavaFileManager fileManager = javaCompiler.getStandardFileManager(errors, null, null)) {
             // 获取编译单元
@@ -74,7 +76,7 @@ public class BuildUtils {
             // 编译执行的参数
             List<String> options = new ArrayList<>();
             options.add("-encoding");
-            options.add("UTF-8");
+            options.add(StandardCharsets.UTF_8.name());
             if (libs == null || libs.trim().equals("")) { // 当fileManager不为null时，使用此方式无效
                 options.add("-classpath"); // 或 -cp
                 options.add(libs); // linux/mac 上cp分隔符使用: windows使用 ;
@@ -123,7 +125,7 @@ public class BuildUtils {
             // 编译执行的参数
             List<String> options = new ArrayList<>();
             options.add("-encoding");
-            options.add("UTF-8");
+            options.add(StandardCharsets.UTF_8.name());
 
             JavaCompiler.CompilationTask task = javaCompiler.getTask(null, fileManager, errors, options, null,
                     compilationUnits);

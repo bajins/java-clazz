@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class CompilerLearning {
         // 获取需要编译的源代码：从文件或者字符流中获取
         Iterable<? extends JavaFileObject> files =
                 standardFileManager.getJavaFileObjectsFromStrings(Arrays.asList(fullFileName));
-        List<String> options = Arrays.asList("-encoding", "UTF-8", "-classpath",
+        List<String> options = Arrays.asList("-encoding", StandardCharsets.UTF_8.name(), "-classpath",
                 "lib/test.jar;lib/1.jar", "-d", "d:\\demo", "-sourcepath", "d:\\");
         // 生成编译任务抽象
         JavaCompiler.CompilationTask task = compiler.getTask(null, standardFileManager, diagnostics, options, null,

@@ -19,6 +19,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -70,7 +71,7 @@ public class HtmlXml {
      * @return String
      */
     public static String formForward(String title, String url, Map<String, String> params) {
-        return formForward(title, url, params, "UTF-8");
+        return formForward(title, url, params, StandardCharsets.UTF_8.name());
     }
 
     public static void main(String[] args) throws ParserConfigurationException, SAXException {
@@ -113,7 +114,7 @@ public class HtmlXml {
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); // 字符集编码
+            transformer.setOutputProperty(OutputKeys.ENCODING, StandardCharsets.UTF_8.name()); // 字符集编码
             transformer.setOutputProperty(OutputKeys.INDENT, "yes"); // 设置换行
             // no表示XML不是独立的而是依赖于外部所定义的一个 DTD，yes表示XML是自包含的(self-contained).
             transformer.setOutputProperty(OutputKeys.STANDALONE, "no");
@@ -129,7 +130,7 @@ public class HtmlXml {
         try { // 把对象数据转换成xml
             JAXBContext context = JAXBContext.newInstance(object.getClass());
             Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+            marshaller.setProperty(Marshaller.JAXB_ENCODING, StandardCharsets.UTF_8);
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(object, writer);
         } catch (JAXBException e) {

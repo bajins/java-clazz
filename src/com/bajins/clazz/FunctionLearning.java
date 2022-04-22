@@ -22,6 +22,9 @@ public class FunctionLearning {
 
     /**
      * Java8使用lambda表达式、方法引用、函数接口（@FunctionalInterface只能有一个抽象方法的接口）等实现函数式编程
+     * <p>
+     * https://www.jianshu.com/p/3c27dfd647f1
+     * https://www.orchome.com/935
      *
      * @see java.util.function 包下有默认的一系列定义好的函数接口
      * @see Consumer 接收一个对象，返回 void，比如 foreach
@@ -33,6 +36,7 @@ public class FunctionLearning {
      * @see BinaryOperator 继承自BiFunction
      * @see BiPredicate 接收两个对象，返回 boolean
      * @see Comparator
+     * @see UnaryOperator
      */
     static class Apply8 {
         /**

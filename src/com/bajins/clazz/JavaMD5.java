@@ -2,6 +2,7 @@ package com.bajins.clazz;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -58,7 +59,7 @@ public class JavaMD5 {
      */
     public static String MD5Encode(String origin) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("JavaMD5");
-        md.update(origin.getBytes("UTF-8"));
+        md.update(origin.getBytes(StandardCharsets.UTF_8));
         return byteArrayToHexString(md.digest());
     }
 

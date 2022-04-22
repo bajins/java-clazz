@@ -266,6 +266,21 @@ public class StringUtil {
         return builder.toString();
     }
 
+    /**
+     * 字符串大写字母转下划线，abcABcaBc->abc_a_bca_bc
+     * @param str
+     * @return
+     */
+    public static String snakeCase(String str) {
+        Matcher matcher = Pattern.compile("[A-Z]").matcher(str);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, "_" + matcher.group(0).toLowerCase());
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
+    }
+
     public static String camel2Underline(String line) {
         if (line == null || "".equals(line)) {
             return line;

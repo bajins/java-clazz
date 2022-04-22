@@ -77,7 +77,6 @@ public class CurdIdeas {
         }
     }
 
-
     public static void main(String[] args) {
 
     }
