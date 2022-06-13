@@ -1,11 +1,12 @@
 package com.bajins.clazz;
 
 import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
+import java.time.chrono.IsoChronology;
+import java.time.format.*;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
@@ -58,8 +59,8 @@ public class DateTimeLearning {
             return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         }
     };*/
-    private static final ThreadLocal<DateFormat> threadLocal = ThreadLocal.withInitial(() ->
-            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+    private static final ThreadLocal<DateFormat> threadLocal = ThreadLocal.withInitial(() -> new SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss"));
 
     public static String format(Date date) {
         return threadLocal.get().format(date);
@@ -126,6 +127,34 @@ public class DateTimeLearning {
         }
     }
 
+    /**
+     * 判断字符串是否为合法的日期格式
+     *
+     * @param dateStr 待判断的字符串
+     * @return
+     */
+    public static boolean isValidDate(String dateStr) {
+        //判断结果 默认为true
+        boolean judgeresult = true;
+        //1、首先使用SimpleDateFormat初步进行判断，过滤掉注入 yyyy-01-32 或yyyy-00-0x等格式
+        //此处可根据实际需求进行调整，如需判断yyyy/MM/dd格式将参数改掉即可
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            //增加强判断条件，否则 诸如2022-02-29也可判断出去
+            format.setLenient(false);
+            Date date = format.parse(dateStr);
+            System.out.println(date);
+        } catch (Exception e) {
+            judgeresult = false;
+        }
+        //由于上述方法只能验证正常的日期格式，像诸如 0001-01-01、11-01-01，10001-01-01等无法校验，此处再添加校验年费是否合法
+        String yearStr = dateStr.split("-")[0];
+        if (yearStr.startsWith("0") || yearStr.length() != 4) {
+            judgeresult = false;
+        }
+        return judgeresult;
+    }
+
     public static void main(String[] args) {
         // 设置一个基于时间的时间量
         Duration duration = Duration.ofMinutes(10);
@@ -173,6 +202,27 @@ public class DateTimeLearning {
         // 使用YYMMdd格式 format [2020~2021]-12-[26~31] 时会变成2212
         // @see java.time.temporal.WeekFields.ComputedDayOfField.localizedWeekBasedYear
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+        /*
+         * https://stackoverflow.com/questions/5897288/optional-parts-in-simpledateformat
+         * yyyy-MM-dd[[ ]['T']HH:mm[:ss][XXX]] 方括号内的允许可选也可以嵌套
+         * yyyy-MM-dd[[' ']['T']HH:mm[':'ss[.SSS]]].
+         */
+        DateTimeFormatter df = new DateTimeFormatterBuilder()//
+                //.appendPattern("yyyy-MM-dd[ HH:mm:ss.SSS]")//
+                .parseCaseInsensitive() // 解析不区分大小写
+                .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)//
+                .append(DateTimeFormatter.ISO_LOCAL_DATE)//
+                .optionalStart()//
+                .optionalStart()//
+                .appendLiteral(' ')//
+                .optionalEnd()//
+                .optionalStart()//
+                .appendLiteral('T')//
+                .optionalEnd()//
+                .appendOptional(DateTimeFormatter.ISO_TIME)//
+                .toFormatter()
+                .withResolverStyle(ResolverStyle.SMART) // 严格/智能/宽松模式
+                .withChronology(IsoChronology.INSTANCE);
 
         // 基于系统时间的毫秒
         long ctm = System.currentTimeMillis();

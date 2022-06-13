@@ -335,13 +335,13 @@ public class StringUtil {
      * @return
      */
     public static String camelName(String name) {
-        StringBuilder result = new StringBuilder();
         if ((name == null) || (name.isEmpty())) {
             return "";
         }
         if (!name.contains("_")) {
-            return name.toLowerCase();
+            return name;
         }
+        StringBuilder result = new StringBuilder();
         String[] camels = name.split("_");
         for (String camel : camels) {
             if (!camel.isEmpty()) {
