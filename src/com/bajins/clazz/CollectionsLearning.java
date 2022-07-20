@@ -28,6 +28,7 @@ import java.util.stream.*;
  * @see Hashtable
  * @see java.util.concurrent.ConcurrentHashMap
  * @see java.util.concurrent.ConcurrentMap
+ * ConcurrentHashMap.newKeySet()
  * @see java.util.concurrent.ConcurrentNavigableMap
  * @see java.util.concurrent.ConcurrentLinkedDeque
  * @see java.util.concurrent.ConcurrentLinkedQueue
@@ -39,13 +40,17 @@ import java.util.stream.*;
  * @see AbstractSequentialList
  * @see Vector 性能是最差，所有的方法都加了synchronized来同步
  * @see Collections.SynchronizedList 能把所有 List 接口的实现类转换成线程安全的List，比 Vector 有更好的扩展性和兼容性
- * @see CopyOnWriteArrayList 添加删除时加锁(ReentrantLock ,非synchronized同步锁)，进行复制替换操作，最后再释放锁
+ * https://blog.csdn.net/weixin_44203321/article/details/114065191
+ * https://blog.csdn.net/u012816626/article/details/111090575
+ * @see CopyOnWriteArrayList 添加删除时加锁(ReentrantLock，非synchronized同步锁)，进行复制替换操作，最后再释放锁，插入的过程中会创建新的数组
  * @see CopyOnWriteArraySet
  * @see Stack 后进先出的堆栈
  * @see Delayed
  * @see AbstractQueue
  * @see Queue 队列
  * @see BlockingQueue 阻塞队列接口 https://www.cnblogs.com/WangHaiMing/p/8798709.html
+ * @see WorkQueue
+ * @see WorkQueueImpl
  * @see ArrayBlockingQueue 一个由数组结构组成的有界阻塞队列。
  * @see LinkedBlockingQueue 一个由链表结构组成的有界阻塞队列。
  * @see SynchronousQueue 一个不存储元素的阻塞队列，即直接提交给线程不保持它们。
@@ -64,7 +69,7 @@ import java.util.stream.*;
  * @see IntStream
  * @see LongStream
  * @see DoubleStream
- * @see Stream#collect(Collector)
+ * @see Stream#collect(Collector) https://blog.csdn.net/qq_33591903/article/details/107990065
  * @see Collector 作为Stream的collect方法的参数
  * @see Collectors 实现Collector的工具类
  * @see Comparable 排序接口
@@ -311,7 +316,8 @@ public class CollectionsLearning {
         // 分组求和后并取最大值
         Map<String, Map<String, Object>> collect2 = maps.parallelStream().filter(Objects::nonNull).collect(
                 Collectors.groupingBy(e -> (String) e.get("name"), Collectors.collectingAndThen(
-                        Collectors.reducing((c1, c2) -> ((Integer) c1.get("price") > (Integer) c2.get("price")) ? c1 : c2)
+                        Collectors.reducing((c1, c2) -> ((Integer) c1.get("price") > (Integer) c2.get("price")) ? c1
+                                : c2)
                         , Optional::get)
                 ));
         int price = maps.stream().mapToInt(x -> (Integer) x.get("price")).sum();
@@ -319,8 +325,10 @@ public class CollectionsLearning {
         int exact = Math.toIntExact(price$);
         int price_ = maps.stream().mapToInt(x -> (Integer) x.get("price")).reduce(0, Integer::sum);
         // BigDecimal使用聚合函数求和
-        BigDecimal $price = maps.stream().map(x -> new BigDecimal((Integer) x.get("price"))).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal _price = maps.stream().collect(Collectors.reducing(BigDecimal.ZERO, x -> new BigDecimal((Integer) x.get("price")), BigDecimal::add));
+        BigDecimal $price = maps.stream().map(x -> new BigDecimal((Integer) x.get("price"))).reduce(BigDecimal.ZERO,
+                BigDecimal::add);
+        BigDecimal _price = maps.stream().collect(Collectors.reducing(BigDecimal.ZERO,
+                x -> new BigDecimal((Integer) x.get("price")), BigDecimal::add));
         /*
          * 获取重复数据
          */
@@ -393,7 +401,8 @@ public class CollectionsLearning {
         listAll.addAll(listAll2);
         System.out.println("---并集 listAll---");
         listAll.parallelStream().forEachOrdered(System.out::println);
-        List<String> listAll3 = Stream.of(list1, list2).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+        List<String> listAll3 =
+                Stream.of(list1, list2).flatMap(Collection::stream).distinct().collect(Collectors.toList());
 
         // 去重并集
         List<String> listAllDistinct = listAll.stream().distinct().collect(Collectors.toList());

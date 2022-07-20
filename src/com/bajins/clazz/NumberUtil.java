@@ -44,6 +44,8 @@ public class NumberUtil {
     /**
      * 判断浮点数（double和float）
      *
+     * https://blog.csdn.net/qq_44750696/article/details/121230073
+     *
      * @param str
      * @return boolean
      */
@@ -227,7 +229,8 @@ public class NumberUtil {
                 }
             }
             //满足连续数字或者字母
-            if (counter >= length) return true;
+            if (counter >= length)
+                return true;
             //
             i++;
         }
@@ -287,6 +290,10 @@ public class NumberUtil {
         System.out.println(number.toPlainString());
         // 有必要时使用科学计数法
         System.out.println(number.toString());
+
+        // 去掉小数点后无用的0
+        BigDecimal bigDecimal = new BigDecimal("3000.000000");
+        System.out.println(bigDecimal.stripTrailingZeros().toPlainString());
 
     }
 

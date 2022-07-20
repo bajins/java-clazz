@@ -15,10 +15,15 @@ import java.util.concurrent.*;
  * @see Thread
  * @see Runnable
  * @see CountDownLatch
- * @see ForkJoinPool 用于把大的计算任务，拆分为多个小的计算任务
+ * @see ForkJoinPool 用于把大的计算任务，拆分为多个小的计算任务 https://blog.csdn.net/beFocused/article/details/104443000
  * @see RecursiveAction
  * @see RecursiveTask
  * @see ForkJoinTask
+ * @see CountedCompleter
+ * <ul>
+ *     <li>https://blog.csdn.net/Xp545945/article/details/106402529</li>
+ *     <li>https://blog.csdn.net/beFocused/article/details/104565841</li>
+ * </ul>
  */
 public class ThreadExample {
 

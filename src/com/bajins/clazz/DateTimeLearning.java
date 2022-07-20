@@ -2,6 +2,7 @@ package com.bajins.clazz;
 
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.chrono.IsoChronology;
@@ -13,6 +14,8 @@ import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -155,6 +158,42 @@ public class DateTimeLearning {
         return judgeresult;
     }
 
+    /**
+     * 判断字符串是否为日期格式
+     *
+     * @param strDate
+     * @return
+     */
+    public static boolean isDate(String strDate) {
+        Pattern pattern = Pattern.compile("^((\\d{2}(([02468][048])|([13579][26]))[\\-\\/\\s]?((((0?[13578])|(1[02]))" +
+                "[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|" +
+                "(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])))))|(\\d{2}(([02468][1235679])|([13579][01345789]))" +
+                "[\\-\\/\\s]?((((0?[13578])|(1[02]))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])" +
+                "|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|(1[0-9])|" +
+                "(2[0-8]))))))(\\s((([0-1]?[0-9])|(2?[0-3]))\\:([0-5]?[0-9])((\\s)|(\\:([0-5]?[0-9])))))?$");
+        Matcher m = pattern.matcher(strDate);
+        return m.matches();
+    }
+
+    /**
+     * 判断字符串是否为日期时间指定格式
+     *
+     * https://github.com/xkzhangsan/xk-time
+     * https://www.jianshu.com/p/cf2f1f26dd0a
+     * https://blog.csdn.net/liuxinghao/article/details/119464230
+     *
+     * @param dat
+     * @param fmt
+     * @return
+     */
+    public static boolean isDate(String dat, String fmt) {
+        DateFormat formatter = new SimpleDateFormat(fmt);
+        ParsePosition pos = new ParsePosition(0);
+        formatter.setLenient(false); // 非宽松模式
+        Date result = formatter.parse(dat, pos);
+        return !(pos.getIndex() == 0) && dat.equals(formatter.format(result));
+    }
+
     public static void main(String[] args) {
         // 设置一个基于时间的时间量
         Duration duration = Duration.ofMinutes(10);
@@ -201,8 +240,9 @@ public class DateTimeLearning {
         // 通过参数传入格式化对象TemporalAccessor的实现类，以保证线程安全
         // 使用YYMMdd格式 format [2020~2021]-12-[26~31] 时会变成2212
         // @see java.time.temporal.WeekFields.ComputedDayOfField.localizedWeekBasedYear
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd[ HH:mm:ss.SSS]");
         /*
+         * https://blog.csdn.net/qq_31635851/article/details/120132776
          * https://stackoverflow.com/questions/5897288/optional-parts-in-simpledateformat
          * yyyy-MM-dd[[ ]['T']HH:mm[:ss][XXX]] 方括号内的允许可选也可以嵌套
          * yyyy-MM-dd[[' ']['T']HH:mm[':'ss[.SSS]]].
