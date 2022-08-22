@@ -30,8 +30,6 @@ import java.util.stream.*;
  * @see java.util.concurrent.ConcurrentMap
  * ConcurrentHashMap.newKeySet()
  * @see java.util.concurrent.ConcurrentNavigableMap
- * @see java.util.concurrent.ConcurrentLinkedDeque
- * @see java.util.concurrent.ConcurrentLinkedQueue
  * @see java.util.concurrent.ConcurrentSkipListMap
  * @see java.util.concurrent.ConcurrentSkipListSet
  * @see ArrayList
@@ -56,8 +54,12 @@ import java.util.stream.*;
  * @see SynchronousQueue 一个不存储元素的阻塞队列，即直接提交给线程不保持它们。
  * @see PriorityBlockingQueue 一个支持优先级排序的无界阻塞队列。
  * @see DelayQueue 一个使用优先级队列实现的无界阻塞队列，只有在延迟期满时才能从中提取元素。
+ * @see TransferQueue
  * @see LinkedTransferQueue 一个由链表结构组成的无界阻塞队列。与SynchronousQueue类似，还含有非阻塞方法。
+ * @see BlockingDeque
  * @see LinkedBlockingDeque 一个由链表结构组成的双向阻塞队列。
+ * @see ConcurrentLinkedDeque
+ * @see ConcurrentLinkedQueue
  * @see AbstractCollection
  * @see Collection 集合框架的父接口 List、Set
  * @see Collections 各种有关集合操作的 静态多态方法 工具类
@@ -388,6 +390,13 @@ public class CollectionsLearning {
         // 交集 两个列表都有的数据
         List<String> intersection = list1.stream().filter(list2::contains).collect(Collectors.toList());
         System.out.println("---交集 intersection---");
+        // 获取集合 重复元素
+        List<String> intersection1 = list1.stream()
+                .collect(Collectors.toMap(e -> e, e -> 1, (x, y) -> x + y)) // 获取元素出现频率的 Map ,键为元素 值为元素重复次数
+                .entrySet().stream() // Set<Entry> 转为 Stream<Entry>
+                .filter(e -> e.getValue() > 1) // 过滤元素出现次数大于 1 的 entry
+                .map(e -> e.getKey()) // 获得 entry 的键（重复的元素）对应的 Stream
+                .collect(Collectors.toList()); // 转换为 List
         intersection.parallelStream().forEach(System.out::println);
 
         // 差集 (list1 - list2) 前面一个列表在后面一个列表中没有的数据

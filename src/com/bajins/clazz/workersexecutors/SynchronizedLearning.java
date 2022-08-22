@@ -7,6 +7,7 @@ package com.bajins.clazz.workersexecutors;
  * 线程释放锁时，JMM会把该线程对应的本地内存中的共享变量刷新到主内存中。
  * 线程获取锁时，JMM会把该线程对应的本地内存置为无效，从而使得被监视器保护的临界区代码必须从主内存中读取共享变量。
  *
+ * @see java.util.concurrent
  * @see Monitor https://www.cnblogs.com/tomsheep/archive/2010/06/09/1754419.html
  * @see java.util.concurrent.locks 锁类包
  * @see Lock
@@ -18,7 +19,7 @@ package com.bajins.clazz.workersexecutors;
  * @see StampedLock
  * @see AbstractQueuedSynchronizer
  * @see AbstractQueuedSynchronizer.Node
- * @see java.util.concurrent.atomic 原子类包
+ * @see java.util.concurrent.atomic 原子类包，可解决并发、stream使用外部变量的问题
  * @see AtomicBoolean 原子更新布尔类型
  * @see AtomicInteger 原子更新整型
  * @see AtomicIntegerArray 原子更新整型数组里的元素

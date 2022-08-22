@@ -28,6 +28,10 @@ public class FunctionLearning {
      *
      * @see java.util.function 包下有默认的一系列定义好的函数接口
      * @see Consumer 接收一个对象，返回 void，比如 foreach
+     * @see Sink
+     * @see IntConsumer
+     * @see LongConsumer
+     * @see DoubleConsumer
      * @see Function 接收一个对象，返回一个对象，比如 map
      * @see Predicate 接收一个对象，返回 boolean，比如 filter
      * @see Supplier 不接收对象，返回一个对象

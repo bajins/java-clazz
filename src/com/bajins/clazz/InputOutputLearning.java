@@ -1,11 +1,11 @@
 package com.bajins.clazz;
 
 import java.io.*;
+import java.nio.channels.AsynchronousChannel;
 import java.nio.channels.FileChannel;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 
 /**
@@ -160,12 +160,60 @@ public class InputOutputLearning {
 
     public static void main(String[] args) {
         // https://www.cnblogs.com/fortunely/p/14051310.html
-        Path path = Paths.get("foo", "bar", "baz.txt");
-        System.out.println(path.resolve("foo"));
-        System.out.println(path.resolveSibling("foo"));
-        System.out.println(path.relativize(Paths.get("bar")));
-        System.out.println(path.getFileName());
-        System.out.println(path.getFileSystem());
-        System.out.println(Paths.get("bar", "11").getFileName());
+        //Path path = Paths.get("foo", "bar", "baz.txt");
+        //System.out.println(path.resolve("foo"));
+        //System.out.println(path.resolveSibling("foo"));
+        //System.out.println(path.relativize(Paths.get("bar")));
+        //System.out.println(path.getFileName());
+        //System.out.println(path.getFileSystem());
+        //System.out.println(Paths.get("bar", "11").getFileName());
+
+
+        File file = new File("C:\\Users\\claer\\Desktop\\ESN_ULPK_MAC145.bin");
+        //ByteBuffer buffer = ByteBuffer.allocateDirect(5);
+
+        try (RandomAccessFile raf = new RandomAccessFile(file, "r");) {
+            raf.seek(441); // 偏移
+            //int bytes = raf.skipBytes(441); // 要跳过的字节数
+            StringJoiner joiner = new StringJoiner(":");
+            for (int i = 0; i < 6; i++) {
+                joiner.add(Integer.toHexString(raf.read()));
+                //System.out.println(Integer.toString(raf.read(), 16));
+            }
+            System.out.println(joiner);
+            //FileChannel channel = raf.getChannel();
+            /*channel.read(buffer);
+            buffer.flip();
+            // Will be between 0 and Constants.BUFFER_SIZE
+            int sizeInBuffer = buffer.remaining();*/
+
+            /*MappedByteBuffer buf = channel.map(FileChannel.MapMode.READ_WRITE, 441, 5);
+            System.out.println(buf);*/
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("--------");
+
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             BufferedInputStream in = new BufferedInputStream(fileInputStream);
+             //ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
+        ) {
+            long skip = in.skip(441); // 要跳过的字节数
+            StringJoiner joiner = new StringJoiner(":");
+            for (int i = 0; i < 6; i++) {
+                joiner.add(Integer.toHexString(in.read()));
+            }
+            System.out.println(joiner);
+            /*byte[] temp = new byte[1024];
+            int size = 0;
+            while ((size = in.read(temp)) != -1) {
+                System.out.println(Integer.toHexString(size));
+                out.write(temp, 0, size);
+            }
+            byte[] content = out.toByteArray();
+            System.out.println(Arrays.toString(content));*/
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

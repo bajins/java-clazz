@@ -12,12 +12,48 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.StringJoiner;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class JavaFxLearning {
+
+    /**
+     * 获取所有可访问字段
+     *
+     * @param clazz
+     * @param func
+     * @date: 2022-8-20 10:56:57
+     */
+    public static void getFields(Class<?> clazz, Consumer<String> func) {
+        Method[] methods = clazz.getMethods();
+        // 过滤出可使用的字段
+        Set<String> fieldSet = Arrays.stream(methods)
+                .filter(t -> !Pattern.matches("^set.*", t.getName()))//
+                .map(t -> {
+                    String mName = t.getName().replace("set", "");
+                    return mName.substring(0, 1).toLowerCase() + mName.substring(1);
+                }).collect(Collectors.toSet());
+
+        List<Field> fields = new ArrayList<>(Arrays.asList(clazz.getDeclaredFields())); // 获取字段
+        Class<?> superclass = clazz.getSuperclass();
+        if (superclass != null) { // 获取父级Class的字段
+            fields.addAll(Arrays.asList(superclass.getDeclaredFields()));
+            superclass = superclass.getSuperclass();
+            if (superclass != null) {
+                fields.addAll(Arrays.asList(superclass.getDeclaredFields()));
+            }
+        }
+        for (Field field : fields) {
+            String fName = field.getName();
+            if (fieldSet.contains(fName)) {
+                func.accept(fName);
+            }
+        }
+    }
 
     /**
      * 生成实例所有set调用方法并复制到剪贴板
@@ -28,15 +64,13 @@ public class JavaFxLearning {
         String name = clazz.getSimpleName();
         String subName = name.substring(0, 1);
         name = name.replace(subName, subName.toLowerCase());
+        String name_ = name;
+
         StringJoiner joiner = new StringJoiner(System.lineSeparator());// 获取系统换行符
-        Method[] methods = clazz.getMethods();
-        Arrays.sort(methods, Comparator.comparing(Method::getName));
-        for (Method m : methods) {
-            if (m.getName().startsWith("set")) {
-                joiner.add(name + "." + m.getName() + "();");
-            }
-        }
-        /**
+        getFields(clazz, t -> {
+            joiner.add(name_ + ".set" + t.substring(0, 1).toUpperCase() + t.substring(1) + "();");
+        });
+        /*
          * Swing
          */
         // 封装文本内容
@@ -56,8 +90,7 @@ public class JavaFxLearning {
                 ex.printStackTrace(); // 错误处理
             }
         }
-
-        /**
+        /*
          * FX
          */
         // 配对(Pair)的实现。同org.apache.commons.lang3.tuple的ImmutablePair、MutablePair、tuple2.Vavr
