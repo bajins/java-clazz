@@ -12,6 +12,7 @@ import java.util.stream.*;
 /**
  * 集合学习：字典、列表、数组、映射、队列、堆栈<br/>
  * stream 流：JDK1.8同时增加了接口函数调用的使用：把接口方法当作参数。见 <link>com.bajins.clazz.FunctionLearning</link>
+ * https://blog.csdn.net/mu_wind/article/details/109516995
  *
  * @see Set 集
  * @see List 列表
