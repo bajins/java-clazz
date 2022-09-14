@@ -7,10 +7,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Function;
@@ -37,7 +34,13 @@ import java.util.stream.Collectors;
  * @see Introspector 内省：对JavaBean类属性、事件的一种缺省处理方法，先得到属性描述器PropertyDecriptor后再进行各种操作
  * @see PropertyDescriptor 属性描述器：通过存储器导出一个JavaBean类的属性
  * https://www.zhihu.com/question/19773379/answers/updated
+ * @see java.lang.reflect （reflection）反射：一个类的所有成员都可以进行反射操作，先得到类的字节码Class后再进行各种操作
  * @see java.lang.reflect.Executable
+ * @see Field 类的属性字段
+ * @see Method 类的方法
+ * @see Modifier
+ * @see Parameter
+ * @see Type
  */
 public class BeanUtil {
     /**
@@ -150,7 +153,6 @@ public class BeanUtil {
         return true;
     }
 
-
     /**
      * 获取一个接口的所有实现类
      * <p>
@@ -167,8 +169,7 @@ public class BeanUtil {
         if (!target.isInterface()) {
             throw new IllegalArgumentException("Class对象不是一个interface");
         }
-        @NotNull
-        String basePackage = Objects.requireNonNull(target.getClassLoader().getResource("")).getPath();
+        @NotNull String basePackage = Objects.requireNonNull(target.getClassLoader().getResource("")).getPath();
         File[] files = new File(basePackage).listFiles();
         // 存放class路径的list
         ArrayList<String> classpaths = new ArrayList<>();
@@ -201,10 +202,9 @@ public class BeanUtil {
      * @return
      */
     public static void listPackages(String basePackage, List<String> classes) {
-        URL url = BeanUtil.class.getClassLoader()
-                .getResource("./" + basePackage.replaceAll("\\.", "/"));
+        URL url = BeanUtil.class.getClassLoader().getResource("./" + basePackage.replaceAll("\\.", "/"));
         File directory = new File(url.getFile());
-        for (File file : directory.listFiles()) {
+        for (File file : Objects.requireNonNull(directory.listFiles())) {
             // 如果是一个目录就继续往下读取(递归调用)
             if (file.isDirectory()) {
                 listPackages(basePackage + "." + file.getName(), classes);
@@ -216,5 +216,103 @@ public class BeanUtil {
                 }
             }
         }
+    }
+
+    /**
+     * 使用Introspector进行map转bean
+     *
+     * @param map
+     * @param beanClass
+     * @return
+     * @throws Exception
+     */
+    public static Object mapToBeanByIntrospector(Map<String, Object> map, Class<?> beanClass) throws Exception {
+        if (map == null) {
+            return null;
+        }
+        Object obj = beanClass.newInstance();
+
+        BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        for (PropertyDescriptor property : propertyDescriptors) {
+            Method setter = property.getWriteMethod();
+            if (setter != null) {
+                setter.invoke(obj, map.get(property.getName()));
+            }
+        }
+        return obj;
+    }
+
+    /**
+     * 使用Introspector进行bean转map
+     *
+     * @param obj
+     * @return
+     * @throws Exception
+     */
+    public static Map<String, Object> beanToMapByIntrospector(Object obj) throws IntrospectionException,
+            InvocationTargetException, IllegalAccessException {
+        if (Objects.isNull(obj)) {
+            throw new IllegalArgumentException("传入的对象为空");
+        }
+        Map<String, Object> map = new HashMap<>();
+
+        BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        for (PropertyDescriptor property : propertyDescriptors) {
+            Method getter = property.getReadMethod();
+            Object value = getter != null ? getter.invoke(obj) : null;
+            map.put(property.getName(), value);
+        }
+
+        return map;
+    }
+
+    /**
+     * 使用reflect进行map转bean
+     *
+     * @param map
+     * @param beanClass
+     * @return
+     * @throws Exception
+     */
+    public static Object mapToBeanByReflect(Map<String, Object> map, Class<?> beanClass) throws IllegalAccessException, InstantiationException {
+        if (Objects.isNull(map)) {
+            throw new IllegalArgumentException("传入的对象为空");
+        }
+        Object obj = beanClass.newInstance();
+
+        Field[] fields = beanClass.getDeclaredFields();
+        for (Field field : fields) {
+            int mod = field.getModifiers();
+            if (Modifier.isStatic(mod) || Modifier.isFinal(mod)) {
+                continue;
+            }
+            field.setAccessible(true);
+            field.set(obj, map.get(field.getName()));
+        }
+        return obj;
+    }
+
+    /**
+     * 使用reflect进行bean转map
+     *
+     * @param obj
+     * @return
+     * @throws Exception
+     */
+    public static Map<String, Object> beanToMapByReflect(Object obj) throws IllegalAccessException {
+        if (Objects.isNull(obj)) {
+            throw new IllegalArgumentException("传入的对象为空");
+        }
+        Map<String, Object> map = new HashMap<>();
+
+        Field[] declaredFields = obj.getClass().getDeclaredFields();
+        for (Field field : declaredFields) {
+            //设置属性可以被访问
+            field.setAccessible(true);
+            map.put(field.getName(), field.get(obj));
+        }
+        return map;
     }
 }

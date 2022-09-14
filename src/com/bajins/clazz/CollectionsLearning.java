@@ -186,7 +186,7 @@ public class CollectionsLearning {
          */
         //Set<String> userIdSet = userList.stream().map(User::getId).collect(Collectors.toSet());
         //Set<String> userIdSet = userList.stream().map(User::getId).collect(Collectors.toCollection(TreeSet::new));
-
+        Set<String> set = new HashSet<>(list);
 
         /*
          * Map转List
@@ -235,6 +235,25 @@ public class CollectionsLearning {
         });*/
         Collections.reverse(list); // 倒序排列
         Collections.shuffle(list); // 混乱排序
+
+        // 创建一个TreeSet的排序器;
+        TreeSet<String> treeSet = new TreeSet<>(new Comparator<String>() {
+            @Override
+            public int compare(String t1, String t2) {
+                //t1.compareTo(t2)  是从小到大正序排序,同理t2 . t1 就是倒序排序;
+                return t1.compareTo(t1);
+            }
+        });
+        // 创建TreeSet排序的lambda表达式;
+        //TreeSet<String> set = new TreeSet<>(String::compareTo);
+        // 将添加好数据的无序Set添加到TreeSet集合中去;
+        treeSet.addAll(set);
+        String s1 = set.stream().sorted(Comparator.naturalOrder()).findFirst().get(); // 取第一个
+        s1 = set.stream().min(Comparator.naturalOrder()).get(); // 取第一个
+        String s2 = set.stream().sorted(Comparator.reverseOrder()).findFirst().get(); // 取最后一个
+        s2 = set.stream().max(Comparator.reverseOrder()).get(); // 取最后一个
+        System.out.println(set.iterator().next()); // 取第一个
+
         // 不改变原list，返回一个list的副本（ 排序之后的）
         // 返回 对象集合以类属性一升序排序
         /*list.stream().sorted(Comparator.comparing(类::属性一));

@@ -1,5 +1,8 @@
 package com.bajins.clazz;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.ParsePosition;
@@ -177,7 +180,7 @@ public class DateTimeLearning {
 
     /**
      * 判断字符串是否为日期时间指定格式
-     *
+     * <p>
      * https://github.com/xkzhangsan/xk-time
      * https://www.jianshu.com/p/cf2f1f26dd0a
      * https://blog.csdn.net/liuxinghao/article/details/119464230
@@ -386,23 +389,7 @@ public class DateTimeLearning {
         //System.out.println(now.format(DateTimeFormatter.RFC_1123_DATE_TIME));
 
 
-        System.out.println("============= 创建定时任务 =============");
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                System.out.println("TimerTask1 run" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
-            }
-        }, 1000, 5000);// 延时1s，之后每隔5s运行一次
-
-        // cheduleWithFixedDelay跟schedule类似，而scheduleAtFixedRate与scheduleAtFixedRate一样会尽量减少漏掉调度的情况
-        ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(5);
-        executorService.scheduleWithFixedDelay(() -> {
-            String now1 = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-            System.out.println("ScheduledThreadPoolExecutor1 run:" + now1);
-        }, 1, 2, TimeUnit.SECONDS);
-
-
+        System.out.println("============= 日历 =============");
         // 获取`Calendar`的实例
         Calendar calendar = Calendar.getInstance();
         Calendar calendar1 = GregorianCalendar.getInstance();
@@ -429,17 +416,32 @@ public class DateTimeLearning {
         Calendar c = Calendar.getInstance(timeZone);// 获取东八区时间
 
 
-        /*Timer animTimer = new Timer();
+        System.out.println("============= 创建定时任务 =============");
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("TimerTask1 run" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+            }
+        }, 1000, 5000);// 延时1s，之后每隔5s运行一次
+
+        // cheduleWithFixedDelay跟schedule类似，而scheduleAtFixedRate与scheduleAtFixedRate一样会尽量减少漏掉调度的情况
+        ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(5);
+        executorService.scheduleWithFixedDelay(() -> {
+            String now1 = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+            System.out.println("ScheduledThreadPoolExecutor1 run:" + now1);
+        }, 1, 2, TimeUnit.SECONDS);
+
+        Timer animTimer = new Timer();
         animTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-
+                System.out.println(Thread.currentThread().getId());
             }
-
         }, 0, 10);
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10 * 101), ev -> {
-
-        }));*/
+        Timeline timeline = new Timeline(new KeyFrame(javafx.util.Duration.millis(10 * 101), ev -> {
+            System.out.println(Thread.currentThread().getId());
+        }));
     }
 }

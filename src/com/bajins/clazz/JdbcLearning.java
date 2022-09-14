@@ -4,6 +4,9 @@ import java.sql.SQLException;
 
 /**
  * 批量执行多条SQL https://blog.csdn.net/mingxu_W/article/details/119540048
+ *
+ * @see java.sql
+ * @see PreparedStatement
  */
 public class JdbcLearning {
     public static void main(String[] args) {

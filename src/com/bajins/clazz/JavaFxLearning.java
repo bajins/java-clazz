@@ -32,7 +32,7 @@ public class JavaFxLearning {
         Method[] methods = clazz.getMethods();
         // 过滤出可使用的字段
         Set<String> fieldSet = Arrays.stream(methods)
-                .filter(t -> !Pattern.matches("^set.*", t.getName()))//
+                .filter(t -> Pattern.matches("^set.*", t.getName()))//
                 .map(t -> {
                     String mName = t.getName().replace("set", "");
                     return mName.substring(0, 1).toLowerCase() + mName.substring(1);
