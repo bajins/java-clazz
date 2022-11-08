@@ -13,6 +13,7 @@ import java.time.format.*;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -31,6 +32,7 @@ import java.util.regex.Pattern;
  * @see Timer
  * @see TimerTask
  * @see Calendar
+ * @see GregorianCalendar
  * @see DateFormat 线程不安全
  * @see SimpleDateFormat 非线程安全
  * @see DateFormatSymbols
@@ -306,6 +308,8 @@ public class DateTimeLearning {
         // 当前时间
         LocalDateTime now = LocalDateTime.now();
         System.out.println(now.format(dateTimeFormatter));
+        // 指定某天
+        LocalDate ofDate = LocalDate.of(2022, 01, 01);
 
         // 增加秒
         LocalDateTime localDateTime3 = now.plusSeconds(l2);
@@ -319,12 +323,28 @@ public class DateTimeLearning {
 
         // 计算去年
         LocalDateTime previousYear = now.minus(1, ChronoUnit.YEARS);
+        // 上月
+        LocalDateTime minusMonths = now.minusMonths(1);
         // 减30天
         LocalDateTime previousDay = now.minus(30, ChronoUnit.DAYS);
         // 减少6天
         LocalDateTime startTime = now.minusDays(6);
         // 减少分钟
         LocalDateTime localDateTime7 = now.minusMinutes(2);
+
+        // 获取当前月的第一天
+        LocalDate firstDay = LocalDate.from(now.with(TemporalAdjusters.firstDayOfMonth()));
+        // 获取当前月的最后一天
+        LocalDate lastDay = LocalDate.from(now.with(TemporalAdjusters.lastDayOfMonth()));
+        System.out.println(firstDay);
+        System.out.println(lastDay);
+        // 日期date减去这个月已有的天数，得到上个月的最后一天
+        LocalDate lastMonthEnd = LocalDate.from(now.minusDays(-now.getDayOfMonth()));
+        // 通过上一步得到的上个月的最后一天，得到上个月的第一天
+        LocalDate lastMonthBegin = LocalDate.of(lastMonthEnd.getYear(), lastMonthEnd.getMonthValue(), 1);
+        System.out.println(lastMonthBegin);
+        System.out.println(lastMonthEnd);
+
 
         // 将此Date对象转换为Instant
         Instant instant = new Date().toInstant();
@@ -404,6 +424,9 @@ public class DateTimeLearning {
         calendar.add(Calendar.YEAR, -1);// 当前时间减去一年，即一年前的时间
         calendar.add(Calendar.MONTH, -1);// 当前时间前去一个月，即一个月前的时间
         calendar.getTime();// 获取一年前的时间，或者一个月前的时间
+        calendar.setFirstDayOfWeek(Calendar.MONDAY); // 设定一周的第一天是周几
+        calendar.setMinimalDaysInFirstWeek(5); // 设置一年的第一周所需的最少天数
+
         int year = calendar.get(Calendar.YEAR);// 获取年
         int month = calendar.get(Calendar.MONTH) + 1;// 获取月，因为第一个月是0，所以要+ 1
         int day = calendar.get(Calendar.DATE);// 获取日

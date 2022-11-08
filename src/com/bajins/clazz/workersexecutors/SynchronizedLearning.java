@@ -38,8 +38,16 @@ package com.bajins.clazz.workersexecutors;
  * @see LongAccumulator
  * @see LongAdder
  * @see ThreadLocal 线程本地变量（副本）
+ * <p>注意：在使用线程池等会缓存线程的组件情况下传递ThreadLocal会被复用（获取到的变量不是想要的值），</p>
+ * <ul><span>参考：</span>
+ * <li>https://github.com/alibaba/transmittable-thread-local</li>
+ * <li>https://www.jianshu.com/p/e0774f965aa3</li>
+ * <li>https://zhuanlan.zhihu.com/p/341017633</li>
+ * <li>https://www.cnblogs.com/WangJinYang/p/10264400.html</li>
+ * <ul/>
  * @see ThreadLocalRandom
- * @see InheritableThreadLocal
+ * @see InheritableThreadLocal 在子线程中使用父线程中的线程本地变量
+ * @see ThreadLocalMap
  */
 public class SynchronizedLearning {
 

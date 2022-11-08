@@ -38,7 +38,6 @@ import java.util.stream.*;
  * @see AbstractList
  * @see AbstractSequentialList
  * @see Vector 性能是最差，所有的方法都加了synchronized来同步
- * @see Collections.SynchronizedList 能把所有 List 接口的实现类转换成线程安全的List，比 Vector 有更好的扩展性和兼容性
  * https://blog.csdn.net/weixin_44203321/article/details/114065191
  * https://blog.csdn.net/u012816626/article/details/111090575
  * @see CopyOnWriteArrayList 添加删除时加锁(ReentrantLock，非synchronized同步锁)，进行复制替换操作，最后再释放锁，插入的过程中会创建新的数组
@@ -66,7 +65,7 @@ import java.util.stream.*;
  * @see Collections 各种有关集合操作的 静态多态方法 工具类
  * @see Collections#nCopies(int, Object)
  * @see Collections#EMPTY_LIST
- * @see Collections#synchronizedList
+ * @see Collections#synchronizedList 能把所有 List 接口的实现类转换成线程安全的List，比 Vector 有更好的扩展性和兼容性
  * @see Arrays
  * @see Arrays#asList(Object[])
  * @see IntStream
@@ -214,6 +213,8 @@ public class CollectionsLearning {
          * 也就是说，修改这个子列表，将导致原列表也发生改变。
          */
         List<String> newList = list.subList(0, 2);
+
+        // ============================================================================================================
         /*
          * 排序
          */
@@ -284,6 +285,8 @@ public class CollectionsLearning {
         /*List<Integer> intList = new ArrayList<>(
                 IntStream.range(0, 10).boxed().collect(Collectors.toCollection(ArrayList::new))
         );*/
+
+        // ============================================================================================================
         /*
          * 分组：
          * 将一个list按三个一组分成N个小的list，分组后的list不再是原list的视图，原list的改变不会影响分组后的结果
@@ -300,7 +303,7 @@ public class CollectionsLearning {
         List<List<Integer>> subSets1 = new ArrayList<>(groups.values());
         List<Integer> lastPartition1 = subSets.get(1);
 
-
+        // ============================================================================================================
         /*
          * 统计求和
          */
@@ -351,6 +354,8 @@ public class CollectionsLearning {
                 BigDecimal::add);
         BigDecimal _price = maps.stream().collect(Collectors.reducing(BigDecimal.ZERO,
                 x -> new BigDecimal((Integer) x.get("price")), BigDecimal::add));
+
+        // ============================================================================================================
         /*
          * 获取重复数据
          */
@@ -369,6 +374,8 @@ public class CollectionsLearning {
             return tamp;
         }).collect(Collectors.toList());
         System.out.println("重复的数据：" + collect4);
+
+        // ============================================================================================================
         /*
          * 过滤：
          * 在数据规模较小、单次操作花费较小时，串行操作直接计算，
@@ -381,6 +388,7 @@ public class CollectionsLearning {
         boolean a = list.stream().filter(entry -> entry.equals("a")).findAny().isPresent();
         boolean b = list.stream().allMatch(entry -> entry.equals("a"));
 
+        // ============================================================================================================
         /*
          * 去重
          */

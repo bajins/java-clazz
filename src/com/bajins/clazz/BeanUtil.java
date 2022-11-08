@@ -41,6 +41,9 @@ import java.util.stream.Collectors;
  * @see Modifier
  * @see Parameter
  * @see Type
+ * @see Reference
+ * @see WeakReference
+ * @see Entry
  */
 public class BeanUtil {
     /**

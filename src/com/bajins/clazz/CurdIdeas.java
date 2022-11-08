@@ -3,9 +3,7 @@ package com.bajins.clazz;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -78,6 +76,6 @@ public class CurdIdeas {
     }
 
     public static void main(String[] args) {
-
+        
     }
 }
