@@ -7,6 +7,10 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.File;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.*;
 import java.net.URL;
 import java.util.*;
@@ -34,13 +38,16 @@ import java.util.stream.Collectors;
  * @see Introspector 内省：对JavaBean类属性、事件的一种缺省处理方法，先得到属性描述器PropertyDecriptor后再进行各种操作
  * @see PropertyDescriptor 属性描述器：通过存储器导出一个JavaBean类的属性
  * https://www.zhihu.com/question/19773379/answers/updated
+ * @see java.lang.instrument
+ * @see java.lang.invoke 反射调用相关（含Lambda调用实现）
  * @see java.lang.reflect （reflection）反射：一个类的所有成员都可以进行反射操作，先得到类的字节码Class后再进行各种操作
- * @see java.lang.reflect.Executable
+ * @see Executable
  * @see Field 类的属性字段
  * @see Method 类的方法
  * @see Modifier
  * @see Parameter
  * @see Type
+ * @see java.lang.ref
  * @see Reference
  * @see WeakReference
  * @see Entry
@@ -267,7 +274,6 @@ public class BeanUtil {
             Object value = getter != null ? getter.invoke(obj) : null;
             map.put(property.getName(), value);
         }
-
         return map;
     }
 
@@ -317,5 +323,73 @@ public class BeanUtil {
             map.put(field.getName(), field.get(obj));
         }
         return map;
+    }
+
+    /**
+     * Lambda 函数调用实现
+     * <a href="https://mp.weixin.qq.com/s/VxszHufvXJn_Mp32Mq_Cdw">Java 的 Lambda 是怎么实现的？（一） Java 的函数解析</a>
+     * <a href="https://mp.weixin.qq.com/s/ywAJOk1F4Rmu_rzRpzlgcA">Java 的 Lambda 是怎么实现的？（二）invokedynamic 的调用过程</a>
+     * <a href="https://mp.weixin.qq.com/s/h9fyeHV0PsVgo_-8wZEUcg">Java 的 Lambda 是怎么实现的？（三）实现 Lambda</a>
+     * <pre>
+     *     try {
+     *         MethodType mt = MethodType.methodType(String.class, String.class);
+     *         MethodHandle handle = MethodHandles.publicLookup().findVirtual(String.class, "concat", mt);
+     *         String result = (String) handle.invoke("Method", "Handle");
+     *         System.out.println(result);
+     *     } catch (NoSuchMethodException e) {
+     *         e.printStackTrace();
+     *     } catch (IllegalAccessException e) {
+     *         e.printStackTrace();
+     *     } catch (Throwable e) {
+     *         e.printStackTrace();
+     *     }
+     * </pre>
+     *
+     * @param refc   实例对象的类
+     * @param name   实例对象的类中方法
+     * @param rtype  实例对象的类中方法的返回类型
+     * @param ptypes 实例对象的类中方法的形参类型，用来确定具体调用的方法（考虑重载情况）
+     * @param args   调用方法的传入参数实例
+     * @return
+     * @throws Throwable
+     */
+    public Object invokeMethod(Class<?> refc, String name, Class<?> rtype, Class<?>[] ptypes, Object... args) throws Throwable {
+        MethodType mt = MethodType.methodType(rtype, ptypes);
+        MethodHandle handle = MethodHandles.publicLookup().findVirtual(refc, name, mt);
+        return handle.invoke(args);
+    }
+
+    /**
+     * 获取 类.方法
+     *
+     * @param traceElement
+     * @return
+     */
+    public static String getClassMethod(StackTraceElement traceElement) {
+        return traceElement.getClassName() + "." + traceElement.getMethodName();
+    }
+
+    /**
+     * 获取 类.方法
+     *
+     * @param thread Thread.currentThread()
+     * @return java.lang.String
+     */
+    public static String getClassMethod(Thread thread) {
+        return getClassMethod(thread.getStackTrace()[1]);
+    }
+
+    /**
+     * 获取 类.方法
+     *
+     * @param throwable
+     * @return java.lang.String
+     */
+    public static String getClassMethod(Throwable throwable) {
+        return getClassMethod(throwable.getStackTrace()[1]);
+    }
+
+    public static void main(String[] args) {
+
     }
 }

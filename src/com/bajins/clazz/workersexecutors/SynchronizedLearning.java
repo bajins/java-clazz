@@ -1,6 +1,14 @@
 package com.bajins.clazz.workersexecutors;
 
 
+import javax.management.monitor.Monitor;
+import java.lang.management.LockInfo;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.*;
+import java.util.concurrent.locks.*;
+
 /**
  * Synchronized示例
  * 内存可见性：https://www.jianshu.com/p/d3fda02d4cae https://blog.csdn.net/u013887008/article/details/79681609
@@ -16,7 +24,9 @@ package com.bajins.clazz.workersexecutors;
  * @see ReadWriteLock
  * @see ReentrantLock
  * @see ReentrantReadWriteLock
- * @see StampedLock
+ * @see StampedLock 对读取操作进行乐观锁定
+ * @see java.lang.management
+ * @see LockInfo
  * @see AbstractQueuedSynchronizer
  * @see AbstractQueuedSynchronizer.Node
  * @see java.util.concurrent.atomic 原子类包，可解决并发、stream使用外部变量的问题
@@ -33,7 +43,7 @@ package com.bajins.clazz.workersexecutors;
  * @see AtomicReferenceFieldUpdater 原子更新引用类型的字段
  * @see AtomicStampedReference 原子更新带有版本号的引用类型
  * @see Striped64 以下JDK1.8新增的原子类的抽象类
- * @see DoubleAccumulator
+ * @see DoubleAccumulator 并发累加器
  * @see DoubleAdder Atomic、Adder在低并发环境下，两者性能很相似。在高并发环境下，Adder 有更高的吞吐量，但有更高的空间复杂度
  * @see LongAccumulator
  * @see LongAdder
@@ -82,5 +92,43 @@ public class SynchronizedLearning {
     public static void testStatic() {
         synchronized (SynchronizedLearning.class) {
         }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        /*
+         * 假设我们有两个线程。
+         * 第一个更新余额，而第二个读取余额的当前值。
+         * 为了更新余额，我们当然需要先读取其当前值。
+         * 我们在这里需要某种同步，假设第一个线程同时运行多次，第二个线程仅说明如何使用乐观锁进行读取操作。
+         */
+        //StampedLock lock = new StampedLock();
+        Integer[] b = new Integer[]{10000};
+        // 通过同时运行两个线程 50 次来测试它。它应该按预期工作，余额的最终值为：60000
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        for (int i = 0; i < 25; i++) {
+            executor.submit(() -> {
+                //long stamp = lock.writeLock();
+                b[0] = b[0] + 1000;
+                System.out.println(Thread.currentThread().getId() + " Read: " + b[0]);
+                //lock.unlockWrite(stamp);
+            });
+            executor.submit(() -> {
+                /*long stamp = lock.tryOptimisticRead();
+                if (!lock.validate(stamp)) {
+                    stamp = lock.readLock();
+                    try {*/
+                b[0] = b[0] + 1000;
+                System.out.println(Thread.currentThread().getId() + " Read: " + b[0]);
+                    /*} finally {
+                        lock.unlockRead(stamp);
+                    }
+                } else {
+                    System.out.println("Optimistic read fails");
+                }*/
+            });
+        }
+        Thread.sleep(1000);
+        System.out.println(b[0]);
+        executor.shutdown();
     }
 }

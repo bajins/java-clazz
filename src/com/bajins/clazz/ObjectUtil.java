@@ -56,57 +56,17 @@ public class ObjectUtil {
     }
 
     /**
-     * 获取 类.方法
-     *
-     * @param thread Thread.currentThread()
-     * @return java.lang.String
-     */
-    public static String getClassMethod(Thread thread) {
-        StringBuilder method = new StringBuilder(thread.getStackTrace()[1].getClassName());
-        method.append(".");
-        method.append(thread.getStackTrace()[1].getMethodName());
-        return method.toString();
-    }
-
-    /**
-     * 获取 类.方法
-     *
-     * @param traceElement
-     * @return
-     */
-    public static String getClassMethod(StackTraceElement traceElement) {
-        StringBuilder method = new StringBuilder(traceElement.getClassName());
-        method.append(".");
-        method.append(traceElement.getMethodName());
-        return method.toString();
-    }
-
-    /**
-     * 获取 类.方法
-     *
-     * @param throwable new Throwable()
-     * @return java.lang.String
-     */
-    public static String getClassMethod(Throwable throwable) {
-        StringBuilder method = new StringBuilder(throwable.getStackTrace()[1].getClassName());
-        method.append(".");
-        method.append(throwable.getStackTrace()[1].getMethodName());
-        return method.toString();
-    }
-
-    /**
      * 序列化对象
      *
      * @param object
      * @return
      * @throws IOException
      */
-    public static byte[] serizlize(Object object) throws IOException {
+    public static byte[] serialize(Object object) throws IOException {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(baos);) {
             oos.writeObject(object);
-            byte[] bytes = baos.toByteArray();
-            return bytes;
+            return baos.toByteArray();
         }
     }
 

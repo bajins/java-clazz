@@ -1,8 +1,11 @@
 package com.bajins.clazz;
 
 
+import com.sun.corba.se.impl.orbutil.threadpool.WorkQueueImpl;
+
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -18,6 +21,9 @@ import java.util.stream.*;
  * @see List 列表
  * @see Map 映射 HashMap、HashTable
  * @see HashMap
+ * @see IdentityHashMap key判断是否为同一个引用地址（代表着key可重复）
+ * @see EnumMap
+ * @see LinkedHashMap
  * @see SortedSet
  * @see SortedMap
  * @see HashSet
@@ -213,6 +219,19 @@ public class CollectionsLearning {
          * 也就是说，修改这个子列表，将导致原列表也发生改变。
          */
         List<String> newList = list.subList(0, 2);
+        // 方法一：使用流遍历操作
+        int MAX_SEND = (list.size() + 3 - 1) / 3; // 单个子list大小
+        List<List<String>> mglist = new ArrayList<>();
+        Stream.iterate(0, n -> n + 1).limit(MAX_SEND).forEach(i -> {
+            mglist.add(list.stream().skip(i * MAX_SEND).limit(MAX_SEND).collect(Collectors.toList()));
+        });
+        System.out.println(mglist);
+        // 方法二：获取分割后的集合
+        List<List<String>> splitList = Stream.iterate(0, n -> n + 1).limit(MAX_SEND).parallel().map(a -> {
+            return list.stream().skip(a * MAX_SEND).limit(MAX_SEND).parallel().collect(Collectors.toList());
+        }).collect(Collectors.toList());
+
+        System.out.println(splitList);
 
         // ============================================================================================================
         /*
@@ -464,6 +483,32 @@ public class CollectionsLearning {
         List<String> listOf1 = lists.stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
+    /**
+     * 将一个List等分成n个list
+     *
+     * @param source
+     * @param n
+     * @param <T>
+     * @return
+     */
+    public static <T> List<List<T>> averageAssign(List<T> source, int n) {
+        List<List<T>> result = new ArrayList<>();
+        int remainder = source.size() % n;  //(先计算出余数)
+        int number = source.size() / n;  //然后是商
+        int offset = 0; //偏移量
+        for (int i = 0; i < n; i++) {
+            List<T> value;
+            if (remainder > 0) {
+                value = source.subList(i * number + offset, (i + 1) * number + offset + 1);
+                remainder--;
+                offset++;
+            } else {
+                value = source.subList(i * number + offset, (i + 1) * number + offset);
+            }
+            result.add(value);
+        }
+        return result;
+    }
 
     private static <I, R> Function<I, R> castingIdentity() {
         return i -> (R) i;

@@ -16,6 +16,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+/**
+ * 编译源码文件
+ *
+ * @see javax.tools
+ */
 public class BuildUtils {
 
     /**

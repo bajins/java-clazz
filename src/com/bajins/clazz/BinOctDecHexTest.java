@@ -2,6 +2,8 @@ package com.bajins.clazz;
 
 /**
  * 自定义进制
+ *
+ * @see HexFormat
  */
 public class BinOctDecHexTest {
     //设置字符数组
@@ -92,8 +94,8 @@ public class BinOctDecHexTest {
     public static void main(String[] args) {
         System.out.println(transRadix("YGL", 36, 26));
 
-        System.out.println(toCustomNumericString(26,26));
-        System.out.println(toUnsignedString(26,32));
+        System.out.println(toCustomNumericString(26, 26));
+        System.out.println(toUnsignedString(26, 32));
 
         CustomDigit cd = new CustomDigit("1000000000", 36, 1);
         for (Integer i : cd.getFormattedNumberList()) {
