@@ -157,6 +157,29 @@ public class InputOutputLearning {
         }
     }
 
+    /**
+     * 复制流
+     *
+     * <pre>
+     * ByteArrayOutputStream baos = cloneInputStream(input);
+     * // 打开两个新的输入流
+     * InputStream stream = new ByteArrayInputStream(baos.toByteArray());
+     * </pre>
+     *
+     * @param input
+     * @return
+     */
+    private static ByteArrayOutputStream cloneInputStream(InputStream input) throws IOException {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();) {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = input.read(buffer)) > -1) {
+                baos.write(buffer, 0, len);
+            }
+            baos.flush();
+            return baos;
+        }
+    }
 
     public static void main(String[] args) {
         // https://www.cnblogs.com/fortunely/p/14051310.html
