@@ -3,10 +3,7 @@ package com.bajins.clazz;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
-import java.text.DateFormat;
-import java.text.DateFormatSymbols;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.time.*;
 import java.time.chrono.IsoChronology;
 import java.time.format.*;
@@ -197,6 +194,64 @@ public class DateTimeLearning {
         formatter.setLenient(false); // 非宽松模式
         Date result = formatter.parse(dat, pos);
         return !(pos.getIndex() == 0) && dat.equals(formatter.format(result));
+    }
+
+    /**
+     * 传入两个时间范围，返回这两个时间范围内的所有日期，并保存在一个集合中
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws ParseException
+     */
+    public static List<String> findEveryDayBetween(String startTime, String endTime) throws ParseException {
+        // 创建时间解析对象规定解析格式
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        // 将传入的时间解析成Date类型,相当于格式化
+        Date startDate = sdf.parse(startTime);
+        // 使用本地的时区和区域获取日历
+        Calendar calendar = Calendar.getInstance();
+        // 传入起始时间将此日历设置为起始日历
+        calendar.setTime(startDate);
+
+        // 创建一个放所有日期的集合
+        List<String> dateList = new ArrayList<>();
+        // 将格式化后的第一天添加进集合
+        dateList.add(sdf.format(startDate));
+
+        Date endDate = sdf.parse(endTime);
+        // 判断结束日期是否在起始日历的日期之后
+        while (endDate.after(calendar.getTime())) {
+            // 9.根据日历的规则:月份中的每一天，为起始日历加一天
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            //10.得到的每一天就添加进集合
+            dateList.add(sdf.format(calendar.getTime()));
+            //11.如果当前的起始日历超过结束日期后,就结束循环
+        }
+        return dateList;
+    }
+
+    /**
+     * 根据传入的日期,获取时间区间中所有的日期
+     *
+     * @param startDate 开始日期
+     * @param endDate   结束日期
+     * @return java.util.List<java.time.LocalDate>
+     * @since 2022/3/2
+     */
+    public static List<LocalDate> getAllDatesInTheDateRange(LocalDate startDate, LocalDate endDate) {
+        List<LocalDate> localDateList = new ArrayList<>();
+        // 开始时间必须小于结束时间
+        if (startDate.isAfter(endDate)) {
+            return null;
+        }
+        while (startDate.isBefore(endDate)) {
+            localDateList.add(startDate);
+            startDate = startDate.plusDays(1);
+        }
+        localDateList.add(endDate);
+        return localDateList;
     }
 
     public static void main(String[] args) {
