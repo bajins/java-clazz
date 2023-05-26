@@ -76,6 +76,6 @@ public class CurdIdeas {
     }
 
     public static void main(String[] args) {
-
+        System.out.println(Locale.getDefault()+"");
     }
 }

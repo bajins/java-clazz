@@ -2,6 +2,7 @@ package com.bajins.clazz;
 
 import java.io.*;
 import java.lang.reflect.Array;
+import java.lang.reflect.GenericArrayType;
 import java.util.Collection;
 import java.util.Map;
 
@@ -29,16 +30,21 @@ public class ObjectUtil {
         System.out.println(obj instanceof CharSequence); // 判断实例对象是否为某个类或其子类
         System.out.println(CharSequence.class.isAssignableFrom(obj.getClass())); // 判断前面一个是否为后面一个类或其父类
         // 判断是否为空引用，也就是判断在堆内存中对象是否存在
-        if (obj instanceof CharSequence) {// CharSequence.class.isAssignableFrom(obj.getClass())
+        if (obj instanceof CharSequence) {
             // CharSequence是一个接口,用于表示有序的字符集合,String实现了它
             return ((CharSequence) obj).length() == 0;
-        } else if (obj instanceof Collection) {// Collection.class.isAssignableFrom(obj.getClass())
+        } else if (obj instanceof Collection) {
             // isEmpty先获取size的值在判断再返回
             // list.add(null) 会造成 isEmpty() 为 false, size() 为 1
             return ((Collection<?>) obj).isEmpty();
-        } else if (obj instanceof Map) {// Map.class.isAssignableFrom(obj.getClass())
+        } else if (obj instanceof Map) {
             // isEmpty先获取size的值在判断再返回
             return ((Map<?, ?>) obj).isEmpty();
+        } else if (obj.getClass().isPrimitive()) { // 判断对象是int,float,double,boolean,char,short,long,void 或 其包装类
+
+        } else if (obj instanceof GenericArrayType) {
+            // 可能是Type对象，通过 {@link Method#getGenericReturnType()}或{@link Method#getGenericParameterTypes()} 而获取的泛型数组
+            return Array.getLength(obj) == 0;
         } else if (obj.getClass().isArray()) {
             return Array.getLength(obj) == 0;
         }

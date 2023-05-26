@@ -35,7 +35,7 @@ import java.util.stream.*;
  * @see Hashtable
  * @see java.util.concurrent.ConcurrentHashMap
  * @see java.util.concurrent.ConcurrentMap
- * ConcurrentHashMap.newKeySet()
+ * ConcurrentHashMap.newKeySet() Collections.newSetFromMap
  * @see java.util.concurrent.ConcurrentNavigableMap
  * @see java.util.concurrent.ConcurrentSkipListMap
  * @see java.util.concurrent.ConcurrentSkipListSet

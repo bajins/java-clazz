@@ -3,6 +3,8 @@ package com.bajins.clazz;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.*;
 import java.time.*;
 import java.time.chrono.IsoChronology;
@@ -521,5 +523,12 @@ public class DateTimeLearning {
         Timeline timeline = new Timeline(new KeyFrame(javafx.util.Duration.millis(10 * 101), ev -> {
             System.out.println(Thread.currentThread().getId());
         }));
+
+
+        // 把java.util.Date转换成数据库的三种时间类型
+        java.sql.Date date_ = new java.sql.Date(date.getTime());//会丢失时分秒
+        Time time_ = new Time(date.getTime());//会丢失年月日
+        Timestamp timestamp = new Timestamp(date.getTime());
+
     }
 }

@@ -1,12 +1,10 @@
 package com.bajins.clazz;
 
-import com.sun.istack.internal.NotNull;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.io.File;
+import java.io.*;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -179,7 +177,7 @@ public class BeanUtil {
         if (!target.isInterface()) {
             throw new IllegalArgumentException("Class对象不是一个interface");
         }
-        @NotNull String basePackage = Objects.requireNonNull(target.getClassLoader().getResource("")).getPath();
+        String basePackage = Objects.requireNonNull(target.getClassLoader().getResource("")).getPath();
         File[] files = new File(basePackage).listFiles();
         // 存放class路径的list
         ArrayList<String> classpaths = new ArrayList<>();
@@ -387,6 +385,29 @@ public class BeanUtil {
      */
     public static String getClassMethod(Throwable throwable) {
         return getClassMethod(throwable.getStackTrace()[1]);
+    }
+
+
+    /**
+     * Java Class类的clone()方法默认为浅拷贝模式，只能实现Java基础类型的按值拷贝操作，对对象拷贝时默认为按址拷贝。
+     * 这里采用对一个对象进行序列化和反序列化的方式来实现对象的深拷贝
+     * <p>
+     * 或者使用JSON
+     *
+     * @param src
+     * @param <T>
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public static <T> T deepClone(T src) throws IOException, ClassNotFoundException {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);) {
+            objectOutputStream.writeObject(src);
+            return (T) objectInputStream.readObject();
+        }
     }
 
     public static void main(String[] args) {

@@ -3,6 +3,7 @@ package com.bajins.clazz;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -246,7 +247,7 @@ public class StringUtil {
         if (param == null || param.trim().equals("")) {
             return "";
         }
-        if (!param.contains("_")) { // 如果有下划线则不进行驼峰转下划线
+        if (param.contains("_")) { // 如果有下划线则不进行驼峰转下划线
             return param;
         }
         if (!isCamel(param)) { // 如果有小写同时也有大写才进行转换
@@ -268,6 +269,7 @@ public class StringUtil {
 
     /**
      * 字符串大写字母转下划线，abcABcaBc->abc_a_bca_bc
+     *
      * @param str
      * @return
      */
@@ -285,7 +287,7 @@ public class StringUtil {
         if (line == null || "".equals(line)) {
             return line;
         }
-        if (!line.contains("_")) { // 如果有下划线则不进行驼峰转下划线
+        if (line.contains("_")) { // 如果有下划线则不进行驼峰转下划线
             return line;
         }
         if (!isCamel(line)) { // 如果有小写同时也有大写才进行转换
@@ -762,7 +764,8 @@ public class StringUtil {
 
         SystemLearning.println("StringArray转String：", Arrays.stream(addr).collect(Collectors.joining(",")));
         SystemLearning.println("StringArray转String：", Arrays.stream(addr).reduce((a, b) -> a + "," + b));
-        SystemLearning.println("StringArray转String：", list.stream().reduce(new StringBuilder(), (sb, s) -> sb.append(s).append(','), StringBuilder::append).toString());
+        SystemLearning.println("StringArray转String：", list.stream().reduce(new StringBuilder(),
+                (sb, s) -> sb.append(s).append(','), StringBuilder::append).toString());
         SystemLearning.println("StringArray转String：", Arrays.toString(addr));
 
         SystemLearning.println("Array转String：", String.join(",", addr));
@@ -832,6 +835,12 @@ public class StringUtil {
         SystemLearning.println("String.format %1$s.%2$s耗时:", end6 - start6);
 
 
+        // 驼峰转下划线
+        System.out.println("userNAmeAge1".replaceAll("([a-z])([A-Z]+)", "$1_$2").toLowerCase());
+        System.out.println("camelCAseTest1".replaceAll("(.)(\\p{Upper})", "$1_$2").toLowerCase());
+        // 下划线转驼峰
+        System.out.println(Arrays.stream("camel_case_test1".split("_")).map(x -> x.replaceFirst("[a-z]",
+                String.valueOf(x.charAt(0)).toUpperCase())).collect(Collectors.joining()));
     }
 
 }
