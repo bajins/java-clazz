@@ -1,20 +1,13 @@
 package com.bajins.clazz;
 
 
-import com.sun.xml.internal.ws.util.xml.XmlUtil;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.*;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -86,7 +79,11 @@ public class HtmlXml {
      * @throws JAXBException
      * @throws IOException
      */
-    public static <T> String bean2Xml(Object obj) throws JAXBException, IOException {
+    /*public static <T> String bean2Xml(Object obj) throws JAXBException, IOException {
+        //import javax.xml.bind.JAXBContext;
+        //import javax.xml.bind.JAXBException;
+        //import javax.xml.bind.Marshaller;
+        //import javax.xml.bind.Unmarshaller;
         // 实参中包含需要解析的类
         JAXBContext jaxbContext = JAXBContext.newInstance(obj.getClass());
         // javaBean序列化xml文件器
@@ -102,7 +99,7 @@ public class HtmlXml {
             marshaller.marshal(obj, sw);
             return sw.toString();
         }
-    }
+    }*/
 
     /**
      * XML反序列化为对象
@@ -117,23 +114,27 @@ public class HtmlXml {
      * @throws FactoryConfigurationError
      * @throws XMLStreamException
      */
-    public static <T> T xml2Bean(String xml, Class<T> clazz) throws JAXBException, UnsupportedEncodingException,
-            IOException, FactoryConfigurationError, XMLStreamException {
-        // 实参中包含需要解析的类
-        JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
-        // xml文件解析成JavaBean对象器
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        try (InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"))) {
-            XMLStreamReader xmlReader = XMLInputFactory.newFactory().createXMLStreamReader(is);
-            // 序列化
-            // return (T) unmarshaller.unmarshal(is);
-            return unmarshaller.unmarshal(xmlReader, clazz).getValue();
-        }
-        /*try (StringReader reader = new StringReader(xml);) {
-            // 序列化
-            return unmarshaller.unmarshal(reader);
-        }*/
-    }
+    //public static <T> T xml2Bean(String xml, Class<T> clazz) throws JAXBException, UnsupportedEncodingException,
+    //        IOException, FactoryConfigurationError, XMLStreamException {
+    //    //import javax.xml.bind.JAXBContext;
+    //    //import javax.xml.bind.JAXBException;
+    //    //import javax.xml.bind.Marshaller;
+    //    //import javax.xml.bind.Unmarshaller;
+    //    // 实参中包含需要解析的类
+    //    JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
+    //    // xml文件解析成JavaBean对象器
+    //    Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+    //    try (InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"))) {
+    //        XMLStreamReader xmlReader = XMLInputFactory.newFactory().createXMLStreamReader(is);
+    //        // 序列化
+    //        // return (T) unmarshaller.unmarshal(is);
+    //        return unmarshaller.unmarshal(xmlReader, clazz).getValue();
+    //    }
+    //    /*try (StringReader reader = new StringReader(xml);) {
+    //        // 序列化
+    //        return unmarshaller.unmarshal(reader);
+    //    }*/
+    //}
 
     public static void main(String[] args) throws ParserConfigurationException, SAXException {
         /*
@@ -177,7 +178,7 @@ public class HtmlXml {
             factory.setNamespaceAware(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setEntityResolver((publicId, systemId) -> {
-                InputStream stream = XmlUtil.class.getClassLoader().getResourceAsStream("***.dtd");
+                InputStream stream = HtmlXml.class.getClassLoader().getResourceAsStream("***.dtd");
                 InputSource is = new InputSource(stream);
                 is.setPublicId(publicId);
                 is.setSystemId(systemId);
@@ -205,10 +206,14 @@ public class HtmlXml {
 
 
         // 序列化为XML方式一
-        StringWriter writer = new StringWriter();
+        /*StringWriter writer = new StringWriter();
         Object object = new Object();
         try { // 把对象数据转换成xml
-            JAXBContext context = JAXBContext.newInstance(object.getClass());
+            //import javax.xml.bind.JAXBContext;
+            //import javax.xml.bind.JAXBException;
+            //import javax.xml.bind.Marshaller;
+            //import javax.xml.bind.Unmarshaller;
+            //JAXBContext context = JAXBContext.newInstance(object.getClass());
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_ENCODING, StandardCharsets.UTF_8);
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -217,7 +222,7 @@ public class HtmlXml {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
-        System.out.println(writer);
+        System.out.println(writer);*/
 
 
     }

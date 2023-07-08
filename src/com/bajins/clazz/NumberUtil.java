@@ -264,7 +264,7 @@ public class NumberUtil {
         BigDecimal multiply = decimal.multiply(decima2);
         // 除，推荐传入保留小数位数参数
         BigDecimal divide = decimal.divide(decima2, 2, RoundingMode.HALF_UP);
-        BigDecimal divide1 = decimal.divide(decima2, 2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal divide1 = decimal.divide(decima2, 2, RoundingMode.HALF_UP);
         // 乘方
         BigDecimal pow = divide.pow(2);
         // 绝对值：负数变为正数

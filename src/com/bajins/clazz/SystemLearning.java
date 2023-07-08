@@ -1,15 +1,10 @@
 package com.bajins.clazz;
 
-import com.sun.javafx.runtime.SystemProperties;
-import sun.security.action.GetPropertyAction;
-
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
-import java.security.AccessController;
-import java.util.Map;
 import java.util.Properties;
 import java.util.StringJoiner;
 
@@ -17,7 +12,6 @@ import java.util.StringJoiner;
  * System原生API的使用示例
  *
  * @see System
- * @see SystemProperties
  */
 public class SystemLearning {
 
@@ -84,7 +78,7 @@ public class SystemLearning {
         String version = props.getProperty("os.version");
         // 用户的当前工作目录
         String dir = props.getProperty("user.dir");
-        String userDir = SystemProperties.getProperty("userDir");
+        //String userDir = com.sun.javafx.runtime.SystemProperties.getProperty("userDir");
         // 获取用户桌面路径
         FileSystemView fileSystemView = FileSystemView.getFileSystemView();
         File desktopDir =fileSystemView.getHomeDirectory();
@@ -98,7 +92,7 @@ public class SystemLearning {
 
         System.out.println(System.getenv("temp")); // 缓存目录
         System.out.println(System.getenv("tmp"));
-        System.out.println(System.getProperty("java.io.tmpdir"));
+        System.out.println(System.getProperty("java.io.tmpdir")); // 系统默认缓存目录
         System.out.println(System.getenv("userprofile")); // 用户目录
         System.out.println(System.getenv("homepath"));
         System.out.println(System.getProperty("user.home")); // 用户的主目录
@@ -108,9 +102,10 @@ public class SystemLearning {
         System.out.println(System.getProperty("path.separator"));
         System.out.println(System.getProperty("line.separator")); // 多个路径分隔符
         // 获取当前系统换行符
-        GetPropertyAction getPropertyAction = new GetPropertyAction("line.separator");
+        // sun.security.action.GetPropertyAction
+        /*GetPropertyAction getPropertyAction = new GetPropertyAction("line.separator");
         String lineSeparator = AccessController.doPrivileged(getPropertyAction);
-        System.err.println("获取当前系统换行符：" + lineSeparator);
+        System.err.println("获取当前系统换行符：" + lineSeparator);*/
         System.err.println("获取当前系统换行符：" + System.lineSeparator());
 
         System.out.println(System.getProperty("sun.jnu.encoding")); // 操作系统默认字符编码
@@ -118,14 +113,13 @@ public class SystemLearning {
         System.out.println(Charset.defaultCharset()); // 操作系统文件的字符编码
 
         System.out.println(System.getenv()); // 系统变量
-        System.out.println(System.getProperties()); // Java环境变量
         System.getProperties().list(System.out);
 
-        Map<String, String> getenv = System.getenv();// 获取所有变量
-        System.out.println(getenv);
-        Properties properties = System.getProperties();// 获取所有配置
-        System.out.println(properties);
-        String tmpdir = System.getProperty("java.io.tmpdir");// 系统默认缓存目录
-
+        System.out.println("---------- 项目绝对路径 -------------");
+        System.out.println(SystemLearning.class.getResource("/")); // 如果不加“/”，则获取当前类的目录
+        System.out.println(Thread.currentThread().getContextClassLoader().getResource(""));
+        System.out.println(SystemLearning.class.getClassLoader().getResource(""));
+        System.out.println(System.getProperty("user.dir"));
+        System.out.println(System.getProperty("java.class.path"));
     }
 }

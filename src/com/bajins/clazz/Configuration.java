@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -134,11 +135,12 @@ public class Configuration extends Properties {
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-    public <T> T bindBean(Class<T> clazz, String prefix) throws InstantiationException, IllegalAccessException {
+    public <T> T bindBean(Class<T> clazz, String prefix) throws InstantiationException, IllegalAccessException,
+            NoSuchMethodException, InvocationTargetException {
         if (prefix == null) {
             prefix = "";
         }
-        T instance = clazz.newInstance(); // 创建实例化对象
+        T instance = clazz.getDeclaredConstructor().newInstance(); // 创建实例化对象
         Field[] declaredFields = clazz.getDeclaredFields(); // 获取所有字段
         for (Field field : declaredFields) {
             String property = this.getProperty(prefix + field.getName());
@@ -200,7 +202,7 @@ public class Configuration extends Properties {
     }
 
     public <T> List<T> bindBeanList(Class<T> clazz, String prefix)
-            throws InstantiationException, IllegalAccessException {
+            throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 
         Pattern pattern = Pattern.compile("(" + prefix + "\\[.*\\]).*");
         Map<String, List<String>> groupMap = this.stringPropertyNames().stream().filter(s -> { // 过滤数据
@@ -228,7 +230,8 @@ public class Configuration extends Properties {
 
             List<Test> bindBeanList = configuration.bindBeanList(Test.class, "test");
             System.out.println(bindBeanList);
-        } catch (InstantiationException | IllegalAccessException | IOException e) {
+        } catch (InstantiationException | IllegalAccessException | IOException | NoSuchMethodException |
+                 InvocationTargetException e) {
             e.printStackTrace();
         }
     }

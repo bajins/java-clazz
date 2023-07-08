@@ -1,6 +1,5 @@
 package com.bajins.clazz;
 
-import com.sun.javafx.runtime.SystemProperties;
 
 import javax.print.*;
 import javax.print.attribute.DocAttributeSet;
@@ -61,7 +60,7 @@ public class PrinterLearning {
     // 打印文件
     private void printFileAction() throws PrinterException {
         // 创建一个文件选择器,构造函数存放的是当前用户路径
-        JFileChooser fileChooser = new JFileChooser(SystemProperties.getProperty("userDir"));
+        JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
         // 显示文件选择对话框
         int state = fileChooser.showOpenDialog(null);
         // 选择完成

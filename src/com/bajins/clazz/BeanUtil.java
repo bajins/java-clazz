@@ -238,7 +238,7 @@ public class BeanUtil {
         if (map == null) {
             return null;
         }
-        Object obj = beanClass.newInstance();
+        Object obj = beanClass.getDeclaredConstructor().newInstance();
 
         BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
         PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
@@ -283,11 +283,11 @@ public class BeanUtil {
      * @return
      * @throws Exception
      */
-    public static Object mapToBeanByReflect(Map<String, Object> map, Class<?> beanClass) throws IllegalAccessException, InstantiationException {
+    public static Object mapToBeanByReflect(Map<String, Object> map, Class<?> beanClass) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         if (Objects.isNull(map)) {
             throw new IllegalArgumentException("传入的对象为空");
         }
-        Object obj = beanClass.newInstance();
+        Object obj = beanClass.getDeclaredConstructor().newInstance();
 
         Field[] fields = beanClass.getDeclaredFields();
         for (Field field : fields) {

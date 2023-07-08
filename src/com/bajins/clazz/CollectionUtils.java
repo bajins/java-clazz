@@ -1,7 +1,5 @@
 package com.bajins.clazz;
 
-import com.sun.istack.internal.Nullable;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -9,6 +7,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
+/**
+ * @see com.sun.istack.internal.Nullable @Nullable
+ */
 public class CollectionUtils {
 
     /**
@@ -163,7 +165,7 @@ public class CollectionUtils {
      * @param collection
      * @return
      */
-    public static boolean isEmpty(@Nullable Collection<?> collection) {
+    public static boolean isEmpty(Collection<?> collection) {
         return collection == null || collection.isEmpty();
     }
 
@@ -173,7 +175,7 @@ public class CollectionUtils {
      * @param map
      * @return
      */
-    public static boolean isEmpty(@Nullable Map<?, ?> map) {
+    public static boolean isEmpty(Map<?, ?> map) {
         return map == null || map.isEmpty();
     }
 

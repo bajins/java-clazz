@@ -1,10 +1,5 @@
 package com.bajins.clazz;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-import sun.security.jca.ProviderList;
-import sun.security.jca.Providers;
-
 import javax.crypto.*;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.PBEKeySpec;
@@ -18,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.CertPathBuilder;
 import java.security.cert.CertPathValidator;
+import java.security.cert.CertStore;
 import java.security.cert.CertificateFactory;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
@@ -25,7 +21,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.Map;
 
 /**
  * 封装各种格式的编码解码工具类.
@@ -285,8 +280,10 @@ public class EncryptUtil {
             e.printStackTrace();
         }
 
+        // import sun.misc.BASE64Decoder;
+        // import sun.misc.BASE64Encoder;
         // 编码，会提示内部使用API，可能会在未来某个版本删除
-        BASE64Encoder base64Encoder = new BASE64Encoder();
+        /*BASE64Encoder base64Encoder = new BASE64Encoder();
         String encode = base64Encoder.encode("111".getBytes());
 
         // 解码，会提示内部使用API，可能会在未来某个版本删除
@@ -297,7 +294,7 @@ public class EncryptUtil {
             String s = new String(bytes);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         // 推荐，Java 8的java.util套件中Base64，比sun.misc套件提供的还要快至少11倍，比Apache Commons Codec快至少3倍
         final Base64.Decoder decoder = Base64.getDecoder();
         final Base64.Encoder encoder = Base64.getEncoder();
@@ -312,18 +309,20 @@ public class EncryptUtil {
         /*
          * 获取支持的加密算法
          */
-        ProviderList providerList = Providers.getProviderList();
+        // import sun.security.jca.ProviderList;
+        // import sun.security.jca.Providers;
+        /*ProviderList providerList = Providers.getProviderList();
         for (Provider provider : providerList.providers()) {
             for (Map.Entry<Object, Object> entry : provider.entrySet()) {
-                /*String key = (String) entry.getKey();
+                *//*String key = (String) entry.getKey();
                 if (key.startsWith("KeyGenerator.")
                         || key.startsWith("Signature")
-                        || key.startsWith("MessageDigest")) {*/
+                        || key.startsWith("MessageDigest")) {*//*
                 System.out.println(entry.getKey() + " -> " + entry.getValue());
                 //}
             }
             System.out.println("--------------");
-        }
+        }*/
 
         System.out.println("----------------------------------------------");
 

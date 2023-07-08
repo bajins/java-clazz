@@ -1,7 +1,5 @@
 package com.bajins.clazz;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -520,9 +518,12 @@ public class DateTimeLearning {
             }
         }, 0, 10);
 
-        Timeline timeline = new Timeline(new KeyFrame(javafx.util.Duration.millis(10 * 101), ev -> {
+
+        // javafx.animation.KeyFrame
+        // javafx.animation.Timeline
+        /*Timeline timeline = new Timeline(new KeyFrame(javafx.util.Duration.millis(10 * 101), ev -> {
             System.out.println(Thread.currentThread().getId());
-        }));
+        }));*/
 
 
         // 把java.util.Date转换成数据库的三种时间类型

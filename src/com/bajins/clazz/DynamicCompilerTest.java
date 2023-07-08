@@ -70,12 +70,10 @@ public class DynamicCompilerTest {
                 };
                 Class<?> clazz = loader.loadClass("CalledClass");
                 if (Runnable.class.isAssignableFrom(clazz)) {
-                    Runnable instance = (Runnable) clazz.newInstance();
+                    Runnable instance = (Runnable) clazz.getDeclaredConstructor().newInstance();
                     instance.run();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ReflectiveOperationException e) {
+            } catch (IOException | ReflectiveOperationException e) {
                 e.printStackTrace();
             }
         });

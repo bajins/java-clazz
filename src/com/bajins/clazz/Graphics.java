@@ -1,6 +1,5 @@
 package com.bajins.clazz;
 
-import sun.awt.SunHints;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -52,13 +51,14 @@ public class Graphics {
      * @return Graphics2D
      */
     private static Graphics2D createG2D(BufferedImage bgBufImage) {
+        // import sun.awt.SunHints;
         Graphics2D bgBufImageGraphics = bgBufImage.createGraphics();
-        bgBufImageGraphics.setRenderingHint(SunHints.KEY_ANTIALIASING, SunHints.VALUE_ANTIALIAS_OFF);
-        bgBufImageGraphics.setRenderingHint(SunHints.KEY_TEXT_ANTIALIASING, SunHints.VALUE_TEXT_ANTIALIAS_DEFAULT);
-        bgBufImageGraphics.setRenderingHint(SunHints.KEY_STROKE_CONTROL, SunHints.VALUE_STROKE_DEFAULT);
-        bgBufImageGraphics.setRenderingHint(SunHints.KEY_TEXT_ANTIALIAS_LCD_CONTRAST, 140);
-        bgBufImageGraphics.setRenderingHint(SunHints.KEY_FRACTIONALMETRICS, SunHints.VALUE_FRACTIONALMETRICS_OFF);
-        bgBufImageGraphics.setRenderingHint(SunHints.KEY_RENDERING, SunHints.VALUE_RENDER_DEFAULT);
+        //bgBufImageGraphics.setRenderingHint(SunHints.KEY_ANTIALIASING, SunHints.VALUE_ANTIALIAS_OFF);
+        //bgBufImageGraphics.setRenderingHint(SunHints.KEY_TEXT_ANTIALIASING, SunHints.VALUE_TEXT_ANTIALIAS_DEFAULT);
+        //bgBufImageGraphics.setRenderingHint(SunHints.KEY_STROKE_CONTROL, SunHints.VALUE_STROKE_DEFAULT);
+        //bgBufImageGraphics.setRenderingHint(SunHints.KEY_TEXT_ANTIALIAS_LCD_CONTRAST, 140);
+        //bgBufImageGraphics.setRenderingHint(SunHints.KEY_FRACTIONALMETRICS, SunHints.VALUE_FRACTIONALMETRICS_OFF);
+        //bgBufImageGraphics.setRenderingHint(SunHints.KEY_RENDERING, SunHints.VALUE_RENDER_DEFAULT);
         return bgBufImageGraphics;
     }
 
