@@ -2,9 +2,11 @@ package com.bajins.clazz;
 
 import java.io.*;
 import java.nio.channels.AsynchronousChannel;
+import java.nio.channels.Channel;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.StringJoiner;
 
 
@@ -12,6 +14,16 @@ import java.util.StringJoiner;
  * 文件IO操作
  *
  * @see java.io
+ * @see Reader 字符读
+ * @see Writer 字符写
+ * @see FilterReader 自定义过滤 字符读
+ * @see FilterWriter 自定义过滤 字符写
+ * @see InputStream 字节读
+ * @see OutputStream 字节写
+ * @see DataInput 基本数据类型与字符串类型 字节读
+ * @see DataOutput 基本数据类型与字符串类型 字节写
+ * @see ObjectInput 对象 字节读
+ * @see ObjectOutput 对象 字节写
  * @see java.nio
  * @see java.net
  * @see AutoCloseable
@@ -235,6 +247,107 @@ public class InputOutputLearning {
             }
             byte[] content = out.toByteArray();
             System.out.println(Arrays.toString(content));*/
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /*
+         * BufferedInputStream 缓冲字节流读
+         * BufferedOutputStream 缓冲字节流写
+         * BufferedReader
+         * BufferedWriter
+         * ByteArrayInputStream 字节数组流读
+         * ByteArrayOutputStream 字节数组流写
+         * CharArrayReader
+         * CharArrayWriter
+         * DataInputStream
+         * DataOutputStream
+         * FileInputStream
+         * FileOutputStream
+         * FileReader
+         * FileWriter
+         * FilterInputStream
+         * FilterOutputStream
+         * InputStreamReader
+         * OutputStreamWriter
+         * LineNumberReader
+         * ObjectInputStream
+         * ObjectOutputStream
+         * PipedInputStream
+         * PipedOutputStream
+         * PipedReader
+         * PipedWriter
+         * PrintStream
+         * PrintWriter
+         * PushbackInputStream
+         * PushbackReader
+         * RandomAccessFile
+         * SequenceInputStream
+         * StringReader
+         * StringWriter
+         *
+         */
+        // 字节流读写文本文件
+        try (FileInputStream fis = new FileInputStream("text.txt");) {
+            System.out.println("可读取的字节数：" + fis.available());
+            int data;
+            StringBuilder sb = new StringBuilder();
+            while ((data = fis.read()) != -1) {
+                sb.append((char) data);
+            }
+            System.out.println(sb);
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+        try (OutputStream fos = new FileOutputStream("text.txt", true);) {
+            fos.write("test".getBytes());
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+        // 字符流读写文本文件
+        try (FileReader fr = new FileReader("text.txt");
+             BufferedReader br = new BufferedReader(fr);) {
+            StringJoiner sj = new StringJoiner(System.lineSeparator());
+            String line;
+            while ((line = br.readLine()) != null) {//读取一行数据，返回字符串
+                sj.add(line);
+            }
+            //String text = br.lines().collect(Collectors.joining(System.lineSeparator())); // 读取所有行
+            System.out.println(sj);
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+        try (Scanner sc = new Scanner(new File("text.txt"))) {
+            StringJoiner sj = new StringJoiner(System.lineSeparator());
+            while (sc.hasNextLine()) {
+                sj.add(sc.nextLine());
+            }
+            System.out.println(sj);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (FileWriter fw = new FileWriter("text.txt");
+             BufferedWriter bw = new BufferedWriter(fw);) {
+            bw.write("test");
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+        try (FileInputStream fis = new FileInputStream("text.txt");
+             DataInputStream dis = new DataInputStream(fis);
+             InputStreamReader isr = new InputStreamReader(dis);
+             BufferedReader d = new BufferedReader(isr);) {
+            StringJoiner sj = new StringJoiner(System.lineSeparator());
+            String line;
+            while ((line = d.readLine()) != null) {
+                sj.add(line);
+            }
+            System.out.println(sj);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (FileOutputStream fos = new FileOutputStream("test1.txt");
+             DataOutputStream out = new DataOutputStream(fos);) {
+            out.writeBytes("test");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -7,7 +7,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import javax.xml.parsers.*;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -15,12 +14,51 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
  * HTML和XML封装工具类
+ * <p>
+ * https://docs.oracle.com/javase/tutorial/jaxp/TOC.html
+ * <p>
+ * https://upload-images.jianshu.io/upload_images/272673-202283ad8e0cea3e.png
+ * <pre>
+ * 1. DOM（Document Object Model）：
+ *    - DOM是一种基于树结构的XML解析技术。
+ *    - DOM将整个XML文档加载到内存中，构建一个树形结构，通过操作这个树来访问和修改XML数据。
+ *    - DOM适用于XML文档较小且需要频繁访问和修改的场景。
+ *    - 在Java中，可以使用标准的JAXP（Java API for XML Processing）库来解析和生成DOM树。
+ *
+ * 2. SAX（Simple API for XML Parsing）：
+ *    - SAX是一种基于事件驱动的XML解析技术。
+ *    - SAX解析器在解析XML文档时，按顺序读取XML数据，并触发相应的事件，应用程序通过实现事件处理器来处理这些事件。
+ *    - SAX适用于处理大型XML文档或在内存有限的情况下，因为它不需要将整个XML文档加载到内存中。
+ *    - 在Java中，可以使用SAXParser来解析XML文档，也可以使用XMLWriter来生成XML文档。
+ *
+ * 3. JAXB（Java Architecture for XML Binding）：
+ *    - JAXB是一种将Java对象与XML数据进行绑定的技术，它可以将Java对象转换为XML数据（编组）或将XML数据转换为Java对象（解组）。
+ *    - JAXB使用注解或XML配置文件来定义Java对象与XML元素之间的映射关系。
+ *    - JAXB适用于Java对象与XML数据之间的相互转换，特别是在Web服务和数据持久化等场景中常被使用。
+ *    - 在Java中，可以使用JAXB提供的工具来生成Java类和XML配置文件之间的映射关系，并使用JAXBContext来进行编组和解组操作。
+ *
+ * 4. JAXP（Java API for XMLProcessing）
+ *    - 使用JAXP的API创建出SAX解析器后，可以指定解析器去解析某个XML文档
+ *
+ * 5. TrAX（Transformation API for XML）
+ *    - 用于使用 XSLT 样式表转换 XML 文档的 Java API
+ *
+ * 6. StAX（Streaming API for XML）
+ *    - Java中处理XML的一种流式解析模式
+ *
+ * 7. XSLT（Extensible Stylesheet Language Transformations）
+ *    - 使用XPath来选取XML文档中的元素或者节点
+ *    - 可以将XML文档转换成其他格式
+ * </pre>
  *
  * @author claer woytu.com
  * @program com.bajins.api.utils
@@ -71,83 +109,7 @@ public class HtmlXml {
         return formForward(title, url, params, StandardCharsets.UTF_8.name());
     }
 
-    /**
-     * 对象转XML
-     *
-     * @param obj
-     * @return
-     * @throws JAXBException
-     * @throws IOException
-     */
-    /*public static <T> String bean2Xml(Object obj) throws JAXBException, IOException {
-        //import javax.xml.bind.JAXBContext;
-        //import javax.xml.bind.JAXBException;
-        //import javax.xml.bind.Marshaller;
-        //import javax.xml.bind.Unmarshaller;
-        // 实参中包含需要解析的类
-        JAXBContext jaxbContext = JAXBContext.newInstance(obj.getClass());
-        // javaBean序列化xml文件器
-        Marshaller marshaller = jaxbContext.createMarshaller();
-        // 序列化后的xml是否需要格式化输出
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        // 取消这个标签的显示<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-        marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
-        // 编码格式
-        marshaller.setProperty(Marshaller.JAXB_ENCODING, StandardCharsets.UTF_8);
-        // 序列化
-        try (StringWriter sw = new StringWriter();) {
-            marshaller.marshal(obj, sw);
-            return sw.toString();
-        }
-    }*/
-
-    /**
-     * XML反序列化为对象
-     *
-     * @param <T>
-     * @param xml
-     * @param clazz
-     * @return
-     * @throws JAXBException
-     * @throws UnsupportedEncodingException
-     * @throws IOException
-     * @throws FactoryConfigurationError
-     * @throws XMLStreamException
-     */
-    //public static <T> T xml2Bean(String xml, Class<T> clazz) throws JAXBException, UnsupportedEncodingException,
-    //        IOException, FactoryConfigurationError, XMLStreamException {
-    //    //import javax.xml.bind.JAXBContext;
-    //    //import javax.xml.bind.JAXBException;
-    //    //import javax.xml.bind.Marshaller;
-    //    //import javax.xml.bind.Unmarshaller;
-    //    // 实参中包含需要解析的类
-    //    JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
-    //    // xml文件解析成JavaBean对象器
-    //    Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-    //    try (InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"))) {
-    //        XMLStreamReader xmlReader = XMLInputFactory.newFactory().createXMLStreamReader(is);
-    //        // 序列化
-    //        // return (T) unmarshaller.unmarshal(is);
-    //        return unmarshaller.unmarshal(xmlReader, clazz).getValue();
-    //    }
-    //    /*try (StringReader reader = new StringReader(xml);) {
-    //        // 序列化
-    //        return unmarshaller.unmarshal(reader);
-    //    }*/
-    //}
-
     public static void main(String[] args) throws ParserConfigurationException, SAXException {
-        /*
-         * 使用 DOM解析XML文档时，需要读取整个XML文档，在内存中构架生成代表整个 DOM树的Doucment对象，才能再对XML文档进行操作。
-         * 如果 XML 文档特别大，就会消耗计算机的大量内存，并且容易导致内存溢出。
-         * SAX解析采用事件处理的方式解析XML文件，允许在读取文档的时候，即对文档进行处理，而不必等到整个文档装载完才会文档进行操作
-         *
-         * 使用JAXP的API创建出SAX解析器后，可以指定解析器去解析某个XML文档。
-         * 在解析某个XML文档时，每解析到XML文档的一个组成部分，都会去调用事件处理器的一个方法，该方法会把当前解析到的XML文件内容作为方法的参数传递给事件处理器
-         * 事件处理器由程序员编写，程序员通过事件处理器中方法的参数，就可以很轻松地得到sax解析器解析到的数据，从而可以决定如何对数据进行处理
-         *
-         * https://upload-images.jianshu.io/upload_images/272673-202283ad8e0cea3e.png
-         */
         // 解析XML方式一
         SAXParserFactory spf = SAXParserFactory.newInstance();
         spf.setNamespaceAware(true);
@@ -203,28 +165,6 @@ public class HtmlXml {
         } catch (ParserConfigurationException | SAXException | IOException | TransformerException e) {
             e.printStackTrace();
         }
-
-
-        // 序列化为XML方式一
-        /*StringWriter writer = new StringWriter();
-        Object object = new Object();
-        try { // 把对象数据转换成xml
-            //import javax.xml.bind.JAXBContext;
-            //import javax.xml.bind.JAXBException;
-            //import javax.xml.bind.Marshaller;
-            //import javax.xml.bind.Unmarshaller;
-            //JAXBContext context = JAXBContext.newInstance(object.getClass());
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_ENCODING, StandardCharsets.UTF_8);
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(object, writer);
-        } catch (JAXBException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
-        }
-        System.out.println(writer);*/
-
-
     }
 
 }

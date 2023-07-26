@@ -43,7 +43,7 @@ public class NumberUtil {
 
     /**
      * 判断浮点数（double和float）
-     *
+     * <p>
      * https://blog.csdn.net/qq_44750696/article/details/121230073
      *
      * @param str
@@ -273,6 +273,14 @@ public class NumberUtil {
         BigDecimal negate = divide.negate();
         // 1正数，0就是0，-1负数
         int signum = divide.signum();
+
+        // 比较是整数还是小数
+        BigDecimal a = BigDecimal.valueOf(-12.01);
+        boolean a1 = BigDecimal.valueOf(a.longValue()).compareTo(a) == 0;
+        System.out.printf("%s是整数？：%s%n", a, a1);
+        BigDecimal b = a.setScale(0, RoundingMode.DOWN); // 去除小数部分
+        boolean b1 = a.compareTo(b) == 0;
+        System.out.printf("%s是整数？：%s%n", a, b1);
 
         String money = "1.054841";
         // 四舍五入保留两位小数

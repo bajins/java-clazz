@@ -117,9 +117,9 @@ public class SystemLearning {
 
         System.out.println("---------- 项目绝对路径 -------------");
         System.out.println(SystemLearning.class.getResource("/")); // 如果不加“/”，则获取当前类的目录
-        System.out.println(Thread.currentThread().getContextClassLoader().getResource(""));
         System.out.println(SystemLearning.class.getClassLoader().getResource(""));
-        System.out.println(System.getProperty("user.dir"));
+        System.out.println(Thread.currentThread().getContextClassLoader().getResource(""));
         System.out.println(System.getProperty("java.class.path"));
+        System.out.println(System.getProperty("user.dir")); // 不太准确
     }
 }
