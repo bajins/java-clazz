@@ -28,17 +28,17 @@ public class FunctionLearning {
      *
      * @see java.util.function 包下有默认的一系列定义好的函数接口
      * @see Consumer 接收一个对象，返回 void，比如 foreach
-     * @see Sink
+     * @see BiConsumer 接收两个对象，返回 void
      * @see IntConsumer
      * @see LongConsumer
      * @see DoubleConsumer
      * @see Function 接收一个对象，返回一个对象，比如 map
-     * @see Predicate 接收一个对象，返回 boolean，比如 filter
-     * @see Supplier 不接收对象，返回一个对象
-     * @see BiConsumer 接收两个对象，返回 void
-     * @see BiFunction 接收三个对象，前两个是参数，最后一个是返回对象
+     * @see BiFunction 接收两个对象，返回一个对象
      * @see BinaryOperator 继承自BiFunction
+     * @see Predicate 接收一个对象，返回 boolean，比如 filter
      * @see BiPredicate 接收两个对象，返回 boolean
+     * @see Supplier 不接收对象，返回一个对象
+     * @see BooleanSupplier 不接收对象，返回 boolean
      * @see Comparator
      * @see UnaryOperator
      */

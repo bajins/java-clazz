@@ -76,6 +76,16 @@ public class CurdIdeas {
     }
 
     public static void main(String[] args) {
-        System.out.println(Locale.getDefault()+"");
+        String[] testStrings = {"1", "a1", "1.0", "-1", "+1", ".1"};
+
+        System.out.println("Using matches method with regex:");
+        for (String testString : testStrings) {
+            if (!testString.matches("^[1-9][0-9]*(\\.[0-9]+)?$")) {
+                System.out.println(testString);
+            }
+            if (!testString.matches("\\d+(\\.\\d+)?")) {
+                System.out.println(testString + " is not a number.");
+            }
+        }
     }
 }

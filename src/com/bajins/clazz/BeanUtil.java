@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
  * @see Method 类的方法
  * @see Modifier
  * @see Parameter
- * @see Type
+ * @see Type https://blog.csdn.net/weixin_44296929/article/details/128868968
  * @see java.lang.ref
  * @see Reference
  * @see WeakReference

@@ -298,7 +298,7 @@ public class CollectionsLearning {
         list.stream().sorted(Comparator.comparing(类::属性一).thenComparing(类::属性二,Comparator.reverseOrder()));*/
 
         // IntStream.range(0, 10).boxed().collect(Collectors.toList());
-        List<Integer> intList = IntStream.range(0, 10).boxed().collect(Collectors.toList());
+        List<Integer> intList = IntStream.range(0, 10).boxed().toList();
         /*List<Integer> intList = new ArrayList<>(
                 IntStream.range(0, 10).boxed().collect(Collectors.toCollection(ArrayList::new))
         );*/
@@ -356,12 +356,18 @@ public class CollectionsLearning {
                         , Collectors.summarizingInt(e -> (Integer) e.get("price"))
                 ));
         // 分组求和后并取最大值
+        // 设置parallelStream线程数量为20个
+        //System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "20");
         Map<String, Map<String, Object>> collect2 = maps.parallelStream().filter(Objects::nonNull).collect(
                 Collectors.groupingBy(e -> (String) e.get("name"), Collectors.collectingAndThen(
                         Collectors.reducing((c1, c2) -> ((Integer) c1.get("price") > (Integer) c2.get("price")) ? c1
                                 : c2)
                         , Optional::get)
                 ));
+        Map<String, Map<String, Object>> collect3 = maps.parallelStream().filter(Objects::nonNull).collect(
+                Collectors.toMap(e -> (String) e.get("name"), Function.identity()
+                        , (c1, c2) -> ((Integer) c1.get("price") > (Integer) c2.get("price")) ? c1 : c2));
+
         int price = maps.stream().mapToInt(x -> (Integer) x.get("price")).sum();
         long price$ = maps.stream().mapToInt(x -> (Integer) x.get("price")).summaryStatistics().getSum();
         int exact = Math.toIntExact(price$);
@@ -372,25 +378,53 @@ public class CollectionsLearning {
         BigDecimal _price = maps.stream().collect(Collectors.reducing(BigDecimal.ZERO,
                 x -> new BigDecimal((Integer) x.get("price")), BigDecimal::add));
 
+        BigDecimal _price1 = maps.stream().map(x -> BigDecimal.valueOf((Integer) x.get("price")))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
+        // 多重分组并取对象中的某一个字段
+        Map<String, Map<String, BigDecimal>> groupMap1 = maps.stream()
+                .collect(Collectors.groupingBy(t -> (String) t.get("name"),
+                        Collectors.groupingBy(t -> (String) t.get("age"),
+                                Collectors.mapping(t -> (BigDecimal) t.get("price"),
+                                        Collectors.collectingAndThen(Collectors.reducing((x, y) -> x), Optional::get)))));
+
+        Map<String, Map<String, BigDecimal>> groupMap2 = maps.stream()
+                .collect(Collectors.groupingBy(t -> (String) t.get("name"),
+                        Collectors.toMap(t -> (String) t.get("age"), t -> (BigDecimal) t.get("price"), (x, y) -> x)));
+
+        Map<String, Map<String, BigDecimal>> groupMap3 = maps.stream()
+                .collect(Collectors.groupingBy(t -> (String) t.get("name"),
+                        Collectors.groupingBy(t -> (String) t.get("age"),
+                                Collectors.mapping(t -> (BigDecimal) t.get("price"),
+                                        Collectors.collectingAndThen(Collectors.maxBy((x, y) -> x.intValue()),
+                                                Optional::get)))));
+
+        Map<String, Map<String, BigDecimal>> groupMap4 = maps.stream()
+                .collect(Collectors.groupingBy(t -> (String) t.get("name"),
+                        Collectors.toMap(t -> (String) t.get("age"), t -> (BigDecimal) t.get("price"),
+                                BinaryOperator.maxBy((x, y) -> x.intValue()))));
+
+
         // ============================================================================================================
         /*
          * 获取重复数据
          */
         // 方式一：distinct, 只能获取重复的主键
-        List<Object> dl1 = maps.stream().map(t -> t.get("name")).distinct().collect(Collectors.toList());
+        List<Object> dl1 = maps.stream().map(t -> t.get("name")).distinct().toList();
         System.out.println(dl1.size() != list.size() ? "有重复" : "无重复");
         // 方式二：先分组统计
         Map<Object, Long> dl2 = maps.stream().collect(Collectors.groupingBy(t -> t.get("name"), Collectors.counting()));
         // 过滤出大于1（重复）的数据
-        List<Object> collect3 = dl2.keySet().stream().filter(key -> dl2.get(key) > 1).collect(Collectors.toList());
-        System.out.println("重复的数据：" + collect3);
+        List<Object> collect4 = dl2.keySet().stream().filter(key -> dl2.get(key) > 1).toList();
+        System.out.println("重复的数据：" + collect4);
         // 方式三：同方式二
-        List<Map<String, Long>> collect4 = dl2.keySet().stream().filter(key -> dl2.get(key) > 1).map(key -> {
+        List<Map<String, Long>> collect5 = dl2.keySet().stream().filter(key -> dl2.get(key) > 1).map(key -> {
             Map<String, Long> tamp = new HashMap<>();
             tamp.put((String) key, dl2.get(key));
             return tamp;
-        }).collect(Collectors.toList());
-        System.out.println("重复的数据：" + collect4);
+        }).toList();
+        System.out.println("重复的数据：" + collect5);
 
         // ============================================================================================================
         /*
@@ -400,7 +434,7 @@ public class CollectionsLearning {
          * 数据量比较小（100W以下），一般业务场景下尽量用普通循环
          */
         List<String> collect =
-                list.stream().filter(entry -> entry.equals("a")).parallel().collect(Collectors.toList());
+                list.stream().filter(entry -> entry.equals("a")).parallel().toList();
         // 判断是否存在某个值
         boolean a = list.stream().filter(entry -> entry.equals("a")).findAny().isPresent();
         boolean b = list.stream().allMatch(entry -> entry.equals("a"));
@@ -433,19 +467,19 @@ public class CollectionsLearning {
         list2.add("8");
 
         // 交集 两个列表都有的数据
-        List<String> intersection = list1.stream().filter(list2::contains).collect(Collectors.toList());
+        List<String> intersection = list1.stream().filter(list2::contains).toList();
         System.out.println("---交集 intersection---");
         // 获取集合 重复元素
         List<String> intersection1 = list1.stream()
                 .collect(Collectors.toMap(e -> e, e -> 1, (x, y) -> x + y)) // 获取元素出现频率的 Map ,键为元素 值为元素重复次数
                 .entrySet().stream() // Set<Entry> 转为 Stream<Entry>
                 .filter(e -> e.getValue() > 1) // 过滤元素出现次数大于 1 的 entry
-                .map(e -> e.getKey()) // 获得 entry 的键（重复的元素）对应的 Stream
-                .collect(Collectors.toList()); // 转换为 List
+                .map(Map.Entry::getKey) // 获得 entry 的键（重复的元素）对应的 Stream
+                .toList(); // 转换为 List
         intersection.parallelStream().forEach(System.out::println);
 
         // 差集 (list1 - list2) 前面一个列表在后面一个列表中没有的数据
-        List<String> reduce1 = list1.stream().filter(item -> !list2.contains(item)).collect(Collectors.toList());
+        List<String> reduce1 = list1.stream().filter(item -> !list2.contains(item)).toList();
         System.out.println("---差集 reduce1 (list1 - list2)---");
         reduce1.parallelStream().forEach(System.out::println);
 
@@ -459,7 +493,7 @@ public class CollectionsLearning {
                 Stream.of(list1, list2).flatMap(Collection::stream).distinct().collect(Collectors.toList());
 
         // 去重并集
-        List<String> listAllDistinct = listAll.stream().distinct().collect(Collectors.toList());
+        List<String> listAllDistinct = listAll.stream().distinct().toList();
         System.out.println("---得到去重并集 listAllDistinct---");
         listAllDistinct.parallelStream().forEachOrdered(System.out::println);
 
@@ -471,14 +505,14 @@ public class CollectionsLearning {
         /*
          * 合并多个list
          */
-        List<String> listAll4 = list1.stream().flatMap(listContainer -> list2.stream()).collect(Collectors.toList());
+        List<String> listAll4 = list1.stream().flatMap(listContainer -> list2.stream()).toList();
 
         List<List<String>> lists = new ArrayList<>(2);
         lists.add(listAll);
         lists.add(listAll2);
         lists.add(listAll3);
         // 多层嵌套合并
-        List<String> listOf1 = lists.stream().flatMap(List::stream).collect(Collectors.toList());
+        List<String> listOf1 = lists.stream().flatMap(List::stream).toList();
     }
 
     /**
