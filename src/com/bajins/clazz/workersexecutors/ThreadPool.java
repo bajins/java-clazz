@@ -107,6 +107,31 @@ public class ThreadPool {
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }*/
+
+            /*CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+                // 异步执行的任务
+                long startTime = System.currentTimeMillis();
+                try {
+                    Thread.sleep(2000); // 模拟耗时操作
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                return "异步执行耗时：" + (System.currentTimeMillis() - startTime) + "ms";
+            }, executorService); // 使用线程池执行任务
+
+            // 获取异步执行的结果
+            future.thenAccept(result -> {
+                System.out.println("结果：" + result);
+            });
+
+            // 如果需要阻塞等待结果并获取
+            try {
+                String result = future.get();
+                System.out.println("阻塞获取的结果：" + result);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }*/
+
         }
         //executorService.shutdown(); // 停止接收新任务，原来的任务继续执行，再次submit()无效（关闭了提交通道）
         //executorService.shutdownNow(); // 停止接收新任务，原来的任务停止执行（正在运行和等待的）

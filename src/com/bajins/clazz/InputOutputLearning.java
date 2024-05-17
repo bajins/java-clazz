@@ -29,7 +29,40 @@ import java.util.StringJoiner;
  * @see AutoCloseable
  * @see Closeable
  * @see Channel
- * @see AsynchronousChannel
+ * @see AsynchronousChannel 异步文件 I/O
+ * @see BufferedInputStream 缓冲字节流读
+ * @see BufferedOutputStream 缓冲字节流写
+ * @see BufferedReader
+ * @see BufferedWriter
+ * @see ByteArrayInputStream 字节数组流读
+ * @see ByteArrayOutputStream 字节数组流写
+ * @see CharArrayReader
+ * @see CharArrayWriter
+ * @see DataInputStream
+ * @see DataOutputStream
+ * @see FileInputStream
+ * @see FileOutputStream
+ * @see FileReader
+ * @see FileWriter
+ * @see FilterInputStream
+ * @see FilterOutputStream 非缓冲的输出流
+ * @see InputStreamReader
+ * @see OutputStreamWriter
+ * @see LineNumberReader
+ * @see ObjectInputStream
+ * @see ObjectOutputStream
+ * @see PipedInputStream
+ * @see PipedOutputStream
+ * @see PipedReader
+ * @see PipedWriter
+ * @see PrintStream
+ * @see PrintWriter
+ * @see PushbackInputStream
+ * @see PushbackReader
+ * @see RandomAccessFile
+ * @see SequenceInputStream
+ * @see StringReader
+ * @see StringWriter
  */
 public class InputOutputLearning {
     /**
@@ -229,8 +262,8 @@ public class InputOutputLearning {
         }
         System.out.println("--------");
 
-        try (FileInputStream fileInputStream = new FileInputStream(file);
-             BufferedInputStream in = new BufferedInputStream(fileInputStream);
+        try (FileInputStream raf = new FileInputStream(file);
+             BufferedInputStream in = new BufferedInputStream(raf);
              //ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
         ) {
             long skip = in.skip(441); // 要跳过的字节数
@@ -252,41 +285,177 @@ public class InputOutputLearning {
         }
 
         /*
-         * BufferedInputStream 缓冲字节流读
-         * BufferedOutputStream 缓冲字节流写
-         * BufferedReader
-         * BufferedWriter
-         * ByteArrayInputStream 字节数组流读
-         * ByteArrayOutputStream 字节数组流写
-         * CharArrayReader
-         * CharArrayWriter
-         * DataInputStream
-         * DataOutputStream
-         * FileInputStream
-         * FileOutputStream
-         * FileReader
-         * FileWriter
-         * FilterInputStream
-         * FilterOutputStream
-         * InputStreamReader
-         * OutputStreamWriter
-         * LineNumberReader
-         * ObjectInputStream
-         * ObjectOutputStream
-         * PipedInputStream
-         * PipedOutputStream
-         * PipedReader
-         * PipedWriter
-         * PrintStream
-         * PrintWriter
-         * PushbackInputStream
-         * PushbackReader
-         * RandomAccessFile
-         * SequenceInputStream
-         * StringReader
-         * StringWriter
-         *
+         * 对图片追加二进制内容
          */
+        String imagePath = "image.jpg";  // 替换为你要处理的实际图片路径
+        byte[] binaryData = {0x00, 0x01, 0x02, 0x03};  // 替换为你要追加的二进制数据
+
+        try (RandomAccessFile raf = new RandomAccessFile(imagePath, "rw")) {
+            long fileSize = file.length();
+            // 追加二进制内容
+            raf.seek(fileSize); // 定位到文件末尾
+            raf.write(binaryData);
+
+            // 读取追加数据
+            /*try(RandomAccessFile dataRaf = new RandomAccessFile(toPath, "r");){
+                byte[] buffer = new byte[(int) dataFile.length()];
+                dataRaf.readFully(buffer);
+                // 记录追加内容的起始位置和长度
+                long startPosition = raf.getFilePointer();
+                int length = buffer.length;
+                // 追加数据
+                raf.write(buffer);
+            }*/
+
+            // 确定追加内容的起始位置和长度
+            long contentLength = binaryData.length;
+
+            System.out.println("追加内容的起始位置: " + fileSize);
+            System.out.println("追加内容的长度: " + contentLength);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (FileOutputStream fos = new FileOutputStream(imagePath, true)) {
+            // 记录追加内容的起始位置（即当前文件的大小）
+            long startPosition = new File(imagePath).length();
+            // 写入二进制内容
+            fos.write(binaryData);
+            // 记录追加内容的长度
+            long length = binaryData.length;
+
+            // 输出追加内容的起始位置和长度
+            System.out.println("追加内容的起始位置：" + startPosition);
+            System.out.println("追加内容的长度：" + length);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (FileOutputStream fos = new FileOutputStream(imagePath, true);
+             BufferedOutputStream bos = new BufferedOutputStream(fos);) {
+
+            // 记录追加内容的起始位置（即当前文件的大小）
+            long startPosition = new File(imagePath).length();
+            //long startPosition = fos.getChannel().position();
+            // 写入二进制内容
+            bos.write(binaryData);
+            // 记录追加内容的长度
+            long length = binaryData.length;
+
+            // 输出追加内容的起始位置和长度
+            System.out.println("追加内容的起始位置：" + startPosition);
+            System.out.println("追加内容的长度：" + length);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /*
+         * 截取二进制文件中的部分内容并保存到新文件
+         */
+        long startPosition = 1024; // 从文件的第1024个字节开始截取
+        int len = 4096; // 截取4096个字节
+        try (RandomAccessFile raf = new RandomAccessFile(imagePath, "r");
+             FileOutputStream fos = new FileOutputStream("11111");) {
+            // 移动到开始位置
+            raf.seek(startPosition);
+            byte[] buffer = new byte[len]; // 创建字节数组作为缓冲区
+            // 读取数据
+            int bytesRead = raf.read(buffer, 0, len);
+
+            // 如果实际读取的字节数少于期望的长度，则创建一个新的较小数组
+            byte[] result = bytesRead < len ? new byte[bytesRead] : buffer;
+            if (bytesRead < len) {
+                System.arraycopy(buffer, 0, result, 0, bytesRead);
+            }
+            // 写入数据
+            fos.write(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (RandomAccessFile raf = new RandomAccessFile(imagePath, "rw");
+             FileChannel channel = raf.getChannel();
+             FileOutputStream fos = new FileOutputStream("1.zip");) {
+            // 移动到开始位置
+            raf.seek(10581);
+            System.out.println(raf.length());
+
+            long filePointer = raf.getFilePointer();
+            // 把部分内容写入到新的文件中
+            byte[] buffer = new byte[(int) (raf.length() - filePointer)];
+            raf.read(buffer, 0, buffer.length);
+            fos.write(buffer);
+
+            // 截断文件到追加内容的起始位置，移除所有之后的内容
+            channel.truncate(filePointer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        /*
+         * 移除二进制文件部分内容
+         */
+        String filePath = "binary_file.bin";  // 替换为你要处理的实际文件路径
+        long start = 100;  // 要移除内容的起始位置
+        long length = 50;  // 要移除的内容长度
+
+        try (RandomAccessFile raf = new RandomAccessFile(filePath, "rw")) {
+            long fileSize = raf.length();
+
+            if (start >= fileSize) {
+                System.out.println("起始位置超出文件大小范围。");
+                return;
+            }
+
+            if (start + length > fileSize) {
+                length = fileSize - start;
+            }
+
+            byte[] remainingBytes = new byte[(int) (fileSize - start - length)];
+            raf.seek(start + length);
+            raf.readFully(remainingBytes);
+
+            raf.seek(start);
+            raf.write(remainingBytes);
+
+            raf.setLength(fileSize - length);
+
+            System.out.println("已成功移除文件的部分内容。");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (FileOutputStream fos = new FileOutputStream(imagePath, true);
+             FileChannel fileChannel = fos.getChannel()) {
+
+            // 截断文件到追加内容的起始位置，移除所有之后的内容
+            fileChannel.truncate(start);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (FileInputStream fis = new FileInputStream(imagePath);
+             ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             FileOutputStream fos = new FileOutputStream(imagePath)) {
+
+            // 读取并写入追加内容之前的所有数据到ByteArrayOutputStream
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                // 仅在没有到达起始位置之前写入
+                long bytesRemaining = start - baos.size();
+                if (bytesRemaining > 0) {
+                    int bytesToWrite = (int) Math.min(bytesRemaining, bytesRead);
+                    baos.write(buffer, 0, bytesToWrite);
+                }
+            }
+            // 将ByteArrayOutputStream中的内容写回文件，移除追加的内容
+            baos.writeTo(fos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         // 字节流读写文本文件
         try (FileInputStream fis = new FileInputStream("text.txt");) {
             System.out.println("可读取的字节数：" + fis.available());

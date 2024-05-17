@@ -3,7 +3,10 @@ package com.bajins.clazz;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -76,16 +79,16 @@ public class CurdIdeas {
     }
 
     public static void main(String[] args) {
-        String[] testStrings = {"1", "a1", "1.0", "-1", "+1", ".1"};
-
-        System.out.println("Using matches method with regex:");
-        for (String testString : testStrings) {
-            if (!testString.matches("^[1-9][0-9]*(\\.[0-9]+)?$")) {
-                System.out.println(testString);
-            }
-            if (!testString.matches("\\d+(\\.\\d+)?")) {
-                System.out.println(testString + " is not a number.");
-            }
+        // 生成20个16进制的值
+       /* List<String> list = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            list.add(Long.toHexString(2301230903722451L + i));
         }
+        System.out.println(list);
+        for (String s : list) {
+            System.out.println(Long.parseLong(s, 16));
+        }*/
+        BigDecimal a=null;
+        System.out.println(a.subtract(null));
     }
 }

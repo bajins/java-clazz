@@ -113,8 +113,8 @@ public class NumberUtil {
     public static String doubleToPercentage(Double value, Integer maximum) {
         Objects.requireNonNull(value, "请输入参数");
         Objects.requireNonNull(maximum, "请输入参数");
-        NumberFormat percent = NumberFormat.getPercentInstance();
-        if (maximum != null && maximum > 0) {
+        NumberFormat percent = NumberFormat.getPercentInstance(); // 默认百分比风格
+        if (maximum > 0) {
             // 保存结果到小数点后几位，特别声明：这个结果已经先*100了
             percent.setMaximumFractionDigits(maximum);
         }
@@ -132,8 +132,9 @@ public class NumberUtil {
     public static String doubleToPercentage(BigDecimal value, Integer maximum) {
         Objects.requireNonNull(value, "请输入参数");
         Objects.requireNonNull(maximum, "请输入参数");
-        DecimalFormat df = new DecimalFormat("0%");
-        if (maximum != null && maximum > 0) {
+        //DecimalFormat.getPercentInstance() // 默认百分比风格
+        DecimalFormat df = new DecimalFormat("0.00%");
+        if (maximum > 0) {
             // 保存结果到小数点后几位，特别声明：这个结果已经先*100了
             df.setMaximumFractionDigits(maximum);
         }
@@ -149,7 +150,7 @@ public class NumberUtil {
      */
     public static double percentageToDoubleNumberFormat(String value) throws ParseException {
         Objects.requireNonNull(value, "请输入参数");
-        NumberFormat percent = NumberFormat.getPercentInstance();
+        NumberFormat percent = NumberFormat.getPercentInstance(); // 默认百分比风格
         Number parse = percent.parse(value);
         return parse.doubleValue();
     }

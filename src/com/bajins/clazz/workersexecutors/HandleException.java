@@ -1,5 +1,7 @@
 package com.bajins.clazz.workersexecutors;
 
+import java.util.Objects;
+
 /**
  * 捕获异常
  * @see Thread
@@ -17,6 +19,9 @@ public class HandleException {
                 e.printStackTrace();
             }
         });
+        if(Objects.equals("","")){
+            throw new IllegalArgumentException("");
+        }
 
         int a = 10 / 0;
         System.out.println(a);

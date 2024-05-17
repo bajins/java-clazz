@@ -493,6 +493,11 @@ public class DateTimeLearning {
         int day_of_week = calendar.get(Calendar.DAY_OF_WEEK);// 获取当周几
         Calendar c = Calendar.getInstance(timeZone);// 获取东八区时间
 
+        // 设置Calendar为一周的第一天（通常是周一，也可以根据需要设置为周日）
+        calendar.setFirstDayOfWeek(Calendar.MONDAY); // 若想设置为周日，改为 Calendar.SUNDAY
+        // 获取当前周的第一天
+        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek()); // 设置为本周的第一天
+
 
         System.out.println("============= 创建定时任务 =============");
         Timer timer = new Timer();
@@ -530,6 +535,59 @@ public class DateTimeLearning {
         java.sql.Date date_ = new java.sql.Date(date.getTime());//会丢失时分秒
         Time time_ = new Time(date.getTime());//会丢失年月日
         Timestamp timestamp = new Timestamp(date.getTime());
+
+        // 获取今天剩余每个半小时的时间点，如果当前时间不是在半小时的时间点上，则取上一个半小时时间点
+        // 方式一
+        LocalDateTime currentTime = LocalDateTime.now();
+        // 如果当前时间不是在半小时的时间点上，则取上一个半小时时间点
+        LocalDateTime nextHalfHour =
+                currentTime.minusMinutes(currentTime.getMinute() % 30).withMinute(30).withSecond(0).withNano(0);
+        // 获取今天的结束时间
+        LocalDateTime maxLocalDateTime = LocalDateTime.of(currentTime.toLocalDate(), LocalTime.MAX);
+        while (nextHalfHour.isBefore(maxLocalDateTime)) {
+            System.out.println(nextHalfHour.toLocalTime());
+            nextHalfHour = nextHalfHour.plusMinutes(30);
+        }
+
+        // 方式二
+        // 计算当前时间距离下一个半小时的时间差
+        nextHalfHour = currentTime.minusMinutes(currentTime.getMinute() % 30).withMinute(30).withSecond(0).withNano(0);
+        LocalDateTime endOfDay = LocalDateTime.of(nextHalfHour.plusDays(1).toLocalDate(), LocalTime.MIDNIGHT);
+        System.out.println("------------------------------------------");
+        // 获取今天剩余的每个半小时的时间点
+        for (LocalDateTime time2 = nextHalfHour; time2.isBefore(endOfDay); time2 = time2.plusMinutes(30)) {
+            System.out.println(time2);
+        }
+
+        // 方式三
+        // 获取当前时间
+        calendar = Calendar.getInstance();
+        int nextDay = calendar.get(Calendar.DAY_OF_YEAR);
+        // 计算当前时间距离下一个半小时的时间差
+        calendar.add(Calendar.MINUTE, 30 - calendar.get(Calendar.MINUTE) % 30);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        System.out.println("------------------------------------------");
+        // 获取今天剩余的每个半小时的时间点
+        while (calendar.get(Calendar.DAY_OF_YEAR) == nextDay) {
+            System.out.println(LocalDateTime.ofInstant(calendar.toInstant(),
+                    calendar.getTimeZone().toZoneId()));
+            calendar.add(Calendar.MINUTE, 30);
+        }
+
+        // 方式四
+        calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, 30 - calendar.get(Calendar.MINUTE) % 30);
+        //int minutesLeftToday = 60 * (23 - calendar.get(Calendar.HOUR_OF_DAY)) + (60 - calendar.get(Calendar.MINUTE));
+        int minutesLeftToday = 1440 - (calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE));
+        int halfHoursLeftToday = minutesLeftToday / 30 - 1;
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        System.out.println("------------------------------------------");
+        for (int i = 0; i < halfHoursLeftToday; i++) {
+            calendar.add(Calendar.MINUTE, 30);
+            System.out.println(calendar.getTime());
+        }
 
     }
 }

@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  * @see Introspector 内省：对JavaBean类属性、事件的一种缺省处理方法，先得到属性描述器PropertyDecriptor后再进行各种操作
  * @see PropertyDescriptor 属性描述器：通过存储器导出一个JavaBean类的属性
  * https://www.zhihu.com/question/19773379/answers/updated
- * @see java.lang.instrument
+ * @see java.lang.instrument 允许代理在类加载时或运行时修改类的行为
  * @see java.lang.invoke 反射调用相关（含Lambda调用实现）
  * @see java.lang.reflect （reflection）反射：一个类的所有成员都可以进行反射操作，先得到类的字节码Class后再进行各种操作
  * @see Executable
@@ -44,6 +44,10 @@ import java.util.stream.Collectors;
  * @see Method 类的方法
  * @see Modifier
  * @see Parameter
+ * @see Constructor
+ * @see Package
+ * @see Module
+ * @see annotation
  * @see Type https://blog.csdn.net/weixin_44296929/article/details/128868968
  * @see java.lang.ref
  * @see Reference
@@ -67,29 +71,32 @@ public class BeanUtil {
         if (!origin.getClass().equals(destination.getClass())) {
             return;
         }
-        Field[] fields = destination.getClass().getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
-            Field targetField = fields[i];
-            // 如果属性为静态的
-            if (Modifier.isStatic(targetField.getModifiers())) {
-                continue;
+        Class<?> clazz = destination.getClass();
+        while (!clazz.equals(Object.class)) {
+            Field[] fields = clazz.getDeclaredFields();
+            for (int i = 0; i < fields.length; i++) {
+                Field targetField = fields[i];
+                // 如果属性为静态的
+                if (Modifier.isStatic(targetField.getModifiers())) {
+                    continue;
+                }
+                if (!Modifier.isPublic(targetField.getDeclaringClass().getModifiers())) {
+                    targetField.setAccessible(true); // 设置属性可访问
+                }
+                Object valueD = targetField.get(origin); // 源数据
+                Object valueO = targetField.get(destination); // 目标数据
+                // 如果源数据不为空，且该属性不为序列化，可覆盖或目标数据为空
+                if (null != valueD && !"serialVersionUID".equals(targetField.getName()) && (cover || null == valueO)) {
+                    targetField.set(destination, valueD); // 设值到目标对象属性
+                }
+                targetField.setAccessible(false);
             }
-            if (!Modifier.isPublic(targetField.getDeclaringClass().getModifiers())) {
-                targetField.setAccessible(true); // 设置属性可访问
-            }
-            Object valueD = targetField.get(origin); // 源数据
-            Object valueO = targetField.get(destination); // 目标数据
-            // 如果源数据不为空，且该属性不为序列化，可覆盖或目标数据为空
-            if (null != valueD && !"serialVersionUID".equals(targetField.getName()) && (cover || null == valueO)) {
-                targetField.set(destination, valueD); // 设值到目标对象属性
-            }
-            targetField.setAccessible(false);
+            clazz = clazz.getSuperclass();
         }
-
     }
 
     /**
-     * 通过发现差异合并两个bean
+     * 通过发现差异合并两个bean（只能用于标准Bean规范）
      *
      * @param target
      * @param destination
@@ -114,7 +121,7 @@ public class BeanUtil {
     }
 
     /**
-     * 比较两个对象指定的属性值是否相等
+     * 比较两个对象指定的属性值是否相等（只能用于标准Bean规范）
      *
      * @param lhs    第一个对象
      * @param rhs    第二个对象
@@ -227,7 +234,7 @@ public class BeanUtil {
     }
 
     /**
-     * 使用Introspector进行map转bean
+     * 使用Introspector进行map转bean（只能用于标准Bean规范）
      *
      * @param map
      * @param beanClass
@@ -252,14 +259,14 @@ public class BeanUtil {
     }
 
     /**
-     * 使用Introspector进行bean转map
+     * 使用Introspector进行bean转map（只能用于标准Bean规范）
      *
      * @param obj
      * @return
      * @throws Exception
      */
     public static Map<String, Object> beanToMapByIntrospector(Object obj) throws IntrospectionException,
-            InvocationTargetException, IllegalAccessException {
+            InvocationTargetException, IllegalAccessException, NoSuchFieldException {
         if (Objects.isNull(obj)) {
             throw new IllegalArgumentException("传入的对象为空");
         }
@@ -269,6 +276,18 @@ public class BeanUtil {
         PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
         for (PropertyDescriptor property : propertyDescriptors) {
             Method getter = property.getReadMethod();
+            /*Field field = getter.getDeclaringClass().getDeclaredField(property.getName());
+            if (Modifier.isStatic(field.getModifiers()) || Modifier.isFinal(field.getModifiers())) {
+                continue;
+            }
+            boolean isPublic = Modifier.isPublic(field.getModifiers());
+            if (!isPublic) {
+                field.setAccessible(true);
+            }
+            Object value = field.get(obj);
+            if (!isPublic) {
+                field.setAccessible(false);
+            }*/
             Object value = getter != null ? getter.invoke(obj) : null;
             map.put(property.getName(), value);
         }
@@ -279,24 +298,28 @@ public class BeanUtil {
      * 使用reflect进行map转bean
      *
      * @param map
-     * @param beanClass
+     * @param clazz
      * @return
      * @throws Exception
      */
-    public static Object mapToBeanByReflect(Map<String, Object> map, Class<?> beanClass) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+    public static Object mapToBeanByReflect(Map<String, Object> map, Class<?> clazz) throws IllegalAccessException,
+            InstantiationException, NoSuchMethodException, InvocationTargetException {
         if (Objects.isNull(map)) {
             throw new IllegalArgumentException("传入的对象为空");
         }
-        Object obj = beanClass.getDeclaredConstructor().newInstance();
+        Object obj = clazz.getDeclaredConstructor().newInstance();
 
-        Field[] fields = beanClass.getDeclaredFields();
-        for (Field field : fields) {
-            int mod = field.getModifiers();
-            if (Modifier.isStatic(mod) || Modifier.isFinal(mod)) {
-                continue;
+        while (!clazz.equals(Object.class)) {
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field field : fields) {
+                int mod = field.getModifiers();
+                if (Modifier.isStatic(mod) || Modifier.isFinal(mod)) {
+                    continue;
+                }
+                field.setAccessible(true);
+                field.set(obj, map.get(field.getName()));
             }
-            field.setAccessible(true);
-            field.set(obj, map.get(field.getName()));
+            clazz = clazz.getSuperclass();
         }
         return obj;
     }
@@ -313,12 +336,19 @@ public class BeanUtil {
             throw new IllegalArgumentException("传入的对象为空");
         }
         Map<String, Object> map = new HashMap<>();
-
-        Field[] declaredFields = obj.getClass().getDeclaredFields();
-        for (Field field : declaredFields) {
-            //设置属性可以被访问
-            field.setAccessible(true);
-            map.put(field.getName(), field.get(obj));
+        Class<?> clazz = obj.getClass();
+        while (!clazz.equals(Object.class)) {
+            Field[] declaredFields = clazz.getDeclaredFields();
+            for (Field field : declaredFields) {
+                int mod = field.getModifiers();
+                if (Modifier.isStatic(mod) || Modifier.isFinal(mod)) {
+                    continue;
+                }
+                //设置属性可以被访问
+                field.setAccessible(true);
+                map.put(field.getName(), field.get(obj));
+            }
+            clazz = clazz.getSuperclass();
         }
         return map;
     }
@@ -354,6 +384,14 @@ public class BeanUtil {
     public Object invokeMethod(Class<?> refc, String name, Class<?> rtype, Class<?>[] ptypes, Object... args) throws Throwable {
         MethodType mt = MethodType.methodType(rtype, ptypes);
         MethodHandle handle = MethodHandles.publicLookup().findVirtual(refc, name, mt);
+        /*PropertyDescriptor propertyDescriptor = new PropertyDescriptor(name, refc);
+        Method readMethod = propertyDescriptor.getReadMethod();
+        //return handle.invoke(readMethod.invoke(args));
+        Field field = readMethod.getDeclaringClass().getDeclaredField(name);
+        if (Modifier.isStatic(field.getModifiers())) {
+            return handle.invoke(args);
+        }
+        Annotation annotation = field.getAnnotation(MyAnnotation.class);*/
         return handle.invoke(args);
     }
 
