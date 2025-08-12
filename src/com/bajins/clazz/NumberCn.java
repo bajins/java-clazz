@@ -4,7 +4,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * @author claer woytu.com
+ * 将数字金额转为大写中文金额，支持到两位小数，最高支持万亿元。
+ * 参考：https://leishen6.github.io/2020/02/09/Java_imp_chinease_monery
+ *
+ * @author bajins
  * @program com.bajins.api.utils
  * @description CnNumberUtil
  * @create 2018-11-23 21:59
@@ -12,13 +15,15 @@ import java.math.BigInteger;
 public class NumberCn {
 
     // 阿拉伯数字对应大写中文数字
+    // 大写中文金额数字对应表
+    // , "拾", "佰", "仟", "万", "亿", "兆", "京", "垓", "秭", "穰", "沟", "涧", "正", "载", "极", "恒河沙", "阿僧祇", "那由多", "不可思議", "无量大数"
     private final static String[] CN_NUMERALS = {"零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"};
     // 低单位
     private final static String[] CN_NUM_UNIT = {"", "拾", "佰", "仟"};
     // 万元以上高单位
-    private final static String[] CN_NUM_HIGHT_UNIT = {"", "万", "亿", "万亿"};
+    private final static String[] CN_NUM_HIGHT_UNIT = {"", "万", "亿", "万亿", "兆", "京", "垓", "秭", "穰", "沟", "涧", "正", "载", "极", "恒河沙", "阿僧祇", "那由多", "不可思議", "无量大数"};
     // 小数位单位
-    private final static String[] CN_NUM_DECIMAL_UNIT = {"", "角", "分"};
+    private final static String[] CN_NUM_DECIMAL_UNIT = {"", "角", "分", "厘", "毫", "微", "纳", "沙", "皮", "卡", "盎", "铢", "穰", "秭", "垓", "京", "垭", "杼", "穣", "溝", "澗", "正", "載", "極", "恒河沙", "阿僧祇", "那由多", "不可思議", "無量大数"};
 
     /**
      * 转换成中文大写金额（最高支持万亿和两位小数）
@@ -37,11 +42,22 @@ public class NumberCn {
      * @return
      */
     public static String toUppercase(String num) {
+        //判断输入的金额字符串是否符合要求
+        if (!num.matches("(-)?[\\d]*(.)?[\\d]*")) {
+            throw new IllegalArgumentException("抱歉，请输入数字！");
+        }
+        if ("0".equals(num) || "0.00".equals(num) || "0.0".equals(num)) {
+            return "零圆";
+        }
+        num = num.replaceAll(",", "");//去掉","
+        //判断是否存在负号"-"
+        boolean flag = false;
+        if (num.startsWith("-")) {
+            flag = true;
+            num = num.replaceAll("-", "");
+        }
         String[] strNumArray = num.split("\\.");
         int strNumArrayLength = strNumArray.length;
-        if (strNumArrayLength > 2 || (strNumArrayLength == 2 && strNumArray[1].length() > 2)) {
-            throw new IllegalArgumentException("金额格式异常，不能有多个小数点，小数位最多只能两位！");
-        }
         BigDecimal bigDecimal = new BigDecimal(strNumArray[0]);
         BigInteger bigInteger = bigDecimal.toBigInteger();
 
@@ -85,6 +101,10 @@ public class NumberCn {
             } else {
                 strBuilder.append(cnNum);
             }
+        }
+        if (flag) {
+            //如果是负数，加上"负"
+            strBuilder.insert(0, "负");
         }
         return strBuilder.toString();
     }
@@ -186,4 +206,36 @@ public class NumberCn {
         return Integer.parseInt(ns, 10);
     }
 
+    public static void main(String[] args) {
+        System.out.println(toUppercase("4567989123456677975434789.0156789"));
+        String number = "12.56";
+        System.out.println(number + ": " + toUppercase(number));
+
+        number = "1234567890563886.123";
+        System.out.println(number + ": " + toUppercase(number));
+
+        number = "1600";
+        System.out.println(number + ": " + toUppercase(number));
+
+        number = "156,0";
+        System.out.println(number + ": " + toUppercase(number));
+
+        number = "-156,0";
+        System.out.println(number + ": " + toUppercase(number));
+
+        number = "0.12";
+        System.out.println(number + ": " + toUppercase(number));
+
+        number = "0.0";
+        System.out.println(number + ": " + toUppercase(number));
+
+        number = "01.12";
+        System.out.println(number + ": " + toUppercase(number));
+
+        number = "0125";
+        System.out.println(number + ": " + toUppercase(number));
+
+        number = "-0125";
+        System.out.println(number + ": " + toUppercase(number));
+    }
 }

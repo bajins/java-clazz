@@ -24,6 +24,8 @@ import java.util.concurrent.locks.*;
  * @see ReadWriteLock
  * @see ReentrantLock
  * @see ReentrantReadWriteLock
+ * @see ReentrantReadWriteLock.ReadLock
+ * @see ReentrantReadWriteLock.WriteLock
  * @see StampedLock 对读取操作进行乐观锁定
  * @see java.lang.management
  * @see LockInfo
@@ -60,6 +62,10 @@ import java.util.concurrent.locks.*;
  * @see ThreadLocalMap
  */
 public class SynchronizedLearning {
+
+    private static final ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
+    private static final Lock readLock = rwLock.readLock();
+    private static final Lock writeLock = rwLock.writeLock();
 
     // 同步实例方法，锁住的是当前实例对象，不同对象实例访问时不会阻塞
     public synchronized void method() {
@@ -102,6 +108,7 @@ public class SynchronizedLearning {
          * 我们在这里需要某种同步，假设第一个线程同时运行多次，第二个线程仅说明如何使用乐观锁进行读取操作。
          */
         //StampedLock lock = new StampedLock();
+
         Integer[] b = new Integer[]{10000};
         // 通过同时运行两个线程 50 次来测试它。它应该按预期工作，余额的最终值为：60000
         ExecutorService executor = Executors.newFixedThreadPool(10);
@@ -113,7 +120,9 @@ public class SynchronizedLearning {
                 //lock.unlockWrite(stamp);
             });
             executor.submit(() -> {
-                /*long stamp = lock.tryOptimisticRead();
+                /*readLock.lock();
+                writeLock.lock();
+                long stamp = lock.tryOptimisticRead();
                 if (!lock.validate(stamp)) {
                     stamp = lock.readLock();
                     try {*/
@@ -121,6 +130,8 @@ public class SynchronizedLearning {
                 System.out.println(Thread.currentThread().getId() + " Read: " + b[0]);
                     /*} finally {
                         lock.unlockRead(stamp);
+                        readLock.unlock();
+                        writeLock.unlock();
                     }
                 } else {
                     System.out.println("Optimistic read fails");

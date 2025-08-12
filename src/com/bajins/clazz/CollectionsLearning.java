@@ -305,13 +305,22 @@ public class CollectionsLearning {
 
         // ============================================================================================================
         /*
-         * 分组：
+         * 分组拆分：
          * 将一个list按三个一组分成N个小的list，分组后的list不再是原list的视图，原list的改变不会影响分组后的结果
          */
         // 通过grouping by
         Map<Integer, List<Integer>> groups = intList.stream().collect(Collectors.groupingBy(s -> (s - 1) / 3));
         List<List<Integer>> subSets = new ArrayList<>(groups.values());
         List<Integer> lastPartition = subSets.get(2);
+
+        int chunkSize = 3; // 每个子列表的大小
+
+        Map<Integer, List<Integer>> splitLists = IntStream.range(0, intList.size()).boxed()
+                .collect(Collectors.groupingBy(i -> i / chunkSize, Collectors.mapping(intList::get, Collectors.toList())));
+
+        List<List<Integer>> subLists = IntStream.range(0, (intList.size() + chunkSize - 1) / chunkSize)
+                .mapToObj(i -> intList.subList(i * chunkSize, Math.min((i + 1) * chunkSize, intList.size())))
+                .toList();
 
         // 通过partition by
         // partitioningBy 其实是一种特殊的 groupingBy，

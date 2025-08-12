@@ -326,4 +326,55 @@ public class ThreadPool {
             forkJoinPool.shutdown();
         }
     }
+
+    /**
+     * 自定义实现限制执行频率的线程池 https://segmentfault.com/a/1190000022685499
+     */
+    public class FundThreadPoolExecutor extends ThreadPoolExecutor {
+
+        private int fixedRateMillis;
+
+        private final Semaphore fixedRateSemaphore = new Semaphore(1);
+
+        // 设置执行频率限制的延迟时间（ms）
+        public void setFixedRateMillis(int fixedRateMillis) {
+            this.fixedRateMillis = fixedRateMillis;
+        }
+
+        public FundThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime,
+                                      TimeUnit unit,
+                                      BlockingQueue<Runnable> workQueue) {
+            super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
+        }
+
+        public FundThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
+                                      BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory) {
+            super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory);
+        }
+
+        public FundThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
+                                      BlockingQueue<Runnable> workQueue, RejectedExecutionHandler handler) {
+            super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, handler);
+        }
+
+        public FundThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
+                                      BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory,
+                                      RejectedExecutionHandler handler) {
+            super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
+        }
+
+        @Override
+        protected void beforeExecute(Thread t, Runnable r) {
+            if (this.fixedRateMillis > 0) {
+                try {
+                    this.fixedRateSemaphore.acquire();
+                    Thread.sleep(this.fixedRateMillis);
+                } catch (InterruptedException e) {
+                    // ignore this
+                } finally {
+                    this.fixedRateSemaphore.release();
+                }
+            }
+        }
+    }
 }

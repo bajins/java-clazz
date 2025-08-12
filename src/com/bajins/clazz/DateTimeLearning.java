@@ -1,6 +1,8 @@
 package com.bajins.clazz;
 
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.*;
@@ -168,11 +170,16 @@ public class DateTimeLearning {
      */
     public static boolean isDate(String strDate) {
         Pattern pattern = Pattern.compile("^((\\d{2}(([02468][048])|([13579][26]))[\\-\\/\\s]?((((0?[13578])|(1[02]))" +
-                "[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|" +
-                "(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])))))|(\\d{2}(([02468][1235679])|([13579][01345789]))" +
-                "[\\-\\/\\s]?((((0?[13578])|(1[02]))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])" +
-                "|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|(1[0-9])|" +
-                "(2[0-8]))))))(\\s((([0-1]?[0-9])|(2?[0-3]))\\:([0-5]?[0-9])((\\s)|(\\:([0-5]?[0-9])))))?$");
+                                          "[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])|(11))" +
+                                          "[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|" +
+                                          "(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])))))|(\\d{2}(" +
+                                          "([02468][1235679])|([13579][01345789]))" +
+                                          "[\\-\\/\\s]?((((0?[13578])|(1[02]))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|" +
+                                          "(3[01])))|(((0?[469])" +
+                                          "|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(30)))|(0?2[\\-\\/\\s]?(" +
+                                          "(0?[1-9])|(1[0-9])|" +
+                                          "(2[0-8]))))))(\\s((([0-1]?[0-9])|(2?[0-3]))\\:([0-5]?[0-9])((\\s)|(\\:" +
+                                          "([0-5]?[0-9])))))?$");
         Matcher m = pattern.matcher(strDate);
         return m.matches();
     }
@@ -378,6 +385,19 @@ public class DateTimeLearning {
 
         // 计算去年
         LocalDateTime previousYear = now.minus(1, ChronoUnit.YEARS);
+
+        // 计算两个时间范围内有多少年
+        LocalDate start = LocalDate.parse("2019-11-08", DateTimeFormatter.ISO_LOCAL_DATE);
+        LocalDate end = LocalDate.parse("2024-05-24", DateTimeFormatter.ISO_LOCAL_DATE);
+
+        Period period = Period.between(start, end);
+        DecimalFormat df1 = new DecimalFormat("#.##");
+        String formattedYears = df1.format(period.getYears() + (period.getMonths() / 12.0));
+
+        long daysDifference = ChronoUnit.DAYS.between(start, end);
+        BigDecimal yearsDifference = BigDecimal.valueOf(daysDifference).divide(BigDecimal.valueOf(365.25), 2,
+                RoundingMode.HALF_UP);
+
         // 上月
         LocalDateTime minusMonths = now.minusMonths(1);
         // 减30天

@@ -385,6 +385,30 @@ public class StringUtil {
     }
 
     /**
+     * 将字符串转换为小驼峰命名
+     *
+     * @param str
+     * @return
+     */
+    public static String toSmallCamel(String str) {
+        String result;
+        if (str == null || str.isEmpty()) {
+            result = str;
+        } else {
+            String[] arr = str.split("_");
+            StringBuilder sb = new StringBuilder();
+            for (String s : arr) {
+                if (!s.isEmpty()) {
+                    sb.append(s.substring(0, 1).toLowerCase());
+                    sb.append(s.substring(1));
+                }
+            }
+            result = sb.toString();
+        }
+        return result;
+    }
+
+    /**
      * 通过身份证号码获取出生日期、性别、年龄
      *
      * @param idCard
