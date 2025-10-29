@@ -19,9 +19,9 @@ public class CodecUtil {
     private static final String DEFAULT_URL_ENCODING = StandardCharsets.UTF_8.name();
 
     // 单个字符的正则表达式
-    private static final String singlePattern = "[0-9|a-f|A-F]";
+    private static final String SINGLE_PATTERN = "[0-9|a-f|A-F]";
     // 4个字符的正则表达式
-    private static final String pattern = singlePattern + singlePattern + singlePattern + singlePattern;
+    private static final String PATTERN = SINGLE_PATTERN + SINGLE_PATTERN + SINGLE_PATTERN + SINGLE_PATTERN;
 
 
     /**
@@ -57,7 +57,7 @@ public class CodecUtil {
             return false;
         }
         String content = str.substring(2, 6);
-        return Pattern.matches(pattern, content);
+        return Pattern.matches(PATTERN, content);
     }
 
     /**
@@ -212,6 +212,8 @@ public class CodecUtil {
             e.printStackTrace();
         }
 
+        System.out.println(Long.toString(135,34));
+        System.out.println(Long.parseLong("3x",34));
 
     }
 

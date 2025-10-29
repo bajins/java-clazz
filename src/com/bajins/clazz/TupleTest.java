@@ -92,6 +92,7 @@ class SerialNumberedImpl implements SerialNumbered {
 
     private final long serialNumber = counter++;
 
+    @Override
     public long getSerialNumber() {
         return serialNumber;
     }
@@ -107,6 +108,7 @@ interface Basic {
 class BasicImpl implements Basic {
     private String value;
 
+    @Override
     public void set(String val) {
         value = val;
     }
