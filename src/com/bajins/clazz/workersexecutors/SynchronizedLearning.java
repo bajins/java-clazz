@@ -22,16 +22,16 @@ import java.util.concurrent.locks.*;
  * @see Condition 条件变量，很大程度上是为了解决Object.wait/notify/notifyAll难以使用的问题
  * @see LockSupport
  * @see ReadWriteLock
- * @see ReentrantLock
- * @see ReentrantReadWriteLock
+ * @see ReentrantLock 可重入、公平/非公平、可中断、超时获取
+ * @see ReentrantReadWriteLock 读读共享、读写互斥、写写互斥
  * @see ReentrantReadWriteLock.ReadLock
  * @see ReentrantReadWriteLock.WriteLock
- * @see StampedLock 对读取操作进行乐观锁定
+ * @see StampedLock 对读取操作进行乐观锁定：读不阻塞写、乐观读、三种模式
  * @see java.lang.management
  * @see LockInfo
  * @see AbstractQueuedSynchronizer
  * @see AbstractQueuedSynchronizer.Node
- * @see java.util.concurrent.atomic 原子类包，可解决并发、stream使用外部变量的问题
+ * @see java.util.concurrent.atomic 原子类包，可解决并发、stream使用外部变量的问题，无锁机制（CAS）
  * @see AtomicBoolean 原子更新布尔类型
  * @see AtomicInteger 原子更新整型
  * @see AtomicIntegerArray 原子更新整型数组里的元素
@@ -48,7 +48,7 @@ import java.util.concurrent.locks.*;
  * @see DoubleAccumulator 并发累加器
  * @see DoubleAdder Atomic、Adder在低并发环境下，两者性能很相似。在高并发环境下，Adder 有更高的吞吐量，但有更高的空间复杂度
  * @see LongAccumulator
- * @see LongAdder
+ * @see LongAdder 分段CAS，减少自旋冲突
  * @see ThreadLocal 线程本地变量（副本）
  * <p>注意：在使用线程池等会缓存线程的组件情况下传递ThreadLocal会被复用（获取到的变量不是想要的值），</p>
  * <ul><span>参考：</span>

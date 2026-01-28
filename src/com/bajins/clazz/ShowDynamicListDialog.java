@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * 创建一个动态列表对话框，用于实时显示数据。
+ * @author bajins
  */
 public class ShowDynamicListDialog {
 
@@ -17,6 +18,11 @@ public class ShowDynamicListDialog {
     private final JList<String> list;
     private int messageCounter = 0;
 
+    /**
+     * 构造一个显示动态列表对话框的实例
+     *
+     * @param parent 父级窗口框架，用于设置对话框的所有者关系
+     */
     public ShowDynamicListDialog(JFrame parent) {
         // 1. 使用 DefaultListModel 作为 JList 的数据模型
         listModel = new DefaultListModel<>();
@@ -49,29 +55,22 @@ public class ShowDynamicListDialog {
         // 使用 pack() 自动调整大小，然后居中
         dialog.pack();
         dialog.setLocationRelativeTo(parent);
+        // 显示对话框
+        dialog.setVisible(true);
     }
 
     /**
      * 在列表的最前面追加一条新数据。 这个方法是线程安全的，可以在任何线程中调用。
+     * <p>
+     * 使用SwingUtilities.invokeLater(() -> { ... });或javax.swing.Timer确保 UI 更新/事件监听器 在事件分发线程 (EDT) 上执行
      *
      * @param data 要追加的数据
      */
     public void prependData(final String data) {
-        // 确保 UI 更新在事件分发线程 (EDT) 上执行
-        // SwingUtilities.invokeLater(() -> { ... });
-        // 但由于我们使用 Timer，这一步是自动的，所以直接写逻辑即可
-
         listModel.add(0, data);
 
         // 4. 自动滚动到列表顶部，让用户看到最新的数据
         list.ensureIndexIsVisible(0);
-    }
-
-    /**
-     * 显示对话框。
-     */
-    public void show() {
-        dialog.setVisible(true);
     }
 
     public static void main(String[] args) {
@@ -86,7 +85,6 @@ public class ShowDynamicListDialog {
 
         // 创建我们的动态列表对话框实例
         ShowDynamicListDialog liveDialog = new ShowDynamicListDialog(mainFrame);
-        liveDialog.show();
 
         // 5. 使用 javax.swing.Timer 来模拟后台持续产生的新数据
         // Timer 是 Swing 中进行周期性任务的最佳选择，因为它确保了事件监听器在 EDT 上执行

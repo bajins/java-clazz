@@ -64,6 +64,9 @@ import java.util.stream.*;
  * @see LinkedBlockingDeque 一个由链表结构组成的双向阻塞队列。
  * @see ConcurrentLinkedDeque
  * @see ConcurrentLinkedQueue
+ * @see Deque
+ * @see ArrayDeque
+ * @see SequencedCollection
  * @see AbstractCollection
  * @see Collection 集合框架的父接口 List、Set
  * @see Collections 各种有关集合操作的 静态多态方法 工具类
@@ -364,6 +367,15 @@ public class CollectionsLearning {
                 Collectors.groupingBy(e -> (String) e.get("name")
                         , Collectors.summarizingInt(e -> (Integer) e.get("price"))
                 ));
+        Map<String, BigDecimal> sumOnlyMap = maps.stream().collect(Collectors.groupingBy(
+                e -> (String) e.get("name"),
+                Collectors.mapping(
+                        // 1. 先把值映射成 BigDecimal
+                        e -> new BigDecimal((Integer) e.get("price")),
+                        // 2. 再进行归约求和
+                        Collectors.reducing(BigDecimal.ZERO, BigDecimal::add)
+                )
+        ));
         // 分组求和后并取最大值
         // 设置parallelStream线程数量为20个
         //System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "20");

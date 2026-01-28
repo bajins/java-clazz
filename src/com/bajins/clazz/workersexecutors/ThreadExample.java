@@ -17,15 +17,16 @@ import java.util.concurrent.*;
  * @see CompletableFuture
  * @see Thread
  * @see Runnable
- * @see CountDownLatch 计数器
- * @see CyclicBarrier 循环栅栏：一个可循环利用的屏障：让所有线程都等待完成后才会继续下一步行动 https://www.jianshu.com/p/043ac5689002
- * @see Phaser 线程屏障同步器
+ * @see CountDownLatch 计数器：等待多个线程完成
+ * @see CyclicBarrier 循环栅栏：一个可循环利用的屏障，在某个点让所有线程都等待完成后才会继续下一步行动 https://www.jianshu.com/p/043ac5689002
+ * @see Phaser 线程屏障同步器，动态分段锁
  * @see Exchanger 允许两个线程在一个同步点交换数据，可以用于校对工作或数据传输
  * @see ForkJoinPool 用于把大的计算任务，拆分为多个小的计算任务 https://blog.csdn.net/beFocused/article/details/104443000
  * @see RecursiveAction
  * @see RecursiveTask
  * @see ForkJoinTask
  * @see CountedCompleter
+ * @see Semaphore 许可证机制，流量控制
  * <ul>
  *     <li>https://blog.csdn.net/Xp545945/article/details/106402529</li>
  *     <li>https://blog.csdn.net/beFocused/article/details/104565841</li>

@@ -3,6 +3,8 @@ package com.bajins.clazz;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * 消息提示框
@@ -120,6 +122,99 @@ public class ShowMessageDialog {
     }
 
     /**
+     * 显示一个带有信息列表和两个操作按钮（“停机”和“关闭”）的模态对话框。
+     * 列表内容不可编辑，并支持垂直滚动。用户点击“停机”按钮时可触发特定逻辑，
+     * 点击“关闭”按钮则仅关闭对话框。
+     *
+     * @param parentComponent 父级组件，用于确定对话框的显示位置
+     * @param title           对话框标题
+     * @param message         要在列表上方显示的消息文本
+     * @param listData        要在列表中展示的数据数组
+     */
+    public static void showInfoListWithShutdown(Component parentComponent, String title, String message,
+                                                String[] listData) {
+        // 1. 创建 JList 实例来显示数据
+        JList<String> list = new JList<>(listData);
+
+        // 2. 禁用列表，使其仅用于显示
+        list.setEnabled(false);
+        list.setVisibleRowCount(Math.min(listData.length, 10));
+
+        // 设置视觉样式，使其看起来更像一个标签
+        list.setForeground(UIManager.getColor("Label.foreground"));
+        list.setBackground(UIManager.getColor("Panel.background"));
+
+        // 3. 将 JList 放入 JScrollPane 以支持滚动
+        JScrollPane scrollPane = new JScrollPane(list);
+        scrollPane.setPreferredSize(new Dimension(500, 300)); // 设置一个合适的初始大小
+
+        // 4. 创建一个面板来组合消息标签和列表
+        JPanel panel = new JPanel(new BorderLayout(0, 10));
+        panel.add(new JLabel(message), BorderLayout.NORTH);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        // 5. 创建自定义按钮
+        JButton shutdownButton = new JButton("停机");
+        JButton closeButton = new JButton("关闭");
+
+        // 将按钮放入一个数组中，这是 JOptionPane 需要的格式
+        Object[] options = {shutdownButton, closeButton};
+
+        // 6. 创建一个 JOptionPane 实例
+        // 我们不再指定默认按钮 (JOptionPane.DEFAULT_OPTION)，因为我们将提供自定义按钮
+        JOptionPane optionPane = new JOptionPane(panel, JOptionPane.INFORMATION_MESSAGE,
+                // 这个参数现在用于控制按钮区域的布局，但实际按钮由 options 数组决定
+                JOptionPane.YES_NO_OPTION, null,
+                // 传入我们自定义的按钮数组
+                options,
+                // 默认焦点在“关闭”按钮上
+                options[1]);
+
+        // 7. 从 JOptionPane 创建 JDialog
+        JDialog dialog = optionPane.createDialog(parentComponent, title);
+
+        // 8. 为“停机”按钮添加事件监听器
+        shutdownButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 在这里执行停机逻辑
+                System.out.println("执行停机操作...");
+                // 例如：调用一个方法来关闭服务或应用程序
+                // shutdownApplication();
+
+                // 关闭对话框
+                dialog.dispose();
+            }
+        });
+
+        // 9. 为“关闭”按钮添加事件监听器
+        closeButton.addActionListener(e -> {
+            // 只关闭对话框，不执行任何其他操作
+            System.out.println("对话框已关闭。");
+            dialog.dispose();
+        });
+
+        // 10. 自动调整对话框大小并进行屏幕适配
+        dialog.pack();
+
+        // 防止对话框因内容过多而超出屏幕
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int maxWidth = (int) (screenSize.width * 0.8);
+        int maxHeight = (int) (screenSize.height * 0.8);
+        Dimension dialogSize = dialog.getSize();
+        int newWidth = Math.min(dialogSize.width, maxWidth);
+        int newHeight = Math.min(dialogSize.height, maxHeight);
+        if (dialogSize.width > maxWidth || dialogSize.height > maxHeight) {
+            dialog.setSize(newWidth, newHeight);
+        }
+
+        dialog.setLocationRelativeTo(parentComponent); // 居中显示
+
+        // 11. 显示对话框
+        dialog.setVisible(true);
+    }
+
+    /**
      * 显示一个自定义的输入对话框，支持指定消息内容、消息类型、选项类型、标题以及窗口大小。
      * 该方法内部使用 JOptionPane 和 JDialog 构建对话框，并根据用户操作返回相应的结果。
      *
@@ -178,9 +273,9 @@ public class ShowMessageDialog {
 
         /*Object value = pane.getInputValue();
 
-        if (value == JOptionPane.UNINITIALIZED_VALUE)
+        if (value == JOptionPane.UNINITIALIZED_VALUE) {
             return null;
-
+        }
         return value;*/
 
         // 5. 获取用户的选择结果
@@ -189,28 +284,18 @@ public class ShowMessageDialog {
         // 检查用户是否点击了 "确定" 按钮
         if (selectedValue != null && selectedValue.equals(JOptionPane.OK_OPTION)) {
             // 如果用户点击了 "确定"，我们尝试从 message 组件中获取列表的选中值
-            JList<?> list = findJList(message);
-            if (list != null) {
-                return list.getSelectedValue(); // 返回 JList 中的选中项
+            // 从 message 对象中查找 JList 实例。 因为 JList 通常被包裹在 JScrollPane 中。
+            if (message instanceof JScrollPane) {
+                Component view = ((JScrollPane) message).getViewport().getView();
+                if (view instanceof JList) {
+                    return ((JList<?>) view).getSelectedValue();// 返回 JList 中的选中项
+                }
+            } else if (message instanceof JList) {
+                return ((JList<?>) message).getSelectedValue();// 返回 JList 中的选中项
             }
         }
 
         // 如果用户点击了 "取消"、关闭了窗口，或者 message 中没有 JList，则返回 null
-        return null;
-    }
-
-    /**
-     * 一个辅助方法，用于从传入的 message 对象中查找 JList 实例。 因为 JList 通常被包裹在 JScrollPane 中。
-     */
-    private static JList<?> findJList(Object component) {
-        if (component instanceof JScrollPane) {
-            Component view = ((JScrollPane) component).getViewport().getView();
-            if (view instanceof JList) {
-                return (JList<?>) view;
-            }
-        } else if (component instanceof JList) {
-            return (JList<?>) component;
-        }
         return null;
     }
 
@@ -325,8 +410,33 @@ public class ShowMessageDialog {
         showInfoList(null, "服务器启动日志", "以下是最近的服务器启动事件：", serverLog);
 
         /*
+         * 自定义按钮弹窗
+         */
+
+        // 创建一个 JFrame 作为父组件
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(300, 200);
+        frame.setLocationRelativeTo(null);
+
+        // 模拟一些列表数据
+        String[] data = new String[20];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = "这是一个信息条目 " + (i + 1) + "，用于测试弹窗显示效果。";
+        }
+
+        // 使用 SwingUtilities.invokeLater 确保 GUI 操作在事件分发线程 (EDT) 上执行
+        SwingUtilities.invokeLater(() -> {
+            showInfoListWithShutdown(frame, "系统信息", "以下是详细的系统状态列表：", data);
+        });
+
+        // 这行代码只是为了演示，实际应用中可能不需要显示主窗口
+        // frame.setVisible(true);
+
+        /*
          * 可选择的弹窗
          */
+
         // 1. 准备要显示的列表数据
         /*String[] fruits = { "苹果 (Apple)", "香蕉 (Banana)", "橙子 (Orange)", "草莓 (Strawberry)", "蓝莓 (Blueberry)" };
 

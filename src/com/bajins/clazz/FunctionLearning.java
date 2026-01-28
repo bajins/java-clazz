@@ -41,6 +41,7 @@ public class FunctionLearning {
      * @see BooleanSupplier 不接收对象，返回 boolean
      * @see Comparator
      * @see UnaryOperator
+     * @see Runnable
      */
     static class Apply8 {
         /**
